@@ -1,568 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Atri's Physics Orbit | Delhi Campus Compass | Free DU Notes & Campus Life</title>
-    <meta name="description" content="Download free Delhi University study notes, DU Semester 1 Physics notes, track college fests, and watch campus vlogs by Atri Mishra.">
-    <meta name="keywords" content="Atri Mishra, Atri Mishra Physics, Kirori Mal College, Hindu College, DU Notes, DU Semester 1 physics Notes, Delhi University, CUET Tips, DU Fests, Physics Orbit">
+    <title>Atri's Physics Orbit | M.Sc. Notes, Robotics, Cricket Analysis & Vlogs</title>
+    <meta name="description" content="Explore advanced M.Sc. & B.Sc. Physics notes, robotics society blueprints, the physics of cricket hacks, and personal campus travel vlogs by Atri Mishra.">
+    <meta name="keywords" content="Atri Mishra, Atri's Physics Orbit, DU Physics Notes, B.Sc Physics NEP Notes, M.Sc Physics DU, Robotics Project Guide, Physics of Cricket, Atri Mishra Vlogs, Hari Sharnam">
     <meta name="author" content="Atri Mishra">
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@500;600;700;800&family=Noto+Serif+Devanagari:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-dark: #050608;
-            --cyber-orange: #ff6a00;
-            --cyber-glow: #ff9d00;
-            --glass-bg: rgba(21, 26, 35, 0.65);
-            --glass-border: rgba(255, 106, 0, 0.25);
-            --text-white: #ffffff;
-            --text-gray: #a0aec0;
+            /* CYBER-DEEP SPACE PROFESSIONAL THEME VARIABLES */
+            --bg-deep-space: #0a0a0c; /* Clean Professional Black */
+            --bg-panel: #0f172a;      /* Deep Team India Navy Blue */
+            --bg-surface: #050911;    /* Subtle Complex Grey-Blue */
+            --brand-accent: #ea580c;  /* Clean Corporate Orange */
+            --brand-glow: #ff7800;    /* Stark Highlight Orange */
+            --text-main: #ffffff;      /* Stark Clear White */
+            --text-muted: #94a3b8;    /* Muted Blue-Grey */
+            --border-color: #1e293b;  /* Subtle Deep Blue Border */
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Space Grotesk', sans-serif;
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-white);
+            background-color: var(--bg-deep-space);
+            color: var(--text-main);
+            line-height: 1.6;
+            position: relative;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 106, 0, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(255, 157, 0, 0.06) 0%, transparent 45%);
         }
 
-        /* Neon Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--cyber-orange);
-            border-radius: 4px;
-            box-shadow: 0 0 10px var(--cyber-glow);
-        }
-
-        /* Navbar Styling */
+        /* Pure Black Sticky Header with Subtles Shadows */
         nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 6%;
-            background: rgba(5, 6, 8, 0.85);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 106, 0, 0.15);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 8%; background: #000000;
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .logo {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.4rem; font-weight: 800; color: var(--text-main);
+            display: flex; align-items: center; gap: 10px;
         }
 
-        .logo span {
-            color: var(--cyber-orange);
-            text-shadow: 0 0 15px rgba(255, 106, 0, 0.6);
-        }
+        .logo span { color: var(--brand-accent); }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-        }
-
+        .nav-links { display: flex; list-style: none; gap: 25px; }
         .nav-links a {
-            color: var(--text-white);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: var(--text-main); text-decoration: none;
+            font-size: 0.95rem; font-weight: 500; transition: 0.2s;
         }
+        .nav-links a:hover { color: var(--brand-accent); }
 
-        .nav-links a:hover {
-            color: var(--cyber-orange);
-            text-shadow: 0 0 10px var(--cyber-orange);
-        }
-
-        /* Hero Section with Light Streaks */
+        /* Premium Center Layout with Name Highlighted (Exactly like your choice) */
         .hero {
+            padding: 90px 8% 70px 8%; text-align: center;
+            background: linear-gradient(180deg, #050911 0%, var(--bg-deep-space) 100%);
+            border-bottom: 1px solid var(--border-color);
             position: relative;
-            min-height: 75vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(rgba(5, 6, 8, 0.8), rgba(5, 6, 8, 0.95)), 
-                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
-            overflow: hidden;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            width: 150%;
-            height: 100px;
-            background: transparent;
-            border-top: 2px solid var(--cyber-orange);
-            border-radius: 50%;
-            box-shadow: 0 -15px 40px rgba(255, 106, 0, 0.4);
-            opacity: 0.7;
         }
 
         .hero h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
+            font-family: 'Lexend', sans-serif;
+            font-size: 2.8rem; font-weight: 800; color: var(--text-main);
+            letter-spacing: -1px; margin-bottom: 20px; line-height: 1.3;
         }
 
-        .hero h1 span {
-            color: transparent;
-            -webkit-text-stroke: 1px var(--cyber-orange);
-            filter: drop-shadow(0 0 10px rgba(255, 106, 0, 0.5));
+        .hero h1 .highlight-name {
+            color: var(--brand-accent);
+            position: relative;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px var(--brand-accent));
         }
 
         .hero p {
-            font-size: 1rem;
-            color: var(--text-gray);
-            max-width: 750px;
-            margin-bottom: 35px;
-            line-height: 1.6;
+            font-size: 1.15rem; color: var(--text-muted);
+            max-width: 800px; margin: 0 auto 35px auto;
         }
 
         .hero-btn {
-            background: linear-gradient(135deg, var(--cyber-orange), var(--cyber-glow));
-            color: #000;
-            padding: 14px 35px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-            box-shadow: 0 0 25px rgba(255, 106, 0, 0.5);
-            transition: 0.3s ease;
-        }
-
-        .hero-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 35px var(--cyber-orange);
-        }
-
-        /* Main Dashboard Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
-        }
-
-        /* Glow Card Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: -100px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 40px 25px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: 0.5s;
-        }
-
-        .glass-card:hover::before {
-            left: 100%;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--cyber-glow);
-            box-shadow: 0 0 30px rgba(255, 106, 0, 0.25);
-        }
-
-        .card-icon {
-            font-size: 2.8rem;
-            color: var(--cyber-orange);
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 8px rgba(255, 106, 0, 0.5));
-        }
-
-        .glass-card h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .glass-card p {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-            min-height: 45px;
-        }
-
-        .card-link {
-            display: inline-block;
-            background: transparent;
-            color: var(--text-white);
-            border: 2px solid var(--cyber-orange);
-            padding: 10px 26px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: 0.3s;
-        }
-
-        .card-link:hover {
-            background: var(--cyber-orange);
-            color: #000;
-            box-shadow: 0 0 15px var(--cyber-orange);
-        }
-
-        /* Dynamic Tech Dashboard Sections */
-        .dashboard-section {
-            margin-top: 100px;
-            background: rgba(10, 14, 22, 0.6);
-            border: 1px solid rgba(255, 106, 0, 0.1);
-            border-radius: 24px;
-            padding: 50px 30px;
-            backdrop-filter: blur(8px);
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .section-header h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: 2rem;
-            text-transform: uppercase;
-        }
-
-        .section-header h2 span {
-            color: var(--cyber-orange);
-            text-shadow: 0 0 10px rgba(255, 106, 0, 0.3);
-        }
-
-        /* Cyberpunk Attendance Calculator Styling */
-        .calc-wrapper {
-            max-width: 500px;
-            margin: 0 auto;
-            background: #0d1117;
-            padding: 35px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 106, 0, 0.2);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
-        }
-
-        .input-box {
-            margin-bottom: 25px;
-        }
-
-        .input-box label {
-            display: block;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            color: var(--text-gray);
-        }
-
-        .input-box input {
-            width: 100%;
-            background: #050608;
-            border: 1px solid rgba(255, 106, 0, 0.3);
-            padding: 14px;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .input-box input:focus {
-            border-color: var(--cyber-orange);
-            box-shadow: 0 0 12px rgba(255, 106, 0, 0.3);
-        }
-
-        .calc-trigger {
-            width: 100%;
-            background: linear-gradient(90deg, var(--cyber-orange), #ff4500);
-            color: #000;
+            background: var(--brand-accent); color: #ffffff;
+            padding: 14px 35px; border-radius: 6px; font-weight: 600;
+            text-decoration: none; display: inline-block; cursor: pointer;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25); transition: 0.2s;
             border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: 0.3s;
         }
+        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(234, 88, 12, 0.35); }
 
-        .calc-trigger:hover {
-            filter: brightness(1.2);
-            box-shadow: 0 0 20px rgba(255, 106, 0, 0.4);
-        }
-
-        .calc-output {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 8px;
-            background: #050608;
-            border-left: 4px solid var(--cyber-orange);
-            display: none;
-            text-align: center;
-        }
-
-        /* YouTube Stream Showcase */
-        .video-stream-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .video-node {
-            background: #0d1117;
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-        }
-
-        .video-node:hover {
-            border-color: rgba(255, 106, 0, 0.4);
-            transform: scale(1.02);
-        }
-
-        .thumb-shell {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #161b22;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.5rem;
-            color: #ff0000;
-            cursor: pointer;
+        /* Complex, curious, math-inspired background grid overlap */
+        .main-container {
+            max-width: 1200px; margin: 0 auto; padding: 60px 20px;
             position: relative;
         }
-
-        .thumb-shell::after {
-            content: 'WATCH STREAM';
-            position: absolute;
-            bottom: 10px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--text-gray);
-            letter-spacing: 1px;
-            opacity: 0;
-            transition: 0.3s;
+        .main-container::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            opacity: 0.5;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
         }
 
-        .thumb-shell:hover::after {
-            opacity: 1;
+        /* Professional dark dropdown architecture */
+        .accordion-section {
+            background: var(--bg-panel); border: 1px solid var(--border-color);
+            border-radius: 12px; margin-bottom: 20px; overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
         }
 
-        .node-meta {
-            padding: 20px;
+        .accordion-trigger {
+            width: 100%; padding: 22px 30px; background: var(--bg-panel);
+            border: none; text-align: left; display: flex; justify-content: space-between;
+            align-items: center; font-family: 'Lexend', sans-serif;
+            font-size: 1.25rem; font-weight: 700; color: var(--text-main);
+            cursor: pointer; transition: 0.2s;
+        }
+        .accordion-trigger:hover { background: var(--bg-surface); }
+        .accordion-trigger i { color: var(--brand-accent); transition: 0.3s; }
+
+        .accordion-content {
+            display: none; padding: 30px; background: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
         }
 
-        .node-meta h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            line-height: 1.4;
+        /* Clean Dashboard Grids */
+        .sub-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;
         }
 
-        /* Footer Element */
-        footer {
-            background: #020304;
-            padding: 60px 20px 30px 20px;
-            border-top: 1px solid rgba(255, 106, 0, 0.15);
-            margin-top: 100px;
+        .node-link-card {
+            background: var(--bg-panel); border: 1px solid var(--border-color);
+            padding: 20px; border-radius: 8px; text-decoration: none;
+            display: flex; align-items: center; justify-content: space-between;
+            color: var(--text-main); font-weight: 600; transition: 0.2s;
+        }
+        .node-link-card:hover { border-color: var(--brand-accent); background: rgba(234,88,12,0.03); }
+        .node-link-card i { color: var(--brand-accent); }
+
+        /* Thesis specific container */
+        .thesis-container {
+            background: var(--bg-panel); border: 1px solid var(--border-color);
+            padding: 25px; border-radius: 8px; margin-top: 20px;
         }
 
-        .footer-map {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 40px;
-            padding-bottom: 40px;
+        /* Tool Input Configurations with subtle borders */
+        .tool-panel { max-width: 600px; margin: 0 auto; background: var(--bg-panel); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+        .form-group input { width: 100%; padding: 10px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; outline: none; }
+        .form-group input:focus { border-color: var(--brand-accent); box-shadow: 0 0 10px rgba(234,88,12,0.1); }
+
+        /* Cricket Blackboard Theme Overlay - Glowing blackboard style */
+        .cricket-banner {
+            background: rgba(15,23,42,0.9); color: #ffffff; border-radius: 16px;
+            padding: 40px; text-align: center; margin-bottom: 40px;
+            box-shadow: 0 10px 15px -3px rgba(15,23,42,0.3);
+            border: 2px solid var(--brand-accent);
+            position: relative;
+        }
+        .cricket-banner h3 { font-family: 'Lexend', sans-serif; color: #ff9d00; font-size: 1.6rem; margin-bottom: 15px; }
+
+        /* Media Responsive Blocks and subtle video shadows */
+        .vlog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        .vlog-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .media-shell {
+            width: 100%; aspect-ratio: 16/9; background: #000;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.8rem; color: #ef4444; cursor: pointer; transition: 0.2s;
+        }
+        .media-shell:hover { opacity: 0.9; }
+
+        /* Dynamic Editable Noticeboard Style for Event Tracker */
+        .board-canvas {
+            background: #fff6e0; border: 2px dashed #f59e0b; border-radius: 12px;
+            padding: 30px; color: #78350f; font-weight: 500; text-align: left;
+            box-shadow: inset 0 0 10px rgba(120,53,15,0.05);
         }
 
-        .footer-block h4 {
-            font-family: 'Syne', sans-serif;
-            color: var(--cyber-orange);
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
+        /* Premium Corporate Footer - Deeper Dark */
+        footer { background: #000000; color: #ffffff; padding: 60px 8% 30px 8%; margin-top: 80px; border-top: 1px solid var(--border-color); }
+        .footer-wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 30px; border-bottom: 1px solid #1e293b; }
+        .footer-wrap h4 { font-family: 'Lexend', sans-serif; color: #ffffff; margin-bottom: 15px; }
+        .footer-wrap a { color: #94a3b8; text-decoration: none; transition: 0.2s; }
+        .footer-wrap a:hover { color: var(--brand-accent); }
 
-        .footer-block p {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
-        .social-matrix a {
-            color: var(--text-gray);
-            font-size: 1.5rem;
-            margin-right: 20px;
-            transition: 0.3s;
-        }
-
-        .social-matrix a:hover {
-            color: var(--cyber-orange);
-            transform: translateY(-3px);
-        }
-
-        .copyright-tag {
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 25px;
-            color: #555;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-        }
-
-        @media (max-width: 768px) {
-            nav { flex-direction: column; gap: 15px; }
-            .hero h1 { font-size: 1.8rem; }
-            .features-grid { margin-top: 30px; }
+        /* The Divine Signature - Stark white alignment */
+        .divine-sig {
+            text-align: center; padding-top: 30px; color: var(--text-main);
+            font-family: 'Noto Serif Devanagari', serif; font-size: 1.5rem; letter-spacing: 4px;
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">
-            <i class="fa-solid fa-circle-nodes"></i> Atri's Physics <span>Orbit</span>
-        </div>
+        <div class="logo"><i class="fa-solid fa-satellite-dish"></i> Atri's Physics <span>Orbit</span></div>
         <ul class="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#matrix-calc">Calculator</a></li>
-            <li><a href="#streams">Streams</a></li>
+            <li><a href="#academics">Academic Vault</a></li>
+            <li><a href="#tech">Tech Matrix</a></li>
+            <li><a href="#cricket">Cricket Analytics</a></li>
+            <li><a href="#events">Live Tracks</a></li>
         </ul>
     </nav>
 
     <header class="hero">
-        <h1>Delhi Campus Compass:<br><span>Unlock Your DU Experience</span></h1>
-        <p>Your premium academic orbit for semester-wise Physics study modules, real-time college fest trackers, and core ecosystem insights. Crafted by Atri Mishra for DU scholars.</p>
-        <a href="#matrix-calc" class="hero-btn">Access Student Tools</a>
+        <h1>Physics in Mind, Adventure in Soul — Meet <br><span class="highlight-name">Atri Mishra</span></h1>
+        <p>Currently navigating advanced M.Sc. Physics modules, crafting automated robotics networks, decoding dynamic cricket physics parameters, and charting immersive travel vlogs.</p>
+        <button class="hero-btn" onclick="toggleAccordion('student-tools')">Access Interactive Student Tools</button>
     </header>
 
-    <main class="container">
+    <main class="main-container">
 
-        <section class="features-grid">
-            <div class="glass-card">
-                <div class="card-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-                <h3>Free Study Notes</h3>
-                <p>Instant access to structured Physics theories and core Delhi University curriculum notes PDF.</p>
-                <a href="#" class="card-link">Download PDF</a>
+        <div class="accordion-section" id="student-tools-wrapper">
+            <button class="accordion-trigger" onclick="toggleAccordion('student-tools')">
+                <span><i class="fa-solid fa-sliders"></i> Interactive Student Utilities Portal</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="accordion-content" id="student-tools">
+                <div class="sub-grid" style="grid-template-columns: 1fr; gap: 30px;">
+                    <div class="tool-panel">
+                        <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;">Ecosystem Attendance Monitor</h4>
+                        <div class="form-group"><label>Total Conducted Slots</label><input type="number" id="held" placeholder="0"></div>
+                        <div class="form-group"><label>Attended Slots Loged</label><input type="number" id="attended" placeholder="0"></div>
+                        <button class="hero-btn" style="width:100%;" onclick="calcAttendance()">Run Calibration</button>
+                        <div id="calc-res" style="margin-top:15px; padding:12px; display:none; border-radius:6px; font-weight:600;"></div>
+                    </div>
+                    <div class="sub-grid">
+                        <a href="https://www.du.ac.in" target="_blank" class="node-link-card"><span><i class="fa-solid fa-calendar-days"></i> Official DU Academic Calendar</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        <div class="tool-panel" style="max-width:100%;">
+                            <h5 style="font-family:'Lexend'; margin-bottom:10px; color:#fff;">UGCF / NEP CGPA Converter</h5>
+                            <div class="form-group"><label>Enter CGPA Score</label><input type="number" id="cgpa" step="0.01" placeholder="0.00"></div>
+                            <button class="hero-btn" style="width:100%; padding:8px;" onclick="calcCgpa()">Convert to Percentage</button>
+                            <div id="cgpa-res" style="margin-top:10px; font-weight:700; color:var(--text-main);"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="glass-card">
-                <div class="card-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
-                <h3>Live Fest Tracker</h3>
-                <p>Sync with ongoing and upcoming Kirori Mal, Hindu College, and elite DU campus events.</p>
-                <a href="#" class="card-link">Track Events</a>
+        </div>
+
+        <div class="accordion-section" id="academics">
+            <button class="accordion-trigger" onclick="toggleAccordion('notes-vault')">
+                <span><i class="fa-solid fa-book-open-reader"></i> Free Study Notes Matrix — DU (NEP)</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="accordion-content" id="notes-vault">
+                
+                <h3 style="font-family:'Lexend'; margin-bottom:15px; border-left:4px solid var(--brand-accent); padding-left:10px; color:#fff;">B.Sc. Physics (Hons) Vault</h3>
+                <div class="sub-grid" style="margin-bottom: 30px;">
+                    <a href="#" target="_blank" class="node-link-card"><span>1st Year Core Framework Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
+                    <a href="#" target="_blank" class="node-link-card"><span>2nd Year Core Framework Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
+                    <a href="#" target="_blank" class="node-link-card"><span>3rd Year Core Framework Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
+                    <a href="#" target="_blank" class="node-link-card"><span>4th Year Core Framework Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
+                </div>
+                
+                <div class="thesis-container">
+                    <h4 style="font-family:'Lexend'; color:var(--text-main);"><i class="fa-solid fa-feather-pointed"></i> 4th Year Research Thesis Idea Incubator</h4>
+                    <p style="color:var(--text-muted); font-size:0.95rem; margin-top:5px;">
+                        [Academic Guidance Log] Focus fields map to kinetic automation loops, mathematical optimization parameters, and semiconductor junction variations. Reference specific framework layouts shared inside internal laboratory streams.
+                    </p>
+                </div>
+
+                <h3 style="font-family:'Lexend'; margin:30px 0 15px 0; border-left:4px solid var(--brand-accent); padding-left:10px; color:#fff;">M.Sc. Physics (Hons) Vault — DU</h3>
+                <div class="sub-grid">
+                    <a href="#" target="_blank" class="node-link-card"><span>M.Sc. 1st Year Advanced Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
+                    <a href="#" target="_blank" class="node-link-card"><span>M.Sc. 2nd Year Advanced Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
+                </div>
             </div>
-            <div class="glass-card">
-                <div class="card-icon"><i class="fa-brands fa-youtube-square"></i></div>
-                <h3>Campus Hub & Vlogs</h3>
-                <p>Immersive digital logs charting student life, strategies, and global research roadmaps.</p>
-                <a href="#streams" class="card-link">Enter Hub</a>
+        </div>
+
+        <div class="accordion-section" id="tech">
+            <button class="accordion-trigger" onclick="toggleAccordion('tech-vault')">
+                <span><i class="fa-solid fa-code"></i> Engineering Tech & Practical Coding Matrix</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="accordion-content" id="tech-vault">
+                <h4 style="font-family:'Lexend'; margin-bottom:12px; color:#fff;">Python Scripts Required for B.Sc. Graduation (DU Physics Hons)</h4>
+                <div class="sub-grid" style="margin-bottom:30px;">
+                    <a href="#" target="_blank" class="node-link-card"><span>Download Core Python Graduation Scripts</span> <i class="fa-brands fa-python"></i></a>
+                </div>
+
+                <h4 style="font-family:'Lexend'; margin-bottom:12px; color:#fff;">Robotics Society Experimental Deployments & Logic Guides</h4>
+                <div class="vlog-grid">
+                    <div class="vlog-card">
+                        <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
+                        <div style="padding:15px;">
+                            <h5 style="font-family:'Lexend'; color:#fff;">Autonomous Embedded Hardware Design Map</h5>
+                            <a href="#" style="color:var(--brand-accent); font-size:0.85rem; font-weight:700; text-decoration:none;">Download System Blueprints →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section id="cricket" style="margin-top: 40px;">
+            <div class="cricket-banner">
+                <h3>💡 Kya Tum Jaante Ho? — The Physics of Cricket</h3>
+                <p style="font-size:1.1rem; max-width:800px; margin:0 auto; color:#fff;">
+                    A premium fast ball swings because of the <strong>Magnus Effect</strong> and asymmetric boundary-layer air friction! When launch velocity matches an angle of exactly 45°, energy transfer reaches maximum range efficiency.
+                </p>
+            </div>
+            <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;">Cricket Trajectory Breakdown Transmissions</h3>
+            <div class="vlog-grid">
+                <div class="vlog-card">
+                    <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
+                    <div style="padding:15px;"><h5 style="font-family:'Lexend'; color:#fff;">The Aerodynamics of Swing & Swing Velocity Matrix</h5></div>
+                </div>
+                <div class="vlog-card">
+                    <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
+                    <div style="padding:15px;"><h5 style="font-family:'Lexend'; color:#fff;">The Sweet Spot Equation: Eliminating Bat Vibration Traps</h5></div>
+                </div>
             </div>
         </section>
 
-        <section class="dashboard-section" id="matrix-calc">
-            <div class="section-header">
-                <h2>Ecosystem <span>Attendance Calculator</span></h2>
+        <section id="events" style="margin-top: 60px;">
+            <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;"><i class="fa-solid fa-clipboard-list"></i> Live Campus Event Tracker</h3>
+            <div class="board-canvas" style="margin-bottom:30px;">
+                <h4 style="font-family:'Lexend'; margin-bottom:10px;"><i class="fa-solid fa-thumbtack"></i> Active Fest Schedule Log [Internal Display]</h4>
+                <p>💡 Upcoming Elite Campus Fests, Academic Symposia, and Science Society Exhibition logs will appear right here. Check out the custom coverage logs and vlogs logged below!</p>
             </div>
-            <div class="calc-wrapper">
-                <div class="input-box">
-                    <label>Total Lectures Conducted</label>
-                    <input type="number" id="held" placeholder="Enter total classes">
+            <div class="vlog-grid">
+                <div class="vlog-card">
+                    <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
+                    <div style="padding:15px;"><h5 style="font-family:'Lexend'; color:#fff;">Kirori Mal & Hindu College Premium Fest Coverage Vlog</h5></div>
                 </div>
-                <div class="input-box">
-                    <label>Lectures Attended</label>
-                    <input type="number" id="attended" placeholder="Enter attended count">
-                </div>
-                <button class="calc-trigger" onclick="runOrbitCalc()">Compute Logs</button>
-                <div class="calc-output" id="output-box"></div>
             </div>
         </section>
 
-        <section class="dashboard-section" id="streams">
-            <div class="section-header">
-                <h2>Latest Transmissions By <span>Atri Mishra</span></h2>
-            </div>
-            <div class="video-stream-grid">
-                <div class="video-node">
-                    <div class="thumb-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')">
-                        <i class="fa-brands fa-youtube"></i>
-                    </div>
-                    <div class="node-meta">
-                        <h4>Physics Core Modules & Exam Blueprints</h4>
-                    </div>
-                </div>
-                <div class="video-node">
-                    <div class="thumb-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')">
-                        <i class="fa-brands fa-youtube"></i>
-                    </div>
-                    <div class="node-meta">
-                        <h4>DU Premium Campus Fest Live Tracking</h4>
-                    </div>
+        <section style="margin-top: 60px;">
+            <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;"><i class="fa-solid fa-compass"></i> Atri's Personal Campus Tours & Travel Chronicles</h3>
+            <div class="vlog-grid">
+                <div class="vlog-card">
+                    <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
+                    <div style="padding:15px;"><h5 style="font-family:'Lexend'; color:#fff;">Exclusive Walkthrough Logs: Deep Campus Explorations</h5></div>
                 </div>
             </div>
         </section>
@@ -570,58 +351,66 @@
     </main>
 
     <footer>
-        <div class="footer-map">
-            <div class="footer-block">
+        <div class="footer-wrap">
+            <div>
                 <h4>Atri's Physics Orbit</h4>
-                <p>Bridging the gap between active campus life and elite scientific research tracks.</p>
+                <p style="color:#94a3b8; max-width:400px; font-size:0.95rem;">Bridging applied physics research fields, advanced robotic arrays, and premium digital campus portfolios.</p>
             </div>
-            <div class="footer-block">
-                <h4>Secure Contact</h4>
-                <p><i class="fa-solid fa-envelope"></i> business.atrimishra@gmail.com</p>
+            <div>
+                <h4>Secure Inquiries</h4>
+                <p style="color:#94a3b8;"><i class="fa-solid fa-envelope"></i> business.atrimishra@gmail.com</p>
             </div>
-            <div class="footer-block">
-                <h4>Network Matrix</h4>
-                <div class="social-matrix">
-                    <a href="https://youtube.com/@sageatrimishra" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-                </div>
+            <div>
+                <h4>Network Directives</h4>
+                <p style="margin-bottom:10px;"><a href="https://youtube.com/@sageatrimishra" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube Channel</a></p>
+                <p><a href="https://instagram.com/atrimishra18" target="_blank"><i class="fa-brands fa-instagram"></i> @atrimishra18</a></p>
             </div>
         </div>
-        <div class="copyright-tag">
-            &copy; 2026 Atri's Physics Orbit | Powered by Delhi Campus Compass Matrix.
+        
+        <div class="divine-sig">
+            हरिशरणम्
         </div>
     </footer>
 
     <script>
-        function runOrbitCalc() {
+        function toggleAccordion(id) {
+            const panel = document.getElementById(id);
+            if(panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+
+        function calcAttendance() {
             const held = parseInt(document.getElementById('held').value);
             const attended = parseInt(document.getElementById('attended').value);
-            const outputBox = document.getElementById('output-box');
-
+            const res = document.getElementById('calc-res');
             if(isNaN(held) || isNaN(attended) || held <= 0 || attended < 0 || attended > held) {
-                outputBox.style.display = 'block';
-                outputBox.style.color = '#ff4d4d';
-                outputBox.style.borderColor = '#ff4d4d';
-                outputBox.innerHTML = "⚠️ ERROR: Enter valid mathematical logs.";
-                return;
+                res.style.display = 'block'; res.style.background = '#fef2f2'; res.style.color = '#ef4444';
+                res.innerHTML = "⚠️ Configuration mismatch logs."; return;
             }
-
             const ratio = ((attended / held) * 100).toFixed(1);
-            outputBox.style.display = 'block';
-            let report = `Current Status Check: <strong>${ratio}%</strong><br><br>`;
-            
+            res.style.display = 'block';
             if(ratio >= 75) {
-                outputBox.style.color = '#00ffcc';
-                outputBox.style.borderColor = '#00ffcc';
-                const bunkable = Math.floor((attended - (0.75 * held)) / 0.75);
-                report += `🚀 CRITERIA SECURED! You hold a safe buffer. You may bunk the next <strong>${bunkable >= 0 ? bunkable : 0}</strong> classes safely.`;
+                res.style.background = '#f0fdf4'; res.style.color = '#15803d';
+                const bunk = Math.floor((attended - (0.75 * held)) / 0.75);
+                res.innerHTML = `Safe Horizon: ${ratio}% | Safe to bypass next ${bunk} slots.`;
             } else {
-                outputBox.style.color = '#ff6a00';
-                outputBox.style.borderColor = '#ff6a00';
-                const required = Math.ceil(((0.75 * held) - attended) / 0.25);
-                report += `⚠️ CRITERIA BREACHED! Attendance below 75%. Absolute clearance required for the next <strong>${required}</strong> classes consecutively.`;
+                res.style.background = '#fff7ed'; res.style.color = '#c2410c';
+                const req = Math.ceil(((0.75 * held) - attended) / 0.25);
+                res.innerHTML = `Clearance Breach: ${ratio}% | Compulsory attendance for next ${req} slots consecutively.`;
             }
-            outputBox.innerHTML = report;
+        }
+
+        function calcCgpa() {
+            const cgpa = parseFloat(document.getElementById('cgpa').value);
+            const res = document.getElementById('cgpa-res');
+            if(isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
+                res.innerHTML = "⚠️ Enter valid decimal scale."; return;
+            }
+            const pct = (cgpa * 9.5).toFixed(2);
+            res.innerHTML = `Calibrated Equating Log: ${pct}%`;
         }
     </script>
 </body>
