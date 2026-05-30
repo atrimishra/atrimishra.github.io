@@ -1,58 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Atri's Physics Orbit | Delhi Campus Compass | Free DU Notes & Campus Life</title>
+    <meta name="description" content="Download free Delhi University study notes, DU Semester 1 Physics notes, track college fests, and watch campus vlogs by Atri Mishra.">
+    <meta name="keywords" content="Atri Mishra, Atri Mishra Physics, Kirori Mal College, Hindu College, DU Notes, DU Semester 1 physics Notes, Delhi University, CUET Tips, DU Fests, Physics Orbit">
+    <meta name="author" content="Atri Mishra">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atri Mishra Physics | Delhi Campus Compass</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --bg-color: #0b0c10;
-            --card-bg: #1f2833;
-            --accent-glow: #ff7b00;
-            --accent-secondary: #ffae00;
-            --text-main: #ffffff;
+            --bg-dark: #050608;
+            --cyber-orange: #ff6a00;
+            --cyber-glow: #ff9d00;
+            --glass-bg: rgba(21, 26, 35, 0.65);
+            --glass-border: rgba(255, 106, 0, 0.25);
+            --text-white: #ffffff;
+            --text-gray: #a0aec0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--bg-dark);
+            color: var(--text-white);
             overflow-x: hidden;
-            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 106, 0, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 157, 0, 0.06) 0%, transparent 45%);
         }
 
+        /* Neon Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-orange);
+            border-radius: 4px;
+            box-shadow: 0 0 10px var(--cyber-glow);
+        }
+
+        /* Navbar Styling */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            background: rgba(11, 12, 16, 0.95);
+            padding: 20px 6%;
+            background: rgba(5, 6, 8, 0.85);
+            backdrop-filter: blur(12px);
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid rgba(255, 123, 0, 0.2);
-            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 106, 0, 0.15);
         }
 
         .logo {
-            font-size: 1.4rem;
-            font-weight: 700;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .logo span {
-            color: var(--accent-glow);
-            text-shadow: 0 0 10px rgba(255, 123, 0, 0.5);
+            color: var(--cyber-orange);
+            text-shadow: 0 0 15px rgba(255, 106, 0, 0.6);
         }
 
         .nav-links {
@@ -62,227 +89,397 @@
         }
 
         .nav-links a {
-            color: var(--text-main);
+            color: var(--text-white);
             text-decoration: none;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
+        .nav-links a:hover {
+            color: var(--cyber-orange);
+            text-shadow: 0 0 10px var(--cyber-orange);
+        }
+
+        /* Hero Section with Light Streaks */
         .hero {
             position: relative;
-            min-height: 60vh;
+            min-height: 75vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(rgba(11, 12, 16, 0.85), rgba(11, 12, 16, 0.95)), 
-                        url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80');
+            padding: 60px 20px;
+            background: linear-gradient(rgba(5, 6, 8, 0.8), rgba(5, 6, 8, 0.95)), 
+                        url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            width: 150%;
+            height: 100px;
+            background: transparent;
+            border-top: 2px solid var(--cyber-orange);
+            border-radius: 50%;
+            box-shadow: 0 -15px 40px rgba(255, 106, 0, 0.4);
+            opacity: 0.7;
         }
 
         .hero h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 15px;
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
             text-transform: uppercase;
+            letter-spacing: -0.5px;
         }
 
         .hero h1 span {
-            color: var(--accent-glow);
-            text-shadow: 0 0 15px rgba(255, 123, 0, 0.4);
+            color: transparent;
+            -webkit-text-stroke: 1px var(--cyber-orange);
+            filter: drop-shadow(0 0 10px rgba(255, 106, 0, 0.5));
         }
 
         .hero p {
             font-size: 1rem;
-            color: #d1d1d1;
-            margin-bottom: 30px;
-            max-width: 700px;
+            color: var(--text-gray);
+            max-width: 750px;
+            margin-bottom: 35px;
+            line-height: 1.6;
         }
 
+        .hero-btn {
+            background: linear-gradient(135deg, var(--cyber-orange), var(--cyber-glow));
+            color: #000;
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            box-shadow: 0 0 25px rgba(255, 106, 0, 0.5);
+            transition: 0.3s ease;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 35px var(--cyber-orange);
+        }
+
+        /* Main Dashboard Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 60px 20px;
         }
 
+        /* Glow Card Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            margin-top: -40px;
+            margin-top: -100px;
             position: relative;
             z-index: 10;
         }
 
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            padding: 30px 20px;
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 40px 25px;
             text-align: center;
-            border: 1px solid rgba(255, 123, 0, 0.15);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: 0.3s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-glow);
-            box-shadow: 0 0 25px rgba(255, 123, 0, 0.3);
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--cyber-glow);
+            box-shadow: 0 0 30px rgba(255, 106, 0, 0.25);
         }
 
         .card-icon {
-            font-size: 2.5rem;
-            color: var(--accent-glow);
+            font-size: 2.8rem;
+            color: var(--cyber-orange);
             margin-bottom: 20px;
+            filter: drop-shadow(0 0 8px rgba(255, 106, 0, 0.5));
         }
 
-        .card h3 {
-            font-size: 1.2rem;
+        .glass-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
             margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
-        .card p {
-            color: #b3b3b3;
-            font-size: 0.85rem;
-            margin-bottom: 25px;
+        .glass-card p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            min-height: 45px;
         }
 
-        .card-btn {
+        .card-link {
             display: inline-block;
-            border: 2px solid var(--accent-glow);
-            color: var(--text-main);
-            padding: 8px 20px;
-            border-radius: 25px;
+            background: transparent;
+            color: var(--text-white);
+            border: 2px solid var(--cyber-orange);
+            padding: 10px 26px;
+            border-radius: 30px;
             text-decoration: none;
             font-size: 0.85rem;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             transition: 0.3s;
         }
 
-        .card-btn:hover {
-            background: var(--accent-glow);
+        .card-link:hover {
+            background: var(--cyber-orange);
             color: #000;
+            box-shadow: 0 0 15px var(--cyber-orange);
         }
 
-        .calculator-section {
-            margin: 60px 0;
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 40px 20px;
-            border: 1px solid rgba(255, 123, 0, 0.2);
+        /* Dynamic Tech Dashboard Sections */
+        .dashboard-section {
+            margin-top: 100px;
+            background: rgba(10, 14, 22, 0.6);
+            border: 1px solid rgba(255, 106, 0, 0.1);
+            border-radius: 24px;
+            padding: 50px 30px;
+            backdrop-filter: blur(8px);
         }
 
-        .section-title {
+        .section-header {
             text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
             text-transform: uppercase;
         }
 
-        .section-title span {
-            color: var(--accent-glow);
+        .section-header h2 span {
+            color: var(--cyber-orange);
+            text-shadow: 0 0 10px rgba(255, 106, 0, 0.3);
         }
 
-        .calc-container {
-            max-width: 400px;
+        /* Cyberpunk Attendance Calculator Styling */
+        .calc-wrapper {
+            max-width: 500px;
             margin: 0 auto;
+            background: #0d1117;
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 106, 0, 0.2);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
         }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 123, 0, 0.3);
-            background: #0b0c10;
-            color: #fff;
-            outline: none;
-        }
-
-        .calc-btn {
-            width: 100%;
-            background: var(--accent-glow);
-            color: #000;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .result-box {
-            margin-top: 25px;
-            padding: 15px;
-            border-radius: 8px;
-            background: rgba(11, 12, 16, 0.8);
-            text-align: center;
-            display: none;
-            border-left: 4px solid var(--accent-glow);
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .video-card {
-            background: #151c24;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .thumbnail-placeholder {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #252e3b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #ff0000;
-            cursor: pointer;
-        }
-
-        .video-info {
-            padding: 15px;
-        }
-
-        footer {
-            background: #050608;
-            padding: 40px 20px 20px 20px;
-            border-top: 1px solid rgba(255, 123, 0, 0.1);
-            font-size: 0.85rem;
-            text-align: center;
-        }
-
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            gap: 20px;
+        .input-box {
             margin-bottom: 25px;
         }
 
-        .social-icons a {
-            color: #b3b3b3;
-            font-size: 1.3rem;
-            margin: 0 10px;
+        .input-box label {
+            display: block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: var(--text-gray);
+        }
+
+        .input-box input {
+            width: 100%;
+            background: #050608;
+            border: 1px solid rgba(255, 106, 0, 0.3);
+            padding: 14px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-box input:focus {
+            border-color: var(--cyber-orange);
+            box-shadow: 0 0 12px rgba(255, 106, 0, 0.3);
+        }
+
+        .calc-trigger {
+            width: 100%;
+            background: linear-gradient(90deg, var(--cyber-orange), #ff4500);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .calc-trigger:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px rgba(255, 106, 0, 0.4);
+        }
+
+        .calc-output {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background: #050608;
+            border-left: 4px solid var(--cyber-orange);
+            display: none;
+            text-align: center;
+        }
+
+        /* YouTube Stream Showcase */
+        .video-stream-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .video-node {
+            background: #0d1117;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+
+        .video-node:hover {
+            border-color: rgba(255, 106, 0, 0.4);
+            transform: scale(1.02);
+        }
+
+        .thumb-shell {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #161b22;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: #ff0000;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .thumb-shell::after {
+            content: 'WATCH STREAM';
+            position: absolute;
+            bottom: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-gray);
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .thumb-shell:hover::after {
+            opacity: 1;
+        }
+
+        .node-meta {
+            padding: 20px;
+        }
+
+        .node-meta h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Footer Element */
+        footer {
+            background: #020304;
+            padding: 60px 20px 30px 20px;
+            border-top: 1px solid rgba(255, 106, 0, 0.15);
+            margin-top: 100px;
+        }
+
+        .footer-map {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            padding-bottom: 40px;
+        }
+
+        .footer-block h4 {
+            font-family: 'Syne', sans-serif;
+            color: var(--cyber-orange);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .footer-block p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .social-matrix a {
+            color: var(--text-gray);
+            font-size: 1.5rem;
+            margin-right: 20px;
+            transition: 0.3s;
+        }
+
+        .social-matrix a:hover {
+            color: var(--cyber-orange);
+            transform: translateY(-3px);
+        }
+
+        .copyright-tag {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 25px;
+            color: #555;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            nav { flex-direction: column; gap: 15px; }
+            .hero h1 { font-size: 1.8rem; }
+            .features-grid { margin-top: 30px; }
         }
     </style>
 </head>
@@ -290,117 +487,142 @@
 
     <nav>
         <div class="logo">
-            <i class="fa-solid fa-compass"></i> Atri Mishra <span>Physics</span>
+            <i class="fa-solid fa-circle-nodes"></i> Atri's Physics <span>Orbit</span>
         </div>
         <ul class="nav-links">
             <li><a href="#">Home</a></li>
-            <li><a href="#calculator">Attendance Calc</a></li>
+            <li><a href="#matrix-calc">Calculator</a></li>
+            <li><a href="#streams">Streams</a></li>
         </ul>
     </nav>
 
     <header class="hero">
         <h1>Delhi Campus Compass:<br><span>Unlock Your DU Experience</span></h1>
-        <p>Free Study Notes, Live Fest Tracking, and Resources. Crafted by Atri Mishra for Kirori Mal, Hindu College & DU Students.</p>
+        <p>Your premium academic orbit for semester-wise Physics study modules, real-time college fest trackers, and core ecosystem insights. Crafted by Atri Mishra for DU scholars.</p>
+        <a href="#matrix-calc" class="hero-btn">Access Student Tools</a>
     </header>
 
     <main class="container">
+
         <section class="features-grid">
-            <div class="card">
-                <div class="card-icon"><i class="fa-solid fa-book-open"></i></div>
+            <div class="glass-card">
+                <div class="card-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                 <h3>Free Study Notes</h3>
-                <p>Get instant access to semester-wise Physics and DU curriculum notes PDF.</p>
-                <a href="#" class="card-btn">Access Notes PDF</a>
+                <p>Instant access to structured Physics theories and core Delhi University curriculum notes PDF.</p>
+                <a href="#" class="card-link">Download PDF</a>
             </div>
-            <div class="card">
-                <div class="card-icon"><i class="fa-solid fa-calendar-days"></i></div>
-                <h3>Fest Tracker</h3>
-                <p>Track upcoming KMC, Hindu, and major DU fests in real-time.</p>
-                <a href="#" class="card-btn">View Events</a>
+            <div class="glass-card">
+                <div class="card-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+                <h3>Live Fest Tracker</h3>
+                <p>Sync with ongoing and upcoming Kirori Mal, Hindu College, and elite DU campus events.</p>
+                <a href="#" class="card-link">Track Events</a>
             </div>
-            <div class="card">
-                <div class="card-icon"><i class="fa-solid fa-video"></i></div>
-                <h3>Campus Vlogs</h3>
-                <p>Dive into daily lifestyle raw vlogs and student ecosystem insights.</p>
-                <a href="https://youtube.com/@sageatrimishra" target="_blank" class="card-btn">Watch Vlogs</a>
-            </div>
-        </section>
-
-        <section class="calculator-section" id="calculator">
-            <h2 class="section-title">DU <span>Attendance Calculator</span></h2>
-            <div class="calc-container">
-                <div class="input-group">
-                    <label>Total Classes Held</label>
-                    <input type="number" id="held" placeholder="e.g. 50">
-                </div>
-                <div class="input-group">
-                    <label>Total Classes Attended</label>
-                    <input type="number" id="attended" placeholder="e.g. 32">
-                </div>
-                <button class="calc-btn" onclick="calculateAttendance()">Calculate Status</button>
-                <div class="result-box" id="result"></div>
+            <div class="glass-card">
+                <div class="card-icon"><i class="fa-brands fa-youtube-square"></i></div>
+                <h3>Campus Hub & Vlogs</h3>
+                <p>Immersive digital logs charting student life, strategies, and global research roadmaps.</p>
+                <a href="#streams" class="card-link">Enter Hub</a>
             </div>
         </section>
 
-        <section id="vlogs">
-            <h2 class="section-title">Latest Updates by <span>Atri Mishra</span></h2>
-            <div class="video-grid">
-                <div class="video-card">
-                    <div class="thumbnail-placeholder" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')">
-                        <i class="fa-brands fa-youtube"></i>
-                    </div>
-                    <div class="video-info"><h4>Semester Exams Prep & Hacks</h4></div>
+        <section class="dashboard-section" id="matrix-calc">
+            <div class="section-header">
+                <h2>Ecosystem <span>Attendance Calculator</span></h2>
+            </div>
+            <div class="calc-wrapper">
+                <div class="input-box">
+                    <label>Total Lectures Conducted</label>
+                    <input type="number" id="held" placeholder="Enter total classes">
                 </div>
-                <div class="video-card">
-                    <div class="thumbnail-placeholder" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')">
+                <div class="input-box">
+                    <label>Lectures Attended</label>
+                    <input type="number" id="attended" placeholder="Enter attended count">
+                </div>
+                <button class="calc-trigger" onclick="runOrbitCalc()">Compute Logs</button>
+                <div class="calc-output" id="output-box"></div>
+            </div>
+        </section>
+
+        <section class="dashboard-section" id="streams">
+            <div class="section-header">
+                <h2>Latest Transmissions By <span>Atri Mishra</span></h2>
+            </div>
+            <div class="video-stream-grid">
+                <div class="video-node">
+                    <div class="thumb-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')">
                         <i class="fa-brands fa-youtube"></i>
                     </div>
-                    <div class="video-info"><h4>DU Campus Fests Live Coverage!</h4></div>
+                    <div class="node-meta">
+                        <h4>Physics Core Modules & Exam Blueprints</h4>
+                    </div>
+                </div>
+                <div class="video-node">
+                    <div class="thumb-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="node-meta">
+                        <h4>DU Premium Campus Fest Live Tracking</h4>
+                    </div>
                 </div>
             </div>
         </section>
+
     </main>
 
     <footer>
-        <div class="footer-content">
-            <div>
+        <div class="footer-map">
+            <div class="footer-block">
+                <h4>Atri's Physics Orbit</h4>
+                <p>Bridging the gap between active campus life and elite scientific research tracks.</p>
+            </div>
+            <div class="footer-block">
+                <h4>Secure Contact</h4>
                 <p><i class="fa-solid fa-envelope"></i> business.atrimishra@gmail.com</p>
             </div>
-            <div class="social-icons">
-                <a href="https://youtube.com/@sageatrimishra" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+            <div class="footer-block">
+                <h4>Network Matrix</h4>
+                <div class="social-matrix">
+                    <a href="https://youtube.com/@sageatrimishra" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
         </div>
-        <p>&copy; 2026 Delhi Campus Compass | Atri Mishra Physics</p>
+        <div class="copyright-tag">
+            &copy; 2026 Atri's Physics Orbit | Powered by Delhi Campus Compass Matrix.
+        </div>
     </footer>
 
     <script>
-        function calculateAttendance() {
+        function runOrbitCalc() {
             const held = parseInt(document.getElementById('held').value);
             const attended = parseInt(document.getElementById('attended').value);
-            const resultBox = document.getElementById('result');
+            const outputBox = document.getElementById('output-box');
 
             if(isNaN(held) || isNaN(attended) || held <= 0 || attended < 0 || attended > held) {
-                resultBox.style.display = 'block';
-                resultBox.style.color = '#ff4d4d';
-                resultBox.innerHTML = "⚠️ Please enter valid numbers!";
+                outputBox.style.display = 'block';
+                outputBox.style.color = '#ff4d4d';
+                outputBox.style.borderColor = '#ff4d4d';
+                outputBox.innerHTML = "⚠️ ERROR: Enter valid mathematical logs.";
                 return;
             }
 
-            const percentage = ((attended / held) * 100).toFixed(1);
-            resultBox.style.display = 'block';
-            let message = `Attendance: <strong>${percentage}%</strong><br>`;
+            const ratio = ((attended / held) * 100).toFixed(1);
+            outputBox.style.display = 'block';
+            let report = `Current Status Check: <strong>${ratio}%</strong><br><br>`;
             
-            if(percentage >= 75) {
-                resultBox.style.color = '#00ffcc';
-                const safeClasses = Math.floor((attended - (0.75 * held)) / 0.75);
-                message += `🎉 Safe Zone! You can bunk next <strong>${safeClasses}</strong> classes.`;
+            if(ratio >= 75) {
+                outputBox.style.color = '#00ffcc';
+                outputBox.style.borderColor = '#00ffcc';
+                const bunkable = Math.floor((attended - (0.75 * held)) / 0.75);
+                report += `🚀 CRITERIA SECURED! You hold a safe buffer. You may bunk the next <strong>${bunkable >= 0 ? bunkable : 0}</strong> classes safely.`;
             } else {
-                resultBox.style.color = '#ff7b00';
-                const requiredClasses = Math.ceil(((0.75 * held) - attended) / 0.25);
-                message += `⚠️ Below 75%! Attend next <strong>${requiredClasses}</strong> classes continuously.`;
+                outputBox.style.color = '#ff6a00';
+                outputBox.style.borderColor = '#ff6a00';
+                const required = Math.ceil(((0.75 * held) - attended) / 0.25);
+                report += `⚠️ CRITERIA BREACHED! Attendance below 75%. Absolute clearance required for the next <strong>${required}</strong> classes consecutively.`;
             }
-            resultBox.innerHTML = message;
+            outputBox.innerHTML = report;
         }
     </script>
 </body>
 </html>
-
