@@ -65,7 +65,7 @@
         }
         .nav-links a:hover { color: var(--brand-accent); }
 
-        /* Premium Center Layout with Name Highlighted (Exactly like your choice) */
+        /* Premium Center Layout with Name Highlighted */
         .hero {
             padding: 90px 8% 70px 8%; text-align: center;
             background: linear-gradient(180deg, #050911 0%, var(--bg-deep-space) 100%);
@@ -139,7 +139,7 @@
 
         /* Clean Dashboard Grids */
         .sub-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
         }
 
         .node-link-card {
@@ -158,31 +158,52 @@
         }
 
         /* Tool Input Configurations with subtle borders */
-        .tool-panel { max-width: 600px; margin: 0 auto; background: var(--bg-panel); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .tool-panel { background: var(--bg-panel); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; }
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
-        .form-group input { width: 100%; padding: 10px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; outline: none; }
-        .form-group input:focus { border-color: var(--brand-accent); box-shadow: 0 0 10px rgba(234,88,12,0.1); }
+        .form-group input, .form-group select { width: 100%; padding: 10px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; outline: none; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--brand-accent); box-shadow: 0 0 10px rgba(234,88,12,0.1); }
 
-        /* Cricket Blackboard Theme Overlay - Glowing blackboard style */
+        /* Pomodoro Specific Styles */
+        .pomo-digits { font-family: 'Lexend', sans-serif; font-size: 2.2rem; font-weight: 800; text-align: center; color: #fff; margin: 10px 0; letter-spacing: 2px; text-shadow: 0 0 10px rgba(234,88,12,0.3); }
+        .pomo-controls { display: flex; gap: 10px; margin-bottom: 10px; }
+        .pomo-btn { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-surface); color: #fff; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .pomo-btn:hover { border-color: var(--brand-accent); background: rgba(234,88,12,0.05); }
+
+        /* Cricket Blackboard Theme Overlay */
         .cricket-banner {
             background: rgba(15,23,42,0.9); color: #ffffff; border-radius: 16px;
             padding: 40px; text-align: center; margin-bottom: 40px;
             box-shadow: 0 10px 15px -3px rgba(15,23,42,0.3);
             border: 2px solid var(--brand-accent);
             position: relative;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .cricket-banner h3 { font-family: 'Lexend', sans-serif; color: #ff9d00; font-size: 1.6rem; margin-bottom: 15px; }
+        .knowledge-text { font-size: 1.15rem; max-width: 850px; margin: 0 auto; color: #fff; transition: opacity 0.5s ease; min-height: 54px; }
 
         /* Media Responsive Blocks and subtle video shadows */
         .vlog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .vlog-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .vlog-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
+        .vlog-card:hover { transform: translateY(-5px); border-color: var(--brand-accent); }
+        
+        /* Thumbnail Layout with Aspect Ratio */
         .media-shell {
             width: 100%; aspect-ratio: 16/9; background: #000;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2.8rem; color: #ef4444; cursor: pointer; transition: 0.2s;
+            font-size: 3rem; color: #ffffff; cursor: pointer; transition: 0.3s;
+            background-size: cover; background-position: center; position: relative;
         }
-        .media-shell:hover { opacity: 0.9; }
+        .media-shell::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); transition: 0.3s;
+        }
+        .media-shell:hover::before { background: rgba(0, 0, 0, 0.2); }
+        .media-shell i { z-index: 2; text-shadow: 0 4px 12px rgba(0,0,0,0.5); filter: drop-shadow(0 0 10px rgba(234,88,12,0.6)); }
+        .media-shell:hover i { color: var(--brand-accent); transform: scale(1.1); }
 
         /* Dynamic Editable Noticeboard Style for Event Tracker */
         .board-canvas {
@@ -231,23 +252,66 @@
                 <i class="fa-solid fa-chevron-down"></i>
             </button>
             <div class="accordion-content" id="student-tools">
-                <div class="sub-grid" style="grid-template-columns: 1fr; gap: 30px;">
+                <div class="sub-grid" style="margin-bottom: 25px;">
+                    
                     <div class="tool-panel">
-                        <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;">Ecosystem Attendance Monitor</h4>
-                        <div class="form-group"><label>Total Conducted Slots</label><input type="number" id="held" placeholder="0"></div>
-                        <div class="form-group"><label>Attended Slots Loged</label><input type="number" id="attended" placeholder="0"></div>
-                        <button class="hero-btn" style="width:100%;" onclick="calcAttendance()">Run Calibration</button>
-                        <div id="calc-res" style="margin-top:15px; padding:12px; display:none; border-radius:6px; font-weight:600;"></div>
-                    </div>
-                    <div class="sub-grid">
-                        <a href="https://www.du.ac.in" target="_blank" class="node-link-card"><span><i class="fa-solid fa-calendar-days"></i> Official DU Academic Calendar</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        <div class="tool-panel" style="max-width:100%;">
-                            <h5 style="font-family:'Lexend'; margin-bottom:10px; color:#fff;">UGCF / NEP CGPA Converter</h5>
-                            <div class="form-group"><label>Enter CGPA Score</label><input type="number" id="cgpa" step="0.01" placeholder="0.00"></div>
-                            <button class="hero-btn" style="width:100%; padding:8px;" onclick="calcCgpa()">Convert to Percentage</button>
-                            <div id="cgpa-res" style="margin-top:10px; font-weight:700; color:var(--text-main);"></div>
+                        <div>
+                            <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-clipboard-user" style="color:var(--brand-accent)"></i> Attendance Monitor</h4>
+                            <div class="form-group"><label>Total Conducted Slots</label><input type="number" id="held" placeholder="0"></div>
+                            <div class="form-group"><label>Attended Slots Logged</label><input type="number" id="attended" placeholder="0"></div>
+                        </div>
+                        <div>
+                            <button class="hero-btn" style="width:100%;" onclick="calcAttendance()">Run Calibration</button>
+                            <div id="calc-res" style="margin-top:15px; padding:12px; display:none; border-radius:6px; font-weight:600; font-size:0.9rem;"></div>
                         </div>
                     </div>
+
+                    <div class="tool-panel">
+                        <div>
+                            <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-calculator" style="color:var(--brand-accent)"></i> UGCF / NEP CGPA Converter</h4>
+                            <div class="form-group"><label>Enter CGPA Score (Scale of 10)</label><input type="number" id="cgpa" step="0.01" placeholder="0.00"></div>
+                        </div>
+                        <div style="margin-top: 35px;">
+                            <button class="hero-btn" style="width:100%;" onclick="calcCgpa()">Convert to Percentage</button>
+                            <div id="cgpa-res" style="margin-top:22px; font-weight:700; color:var(--text-main); text-align:center;"></div>
+                        </div>
+                    </div>
+
+                    <div class="tool-panel">
+                        <div>
+                            <h4 style="font-family:'Lexend'; margin-bottom: 5px; color:#fff;"><i class="fa-solid fa-stopwatch" style="color:var(--brand-accent)"></i> Quantum Focus Timer</h4>
+                            <div class="pomo-digits" id="pomo-display">25:00</div>
+                            <div class="pomo-controls">
+                                <button class="pomo-btn" id="pomo-start" onclick="togglePomodoro()">Start</button>
+                                <button class="pomo-btn" onclick="resetPomodoro()">Reset</button>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0; margin-top:10px;">
+                            <label>Session Mode</label>
+                            <select id="pomo-mode" onchange="changePomodoroMode()">
+                                <option value="25">Study Block (25 Mins)</option>
+                                <option value="5">Short Rest (5 Mins)</option>
+                                <option value="15">Deep Break (15 Mins)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="tool-panel">
+                        <div>
+                            <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-hourglass-half" style="color:var(--brand-accent)"></i> Academic Horizon Tracker</h4>
+                            <div class="form-group"><label>Target Assessment/Exam Name</label><input type="text" id="target-name" placeholder="e.g., Quantum Mechanics Sem Exam"></div>
+                            <div class="form-group"><label>Target Date</label><input type="date" id="target-date"></div>
+                        </div>
+                        <div>
+                            <button class="hero-btn" style="width:100%;" onclick="calculateDeadline()">Track Remaining Time</button>
+                            <div id="deadline-res" style="margin-top:15px; font-weight:600; color:#fff; text-align:center; font-size:0.9rem;"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div style="max-width: 100%;">
+                    <a href="https://www.du.ac.in" target="_blank" class="node-link-card"><span><i class="fa-solid fa-calendar-days"></i> Launch Official DU Academic Calendar Portal</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 </div>
             </div>
         </div>
@@ -268,7 +332,7 @@
                 </div>
                 
                 <div class="thesis-container">
-                    <h4 style="font-family:'Lexend'; color:var(--text-main);"><i class="fa-solid fa-feather-pointed"></i> 4th Year Research Thesis Idea Incubator</h4>
+                    <h4><i class="fa-solid fa-feather-pointed"></i> 4th Year Research Thesis Idea Incubator</h4>
                     <p style="color:var(--text-muted); font-size:0.95rem; margin-top:5px;">
                         [Academic Guidance Log] Focus fields map to kinetic automation loops, mathematical optimization parameters, and semiconductor junction variations. Reference specific framework layouts shared inside internal laboratory streams.
                     </p>
@@ -309,20 +373,34 @@
         <section id="cricket" style="margin-top: 40px;">
             <div class="cricket-banner">
                 <h3>💡 Kya Tum Jaante Ho? — The Physics of Cricket</h3>
-                <p style="font-size:1.1rem; max-width:800px; margin:0 auto; color:#fff;">
+                <p id="knowledge-box" class="knowledge-text">
                     A premium fast ball swings because of the <strong>Magnus Effect</strong> and asymmetric boundary-layer air friction! When launch velocity matches an angle of exactly 45°, energy transfer reaches maximum range efficiency.
                 </p>
             </div>
-            <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;">Cricket Trajectory Breakdown Transmissions</h3>
+            
+            <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;"><i class="fa-solid fa-play"></i> Cricket Trajectory Breakdown Transmissions</h3>
             <div class="vlog-grid">
+                
                 <div class="vlog-card">
-                    <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
-                    <div style="padding:15px;"><h5 style="font-family:'Lexend'; color:#fff;">The Aerodynamics of Swing & Swing Velocity Matrix</h5></div>
+                    <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/bOuT8H2kJzs/maxresdefault.jpg');" onclick="window.open('https://youtube.com/shorts/bOuT8H2kJzs?si=0q7Bb48v24TNBOJz','_blank')">
+                        <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
+                    </div>
+                    <div style="padding:15px;">
+                        <h5 style="font-family:'Lexend'; color:#fff; font-size: 1rem; margin-bottom: 5px;">The Aerodynamics of Swing & Swing Velocity Matrix</h5>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Decoding fluid dynamics parameters behind standard late swing delivery mechanics.</p>
+                    </div>
                 </div>
+                
                 <div class="vlog-card">
-                    <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
-                    <div style="padding:15px;"><h5 style="font-family:'Lexend'; color:#fff;">The Sweet Spot Equation: Eliminating Bat Vibration Traps</h5></div>
+                    <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/ordHjYO2BsI/maxresdefault.jpg');" onclick="window.open('https://youtube.com/shorts/ordHjYO2BsI?si=4-E4x9qXF24EO8ES','_blank')">
+                        <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
+                    </div>
+                    <div style="padding:15px;">
+                        <h5 style="font-family:'Lexend'; color:#fff; font-size: 1rem; margin-bottom: 5px;">The Sweet Spot Equation: Eliminating Bat Vibration Traps</h5>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Locating the fundamental vibrational node where energy conversion reaches peak efficiency.</p>
+                    </div>
                 </div>
+
             </div>
         </section>
 
@@ -414,6 +492,122 @@
             const pct = (cgpa * 9.5).toFixed(2);
             res.innerHTML = `Calibrated Equating Log: ${pct}%`;
         }
+
+        /* POMODORO TIMER LOGIC */
+        let pomoInterval = null;
+        let pomoMinutes = 25;
+        let pomoSeconds = 0;
+        let pomoIsRunning = false;
+
+        function updatePomoDisplay() {
+            const display = document.getElementById('pomo-display');
+            const m = pomoMinutes < 10 ? '0' + pomoMinutes : pomoMinutes;
+            const s = pomoSeconds < 10 ? '0' + pomoSeconds : pomoSeconds;
+            display.innerHTML = `${m}:${s}`;
+        }
+
+        function changePomodoroMode() {
+            const modeVal = parseInt(document.getElementById('pomo-mode').value);
+            clearInterval(pomoInterval);
+            pomoIsRunning = false;
+            document.getElementById('pomo-start').innerHTML = "Start";
+            pomoMinutes = modeVal;
+            pomoSeconds = 0;
+            updatePomoDisplay();
+        }
+
+        function togglePomodoro() {
+            const startBtn = document.getElementById('pomo-start');
+            if (pomoIsRunning) {
+                clearInterval(pomoInterval);
+                pomoIsRunning = false;
+                startBtn.innerHTML = "Start";
+            } else {
+                pomoIsRunning = true;
+                startBtn.innerHTML = "Pause";
+                pomoInterval = setInterval(() => {
+                    if (pomoSeconds === 0) {
+                        if (pomoMinutes === 0) {
+                            clearInterval(pomoInterval);
+                            pomoIsRunning = false;
+                            startBtn.innerHTML = "Start";
+                            alert("Time's up! Session matrix complete.");
+                            resetPomodoro();
+                            return;
+                        }
+                        pomoMinutes--;
+                        pomoSeconds = 59;
+                    } else {
+                        pomoSeconds--;
+                    }
+                    updatePomoDisplay();
+                }, 1000);
+            }
+        }
+
+        function resetPomodoro() {
+            clearInterval(pomoInterval);
+            pomoIsRunning = false;
+            document.getElementById('pomo-start').innerHTML = "Start";
+            const modeVal = parseInt(document.getElementById('pomo-mode').value);
+            pomoMinutes = modeVal;
+            pomoSeconds = 0;
+            updatePomoDisplay();
+        }
+
+        /* DEADLINE TRACKER LOGIC */
+        function calculateDeadline() {
+            const tName = document.getElementById('target-name').value.trim();
+            const tDateVal = document.getElementById('target-date').value;
+            const res = document.getElementById('deadline-res');
+
+            if (!tDateVal) {
+                res.innerHTML = "⚠️ Please configure a target date.";
+                res.style.color = "#ef4444";
+                return;
+            }
+
+            const targetDate = new Date(tDateVal);
+            const today = new Date();
+            
+            today.setHours(0,0,0,0);
+            targetDate.setHours(0,0,0,0);
+
+            const diffTime = targetDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const eventLabel = tName ? `"${tName}"` : "Target Event";
+
+            if (diffDays < 0) {
+                res.innerHTML = `⌛ ${eventLabel} matrix passed ${Math.abs(diffDays)} days ago.`;
+                res.style.color = "#94a3b8";
+            } else if (diffDays === 0) {
+                res.innerHTML = `🚨 Quantum Node Reached! ${eventLabel} is TODAY.`;
+                res.style.color = "#ff7800";
+            } else {
+                res.innerHTML = `⏳ ${diffDays} Days remaining until ${eventLabel}.`;
+                res.style.color = "#4ade80";
+            }
+        }
+
+        /* LIVE DYNAMIC PHYSICS-CRICKET KNOWLEDGE SLIDER */
+        const cricketFacts = [
+            "A premium fast ball swings because of the <strong>Magnus Effect</strong> and asymmetric boundary-layer air friction! When launch velocity matches an angle of exactly 45°, energy transfer reaches maximum range efficiency.",
+            "Spin bowling uncovers the true magic of <strong>Fluid Dynamics</strong>! A heavy top-spin forces high-velocity air under the ball, generating a massive downward pressure differential that causes it to dip abruptly before hitting the deck.",
+            "Ever wondered about the 'Sweet Spot'? When a leather ball collides at this precise node, the <strong>fundamental vibrational harmonics</strong> drop to zero, transmitting near-maximum kinetic energy into the trajectory without stinging the hands.",
+            "The <strong>Coefficient of Restitution (COR)</strong> dictates how high a cricket ball bounces. As pitch wear alters moisture loops and surface elasticity, energy absorption profiles shift drastically across days 1 to 5.",
+            "A rough vs smooth side layout creates an air velocity mismatch. This uneven boundary layer transition triggers a localized pressure drop, resulting in legendary **Conventional and Reverse Swing** paths."
+        ];
+        
+        let factIndex = 0;
+        setInterval(() => {
+            const box = document.getElementById('knowledge-box');
+            box.style.opacity = 0;
+            setTimeout(() => {
+                factIndex = (factIndex + 1) % cricketFacts.length;
+                box.innerHTML = cricketFacts[factIndex];
+                box.style.opacity = 1;
+            }, 500);
+        }, 5000);
     </script>
 </body>
 </html>
