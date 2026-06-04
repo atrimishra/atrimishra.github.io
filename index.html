@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@500;600;700;800&family=Noto+Serif+Devanagari:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lexend:wght@500;600;700;800&family=Noto+Serif+Devanagari:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -246,6 +246,7 @@
 
     <main class="main-container">
 
+        <!-- STUDENT UTILITIES PORTAL WITH 4 INTERACTIVE TOOLS -->
         <div class="accordion-section" id="student-tools-wrapper">
             <button class="accordion-trigger" onclick="toggleAccordion('student-tools')">
                 <span><i class="fa-solid fa-sliders"></i> Interactive Student Utilities Portal</span>
@@ -254,6 +255,7 @@
             <div class="accordion-content" id="student-tools">
                 <div class="sub-grid" style="margin-bottom: 25px;">
                     
+                    <!-- TOOL 1: Attendance Monitor -->
                     <div class="tool-panel">
                         <div>
                             <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-clipboard-user" style="color:var(--brand-accent)"></i> Attendance Monitor</h4>
@@ -266,6 +268,7 @@
                         </div>
                     </div>
 
+                    <!-- TOOL 2: CGPA Converter -->
                     <div class="tool-panel">
                         <div>
                             <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-calculator" style="color:var(--brand-accent)"></i> UGCF / NEP CGPA Converter</h4>
@@ -277,6 +280,7 @@
                         </div>
                     </div>
 
+                    <!-- TOOL 3: Study Session Pomodoro Timer -->
                     <div class="tool-panel">
                         <div>
                             <h4 style="font-family:'Lexend'; margin-bottom: 5px; color:#fff;"><i class="fa-solid fa-stopwatch" style="color:var(--brand-accent)"></i> Quantum Focus Timer</h4>
@@ -296,6 +300,7 @@
                         </div>
                     </div>
 
+                    <!-- TOOL 4: Deadline Tracker -->
                     <div class="tool-panel">
                         <div>
                             <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-hourglass-half" style="color:var(--brand-accent)"></i> Academic Horizon Tracker</h4>
@@ -346,6 +351,7 @@
             </div>
         </div>
 
+        <!-- TECH & ROBOTICS VAULT SECTION -->
         <div class="accordion-section" id="tech">
             <button class="accordion-trigger" onclick="toggleAccordion('tech-vault')">
                 <span><i class="fa-solid fa-code"></i> Engineering Tech & Practical Coding Matrix</span>
@@ -357,19 +363,38 @@
                     <a href="#" target="_blank" class="node-link-card"><span>Download Core Python Graduation Scripts</span> <i class="fa-brands fa-python"></i></a>
                 </div>
 
-                <h4 style="font-family:'Lexend'; margin-bottom:12px; color:#fff;">Robotics Society Experimental Deployments & Logic Guides</h4>
+                <h4 style="font-family:'Lexend'; margin-bottom:15px; color:#fff;">Robotics Society Experimental Deployments & Logic Guides</h4>
                 <div class="vlog-grid">
+                    
+                    <!-- NEW VIDEO CARD 1 (Robotics/Python Playlist/Video Link 1) -->
                     <div class="vlog-card">
-                        <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
+                        <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/4dOz21ePUJU/maxresdefault.jpg');" onclick="window.open('https://youtu.be/4dOz21ePUJU','_blank')">
+                            <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
+                        </div>
                         <div style="padding:15px;">
-                            <h5 style="font-family:'Lexend'; color:#fff;">Autonomous Embedded Hardware Design Map</h5>
+                            <h5 style="font-family:'Lexend'; color:#fff; font-size:1rem; margin-bottom:5px;">Advanced Hardware Automation & Control Mechanics</h5>
+                            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:10px;">Decoding algorithmic frameworks and embedding logic setups for next-gen automation pipelines.</p>
                             <a href="#" style="color:var(--brand-accent); font-size:0.85rem; font-weight:700; text-decoration:none;">Download System Blueprints →</a>
                         </div>
                     </div>
+
+                    <!-- NEW VIDEO CARD 2 (Robotics Shorts Link 2) -->
+                    <div class="vlog-card">
+                        <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/cEoO9o54UVU/maxresdefault.jpg');" onclick="window.open('https://youtube.com/shorts/cEoO9o54UVU?si=bfhOEDe8PDn4UE_6','_blank')">
+                            <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
+                        </div>
+                        <div style="padding:15px;">
+                            <h5 style="font-family:'Lexend'; color:#fff; font-size:1rem; margin-bottom:5px;">Micro-Controller Logic Interfacing & Rapid Testing</h5>
+                            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:10px;">Quick transmission brief exploring real-time script processing loops inside embedded environments.</p>
+                            <a href="#" style="color:var(--brand-accent); font-size:0.85rem; font-weight:700; text-decoration:none;">View Deployment Logs →</a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
+        <!-- PHYSICS OF CRICKET SECTION -->
         <section id="cricket" style="margin-top: 40px;">
             <div class="cricket-banner">
                 <h3>💡 Kya Tum Jaante Ho? — The Physics of Cricket</h3>
@@ -381,6 +406,7 @@
             <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;"><i class="fa-solid fa-play"></i> Cricket Trajectory Breakdown Transmissions</h3>
             <div class="vlog-grid">
                 
+                <!-- VIDEO CARD 1 -->
                 <div class="vlog-card">
                     <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/bOuT8H2kJzs/maxresdefault.jpg');" onclick="window.open('https://youtube.com/shorts/bOuT8H2kJzs?si=0q7Bb48v24TNBOJz','_blank')">
                         <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
@@ -391,6 +417,7 @@
                     </div>
                 </div>
                 
+                <!-- VIDEO CARD 2 -->
                 <div class="vlog-card">
                     <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/ordHjYO2BsI/maxresdefault.jpg');" onclick="window.open('https://youtube.com/shorts/ordHjYO2BsI?si=4-E4x9qXF24EO8ES','_blank')">
                         <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
@@ -404,11 +431,14 @@
             </div>
         </section>
 
+        <!-- LIVE CAMPUS EVENT TRACKER (FUNNY NOTEPAD UPDATE) -->
         <section id="events" style="margin-top: 60px;">
             <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;"><i class="fa-solid fa-clipboard-list"></i> Live Campus Event Tracker</h3>
             <div class="board-canvas" style="margin-bottom:30px;">
-                <h4 style="font-family:'Lexend'; margin-bottom:10px;"><i class="fa-solid fa-thumbtack"></i> Active Fest Schedule Log [Internal Display]</h4>
-                <p>💡 Upcoming Elite Campus Fests, Academic Symposia, and Science Society Exhibition logs will appear right here. Check out the custom coverage logs and vlogs logged below!</p>
+                <h4 style="font-family:'Lexend'; margin-bottom:10px; color: #9a3412;"><i class="fa-solid fa-thumbtack"></i> Active Fest Schedule Log [Internal Display]</h4>
+                <p style="font-size: 1.05rem; line-height: 1.5;">
+                    🎉 <strong>Important Update:</strong> अरे भाई-भाई! कॉलेज के छोटे-मोटे फेस्ट और सेमिनार तो चलते रहेंगे, उनमे क्या ही रखा है... असली सुख-शांति चाहिए तो बस <strong>DUSU Elections (दिल्ली यूनिवर्सिटी छात्र संघ चुनाव)</strong> का चुपचाप इंतजार करो! पूरे कैंपस में जो भौकाल, फ्री के छोले-भटूरे, लक्ज़री गाड़ियों के काफिले और हाई-लेवल ड्रामा वाला 'असली एन्जॉयमेंट' मिलेगा ना, उसके आगे सारे कॉलेज फेस्ट फीके हैं! 🤝🔥
+                </p>
             </div>
             <div class="vlog-grid">
                 <div class="vlog-card">
