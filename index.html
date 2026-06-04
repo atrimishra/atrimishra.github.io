@@ -32,10 +32,10 @@
             --radius-md: 14px;
             --radius-lg: 20px;
             --radius-xl: 28px;
+            --space-bg: #04060f;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         html { scroll-behavior: smooth; }
 
         body {
@@ -55,251 +55,273 @@
 
         /* ─── NAV ─── */
         nav {
-            position: sticky; top: 0; z-index: 1000;
-            background: rgba(247, 245, 240, 0.92);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(4, 6, 15, 0.75);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
             padding: 0 5%;
             display: flex; align-items: center; justify-content: space-between;
             height: 62px;
-            animation: slideDown 0.5s ease both;
+            transition: background 0.4s, border-color 0.4s;
         }
-
-        @keyframes slideDown {
-            from { transform: translateY(-100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        nav.light-nav {
+            background: rgba(247, 245, 240, 0.92);
+            border-bottom-color: var(--border);
         }
 
         .logo {
             font-family: 'Fraunces', serif;
-            font-size: 1.15rem; font-weight: 700; color: var(--ink);
+            font-size: 1.15rem; font-weight: 700; color: #fff;
             display: flex; align-items: center; gap: 8px; text-decoration: none;
+            transition: color 0.3s;
         }
-        .logo .dot { color: var(--accent); }
+        nav.light-nav .logo { color: var(--ink); }
+        .logo .dot { color: var(--accent-mid); }
 
         .nav-links {
             display: flex; list-style: none; gap: 4px;
         }
         .nav-links a {
-            color: var(--ink-2); text-decoration: none; font-size: 0.85rem;
+            color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85rem;
             font-weight: 500; padding: 6px 12px; border-radius: 30px;
             transition: all 0.2s;
         }
-        .nav-links a:hover { background: var(--accent-light); color: var(--accent); }
+        .nav-links a:hover { background: rgba(249,115,22,0.15); color: var(--accent-mid); }
+        nav.light-nav .nav-links a { color: var(--ink-2); }
+        nav.light-nav .nav-links a:hover { background: var(--accent-light); color: var(--accent); }
 
         .nav-hamburger {
             display: none; background: none; border: none; cursor: pointer;
-            font-size: 1.3rem; color: var(--ink);
+            font-size: 1.3rem; color: #fff;
         }
+        nav.light-nav .nav-hamburger { color: var(--ink); }
 
         .mobile-menu {
             display: none; position: fixed; top: 62px; left: 0; right: 0;
-            background: var(--white); border-bottom: 1px solid var(--border);
+            background: rgba(4,6,15,0.97); border-bottom: 1px solid rgba(255,255,255,0.08);
             z-index: 999; padding: 12px 5%; flex-direction: column; gap: 4px;
+            backdrop-filter: blur(20px);
         }
         .mobile-menu.open { display: flex; }
         .mobile-menu a {
-            color: var(--ink-2); text-decoration: none; font-size: 0.9rem;
+            color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem;
             font-weight: 500; padding: 10px 14px; border-radius: var(--radius-sm);
             transition: all 0.2s;
         }
-        .mobile-menu a:hover { background: var(--accent-light); color: var(--accent); }
+        .mobile-menu a:hover { background: rgba(249,115,22,0.15); color: var(--accent-mid); }
 
-        /* ─── HERO ─── */
-        .hero {
-            padding: 80px 5% 70px;
-            text-align: center;
+        /* ─── HERO / SOLAR SYSTEM ─── */
+        #hero-canvas-wrap {
             position: relative;
+            width: 100%; height: 100vh;
+            min-height: 600px;
+            background: var(--space-bg);
             overflow: hidden;
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
         }
-
-        /* Decorative radial blob */
-        .hero::before {
-            content: '';
-            position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
-            width: 700px; height: 400px;
-            background: radial-gradient(ellipse, rgba(212,80,10,0.07) 0%, transparent 70%);
-            pointer-events: none;
+        #solar-canvas {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            display: block;
         }
-
-        /* Animated dot-grid background */
-        .hero-dots {
-            position: absolute; inset: 0; opacity: 0.4;
-            background-image: radial-gradient(circle, #c5bdb0 1px, transparent 1px);
-            background-size: 28px 28px;
-            pointer-events: none;
-            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 80%);
+        .hero-overlay {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            pointer-events: none; z-index: 2;
         }
-
         .hero-eyebrow {
             display: inline-flex; align-items: center; gap: 6px;
-            background: var(--accent-light); color: var(--accent);
-            font-size: 0.8rem; font-weight: 600; padding: 5px 14px;
-            border-radius: 30px; margin-bottom: 20px;
-            border: 1px solid rgba(212,80,10,0.2);
-            animation: fadeUp 0.6s 0.2s ease both;
+            background: rgba(249,115,22,0.12); color: var(--accent-mid);
+            font-size: 0.78rem; font-weight: 600; padding: 5px 14px;
+            border-radius: 30px; margin-bottom: 18px;
+            border: 1px solid rgba(249,115,22,0.25);
+            backdrop-filter: blur(10px);
+            opacity: 0; transform: translateY(20px);
+            animation: fadeUp 0.7s 0.3s ease forwards;
         }
-
-        .hero h1 {
+        .hero-title {
             font-family: 'Fraunces', serif;
-            font-size: clamp(2.2rem, 6vw, 4rem);
-            font-weight: 900; color: var(--ink);
-            line-height: 1.1; letter-spacing: -1.5px;
-            margin-bottom: 18px;
-            animation: fadeUp 0.6s 0.35s ease both;
+            font-size: clamp(2.4rem, 6.5vw, 5rem);
+            font-weight: 900; color: #fff;
+            line-height: 1.05; letter-spacing: -2px;
+            text-align: center; margin-bottom: 16px;
+            text-shadow: 0 0 80px rgba(249,115,22,0.2);
+            opacity: 0; transform: translateY(24px);
+            animation: fadeUp 0.7s 0.5s ease forwards;
         }
-
-        .hero h1 em {
-            color: var(--accent); font-style: italic;
-            position: relative;
-        }
-
+        .hero-title em { color: var(--accent-mid); font-style: italic; }
         .hero-sub {
-            font-size: 1.05rem; color: var(--ink-muted); max-width: 600px;
-            margin: 0 auto 36px; line-height: 1.7;
-            animation: fadeUp 0.6s 0.5s ease both;
+            font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 520px;
+            margin: 0 auto 32px; line-height: 1.7; text-align: center;
+            opacity: 0; transform: translateY(20px);
+            animation: fadeUp 0.7s 0.7s ease forwards;
         }
-
         .hero-actions {
             display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-            animation: fadeUp 0.6s 0.65s ease both;
+            pointer-events: all;
+            opacity: 0; transform: translateY(16px);
+            animation: fadeUp 0.7s 0.9s ease forwards;
+        }
+        .hero-hint {
+            position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+            font-size: 0.75rem; color: rgba(255,255,255,0.3); letter-spacing: 2px;
+            text-transform: uppercase; pointer-events: none;
+            animation: floatPulse 3s infinite;
         }
 
+        /* Planet tooltip */
+        #planet-tooltip {
+            position: absolute; z-index: 10;
+            background: rgba(10,12,25,0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(249,115,22,0.3);
+            border-radius: 14px; padding: 12px 18px;
+            color: #fff; pointer-events: none;
+            opacity: 0; transition: opacity 0.25s;
+            font-family: 'DM Sans', sans-serif;
+            min-width: 160px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(249,115,22,0.1);
+        }
+        #planet-tooltip .p-name {
+            font-family: 'Fraunces', serif;
+            font-size: 1rem; font-weight: 700; color: var(--accent-mid);
+            margin-bottom: 3px;
+        }
+        #planet-tooltip .p-desc { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
+        #planet-tooltip .p-cta {
+            font-size: 0.72rem; color: var(--accent-mid); margin-top: 8px;
+            display: flex; align-items: center; gap: 4px;
+        }
+
+        /* Hero stats bar at bottom of hero */
+        .hero-stats-bar {
+            position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+            display: flex; justify-content: center; gap: 0;
+            background: rgba(4,6,15,0.7);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .stat-item {
+            text-align: center; padding: 14px 32px;
+            border-right: 1px solid rgba(255,255,255,0.06);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-num {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem; font-weight: 900; color: var(--accent-mid);
+            display: block; line-height: 1;
+        }
+        .stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.35); font-weight: 500; margin-top: 3px; }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes floatPulse {
+            0%, 100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
+            50% { opacity: 0.6; transform: translateX(-50%) translateY(-5px); }
+        }
+
+        /* ─── MAIN CONTENT (light sections) ─── */
+        .reveal {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .section {
+            max-width: 1120px; margin: 0 auto; padding: 72px 20px;
+        }
+        .section-header { margin-bottom: 36px; }
+        .section-label {
+            font-size: 0.76rem; font-weight: 600; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;
+        }
+        .section-label::before {
+            content: ''; width: 20px; height: 2px; background: var(--accent);
+            display: inline-block; border-radius: 2px;
+        }
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(1.5rem, 3vw, 2.1rem);
+            font-weight: 700; color: var(--ink); line-height: 1.15;
+        }
+
+        .content-divider {
+            border: none; border-top: 1px solid var(--border);
+            max-width: 1120px; margin: 0 auto;
+        }
+
+        /* ─── BUTTONS ─── */
         .btn-primary {
             background: var(--accent); color: #fff;
             padding: 13px 28px; border-radius: 30px; font-weight: 600;
             font-size: 0.9rem; text-decoration: none; display: inline-flex;
             align-items: center; gap: 7px; border: none; cursor: pointer;
-            transition: all 0.25s; box-shadow: 0 4px 14px rgba(212,80,10,0.3);
+            transition: all 0.25s; box-shadow: 0 4px 20px rgba(212,80,10,0.35);
             font-family: 'DM Sans', sans-serif;
         }
-        .btn-primary:hover {
-            background: #b8430a; transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(212,80,10,0.35);
-        }
-
+        .btn-primary:hover { background: #b8430a; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,80,10,0.4); }
         .btn-outline {
-            background: transparent; color: var(--ink);
+            background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85);
             padding: 13px 28px; border-radius: 30px; font-weight: 500;
             font-size: 0.9rem; text-decoration: none; display: inline-flex;
+            align-items: center; gap: 7px;
+            border: 1px solid rgba(255,255,255,0.18);
+            cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+            backdrop-filter: blur(10px);
+        }
+        .btn-outline:hover { border-color: var(--accent-mid); color: var(--accent-mid); background: rgba(249,115,22,0.1); }
+        .btn-outline-dark {
+            background: transparent; color: var(--ink);
+            padding: 11px 24px; border-radius: 30px; font-weight: 500;
+            font-size: 0.88rem; text-decoration: none; display: inline-flex;
             align-items: center; gap: 7px; border: 1.5px solid var(--border-dark);
             cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
         }
-        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+        .btn-outline-dark:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 
-        /* Stats strip */
-        .hero-stats {
-            display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
-            margin-top: 50px; padding-top: 30px;
-            border-top: 1px solid var(--border);
-            animation: fadeUp 0.6s 0.8s ease both;
-        }
-        .stat-item { text-align: center; }
-        .stat-num {
-            font-family: 'Fraunces', serif;
-            font-size: 1.8rem; font-weight: 900; color: var(--accent);
-            display: block; line-height: 1;
-        }
-        .stat-label { font-size: 0.78rem; color: var(--ink-muted); font-weight: 500; margin-top: 4px; }
-
-        /* ─── ANIMATIONS ─── */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .reveal {
-            opacity: 0; transform: translateY(24px);
-            transition: opacity 0.55s ease, transform 0.55s ease;
-        }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-
-        /* ─── SECTION LAYOUT ─── */
-        .section {
-            max-width: 1120px; margin: 0 auto; padding: 64px 20px;
-        }
-
-        .section-header {
-            margin-bottom: 32px;
-        }
-
-        .section-label {
-            font-size: 0.78rem; font-weight: 600; color: var(--accent);
-            text-transform: uppercase; letter-spacing: 1.5px;
-            display: inline-flex; align-items: center; gap: 8px;
-            margin-bottom: 8px;
-        }
-        .section-label::before {
-            content: '';
-            width: 20px; height: 2px; background: var(--accent);
-            display: inline-block; border-radius: 2px;
-        }
-
-        .section-title {
-            font-family: 'Fraunces', serif;
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            font-weight: 700; color: var(--ink); line-height: 1.2;
-        }
-
-        /* ─── CARDS ─── */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            transition: all 0.25s ease;
-            overflow: hidden;
-        }
-        .card:hover {
-            border-color: var(--border-dark);
-            box-shadow: var(--shadow-md);
-            transform: translateY(-3px);
-        }
-
-        /* ─── TOOL GRID ─── */
+        /* ─── TOOL CARDS ─── */
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 18px;
+            gap: 20px;
         }
-
         .tool-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 24px;
-            transition: all 0.25s ease;
+            padding: 26px;
+            transition: all 0.3s ease;
             display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
         }
-        .tool-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+        .tool-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-mid));
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .tool-card:hover { border-color: var(--border-dark); box-shadow: var(--shadow-md); transform: translateY(-4px); }
+        .tool-card:hover::before { opacity: 1; }
 
         .tool-icon {
-            width: 42px; height: 42px; border-radius: 10px;
+            width: 44px; height: 44px; border-radius: 11px;
             background: var(--accent-light);
             display: flex; align-items: center; justify-content: center;
             font-size: 1.1rem; color: var(--accent);
-            margin-bottom: 14px; flex-shrink: 0;
+            margin-bottom: 16px; flex-shrink: 0;
         }
-
         .tool-card h4 {
             font-family: 'Fraunces', serif;
-            font-size: 1rem; font-weight: 700; color: var(--ink);
-            margin-bottom: 14px;
+            font-size: 1.02rem; font-weight: 700; color: var(--ink); margin-bottom: 16px;
         }
-
         .form-label {
-            display: block; font-size: 0.78rem; font-weight: 600;
+            display: block; font-size: 0.76rem; font-weight: 600;
             color: var(--ink-muted); margin-bottom: 6px;
             text-transform: uppercase; letter-spacing: 0.5px;
         }
-
         .form-input, .form-select {
-            width: 100%; padding: 10px 12px;
+            width: 100%; padding: 10px 13px;
             background: var(--bg); border: 1px solid var(--border);
             border-radius: var(--radius-sm); color: var(--ink);
             font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
@@ -310,14 +332,13 @@
             box-shadow: 0 0 0 3px rgba(212,80,10,0.1);
             background: var(--white);
         }
-
         .tool-result {
             margin-top: 10px; padding: 10px 14px;
             border-radius: var(--radius-sm); font-size: 0.85rem;
             font-weight: 600; display: none;
         }
 
-        /* Pomodoro special styles */
+        /* Pomodoro */
         .pomo-display {
             font-family: 'Fraunces', serif;
             font-size: 2.8rem; font-weight: 900;
@@ -335,17 +356,17 @@
         .pomo-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
         .pomo-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-        /* ─── ACCORDION NOTES ─── */
+        /* ─── ACCORDION ─── */
         .accordion {
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            overflow: hidden;
-            margin-bottom: 14px;
+            overflow: hidden; margin-bottom: 14px;
             background: var(--bg-card);
+            transition: box-shadow 0.2s;
         }
-
+        .accordion:hover { box-shadow: var(--shadow-sm); }
         .accordion-trigger {
-            width: 100%; padding: 18px 22px;
+            width: 100%; padding: 20px 24px;
             background: var(--bg-card); border: none; text-align: left;
             display: flex; align-items: center; justify-content: space-between;
             font-family: 'Fraunces', serif; font-size: 1.05rem;
@@ -356,17 +377,13 @@
         .accordion-trigger .icon { color: var(--accent); width: 32px; flex-shrink: 0; }
         .accordion-trigger .chevron { color: var(--ink-muted); transition: transform 0.3s; flex-shrink: 0; }
         .accordion-trigger.open .chevron { transform: rotate(180deg); }
-
         .accordion-body {
             max-height: 0; overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
             border-top: 0 solid var(--border);
         }
-        .accordion-body.open {
-            max-height: 1200px;
-            border-top-width: 1px;
-        }
-        .accordion-body-inner { padding: 22px; }
+        .accordion-body.open { max-height: 1200px; border-top-width: 1px; }
+        .accordion-body-inner { padding: 24px; }
 
         /* ─── LINK CARDS ─── */
         .link-grid {
@@ -374,7 +391,6 @@
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             gap: 12px;
         }
-
         .link-card {
             background: var(--bg); border: 1px solid var(--border);
             padding: 14px 18px; border-radius: var(--radius-md);
@@ -388,8 +404,8 @@
         .sub-heading {
             font-family: 'Fraunces', serif;
             font-size: 1.1rem; font-weight: 700; color: var(--ink);
-            margin: 22px 0 12px;
-            padding-left: 12px;
+            margin: 24px 0 14px;
+            padding-left: 14px;
             border-left: 3px solid var(--accent);
         }
 
@@ -397,187 +413,94 @@
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 18px;
+            gap: 20px;
         }
-
         .video-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: all 0.25s ease;
+            border-radius: var(--radius-lg); overflow: hidden;
+            transition: all 0.3s ease;
         }
-        .video-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); border-color: var(--border-dark); }
-
+        .video-card:hover { box-shadow: var(--shadow-md); transform: translateY(-5px); border-color: var(--border-dark); }
         .video-thumb {
             width: 100%; aspect-ratio: 16/9;
             background: var(--bg); position: relative;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; overflow: hidden;
         }
-        .video-thumb img {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-        .video-card:hover .video-thumb img { transform: scale(1.05); }
+        .video-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .video-card:hover .video-thumb img { transform: scale(1.06); }
         .video-thumb-overlay {
             position: absolute; inset: 0;
-            background: rgba(0,0,0,0.2);
-            display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center;
             transition: background 0.3s;
         }
         .video-card:hover .video-thumb-overlay { background: rgba(0,0,0,0.1); }
         .play-btn {
-            width: 48px; height: 48px; border-radius: 50%;
+            width: 50px; height: 50px; border-radius: 50%;
             background: rgba(255,255,255,0.95);
             display: flex; align-items: center; justify-content: center;
             color: var(--accent); font-size: 1rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-            transition: transform 0.2s;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .video-card:hover .play-btn { transform: scale(1.12); }
-
-        .video-info { padding: 16px 18px; }
+        .video-card:hover .play-btn { transform: scale(1.14); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+        .video-info { padding: 18px 20px; }
         .video-info h5 {
             font-family: 'Fraunces', serif;
-            font-size: 0.95rem; font-weight: 700; color: var(--ink);
+            font-size: 0.97rem; font-weight: 700; color: var(--ink);
             margin-bottom: 6px; line-height: 1.35;
         }
-        .video-info p { font-size: 0.82rem; color: var(--ink-muted); line-height: 1.5; }
+        .video-info p { font-size: 0.82rem; color: var(--ink-muted); line-height: 1.55; }
         .video-tag {
             display: inline-block; padding: 3px 10px;
             background: var(--accent-light); color: var(--accent);
-            border-radius: 20px; font-size: 0.72rem; font-weight: 600;
-            margin-bottom: 8px;
+            border-radius: 20px; font-size: 0.72rem; font-weight: 600; margin-bottom: 8px;
         }
 
         /* ─── CRICKET SECTION ─── */
         .cricket-hero {
-            background: var(--ink);
-            border-radius: var(--radius-xl);
-            padding: 40px 36px;
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 32px;
+            background: var(--ink); border-radius: var(--radius-xl);
+            padding: 42px 38px; color: #fff; position: relative; overflow: hidden; margin-bottom: 32px;
         }
         .cricket-hero::before {
-            content: '';
-            position: absolute; top: -60px; right: -60px;
-            width: 280px; height: 280px;
-            border-radius: 50%;
-            background: rgba(212,80,10,0.15);
-            pointer-events: none;
+            content: ''; position: absolute; top: -60px; right: -60px;
+            width: 280px; height: 280px; border-radius: 50%;
+            background: rgba(212,80,10,0.12); pointer-events: none;
         }
         .cricket-hero::after {
-            content: '';
-            position: absolute; bottom: -40px; left: -40px;
-            width: 200px; height: 200px;
-            border-radius: 50%;
-            background: rgba(212,80,10,0.08);
-            pointer-events: none;
+            content: ''; position: absolute; bottom: -40px; left: -40px;
+            width: 200px; height: 200px; border-radius: 50%;
+            background: rgba(212,80,10,0.06); pointer-events: none;
         }
         .cricket-hero h3 {
             font-family: 'Fraunces', serif;
             font-size: 1.3rem; font-weight: 700;
-            color: var(--accent-mid); margin-bottom: 14px;
-            position: relative;
+            color: var(--accent-mid); margin-bottom: 14px; position: relative;
         }
         .cricket-fact {
-            font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,0.88);
+            font-size: 1.05rem; line-height: 1.75; color: rgba(255,255,255,0.85);
             max-width: 760px; min-height: 68px;
-            transition: opacity 0.5s ease;
-            position: relative;
+            transition: opacity 0.5s ease; position: relative;
         }
-        .cricket-dots {
-            display: flex; gap: 6px; margin-top: 20px;
-        }
+        .cricket-dots { display: flex; gap: 6px; margin-top: 22px; }
         .cricket-dot {
             width: 6px; height: 6px; border-radius: 50%;
-            background: rgba(255,255,255,0.25);
-            transition: all 0.3s;
+            background: rgba(255,255,255,0.2); transition: all 0.3s;
         }
-        .cricket-dot.active {
-            background: var(--accent-mid); width: 20px; border-radius: 3px;
-        }
+        .cricket-dot.active { background: var(--accent-mid); width: 22px; border-radius: 3px; }
 
-        /* ─── EVENT NOTICEBOARD ─── */
+        /* ─── NOTICEBOARD ─── */
         .noticeboard {
-            background: #fffbf0;
-            border: 1.5px dashed #f59e0b;
-            border-radius: var(--radius-lg);
-            padding: 26px 28px;
-            margin-bottom: 28px;
+            background: #fffbf0; border: 1.5px dashed #f59e0b;
+            border-radius: var(--radius-lg); padding: 28px 30px; margin-bottom: 28px;
         }
-        .notice-header {
-            display: flex; align-items: center; gap: 10px;
-            margin-bottom: 14px;
-        }
-        .notice-pin {
-            font-size: 1.1rem;
-        }
+        .notice-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
         .notice-title {
             font-family: 'Fraunces', serif;
             font-size: 1rem; font-weight: 700; color: #92400e;
         }
-        .noticeboard p {
-            font-size: 0.95rem; color: #78350f; line-height: 1.7;
-        }
-
-        /* ─── FOOTER ─── */
-        footer {
-            background: var(--ink);
-            color: #fff;
-            padding: 56px 5% 28px;
-            margin-top: 40px;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 40px;
-            padding-bottom: 32px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 24px;
-        }
-
-        .footer-logo {
-            font-family: 'Fraunces', serif;
-            font-size: 1.2rem; font-weight: 700; color: #fff;
-            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
-        }
-        .footer-logo .dot { color: var(--accent-mid); }
-
-        .footer-desc {
-            font-size: 0.88rem; color: rgba(255,255,255,0.55);
-            line-height: 1.65; max-width: 320px;
-        }
-
-        .footer-col h4 {
-            font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.4);
-            text-transform: uppercase; letter-spacing: 1.5px;
-            margin-bottom: 14px;
-        }
-        .footer-col a {
-            display: flex; align-items: center; gap: 8px;
-            color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.88rem;
-            margin-bottom: 10px; transition: color 0.2s;
-        }
-        .footer-col a:hover { color: var(--accent-mid); }
-
-        .footer-bottom {
-            display: flex; align-items: center;
-            justify-content: space-between; flex-wrap: wrap; gap: 12px;
-        }
-
-        .divine-sig {
-            font-family: 'Noto Serif Devanagari', serif;
-            font-size: 1.1rem; letter-spacing: 3px; color: rgba(255,255,255,0.5);
-        }
-
-        .footer-copy {
-            font-size: 0.8rem; color: rgba(255,255,255,0.3);
-        }
+        .noticeboard p { font-size: 0.95rem; color: #78350f; line-height: 1.75; }
 
         /* ─── THESIS BOX ─── */
         .thesis-box {
@@ -591,66 +514,81 @@
         }
         .thesis-box p { font-size: 0.85rem; color: var(--ink-muted); line-height: 1.65; }
 
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--ink); color: #fff;
+            padding: 60px 5% 30px; margin-top: 40px;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px; padding-bottom: 36px;
+            border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 24px;
+        }
+        .footer-logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem; font-weight: 700; color: #fff;
+            margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        }
+        .footer-logo .dot { color: var(--accent-mid); }
+        .footer-desc { font-size: 0.87rem; color: rgba(255,255,255,0.45); line-height: 1.7; max-width: 320px; }
+        .footer-col h4 {
+            font-size: 0.76rem; font-weight: 600; color: rgba(255,255,255,0.35);
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px;
+        }
+        .footer-col a {
+            display: flex; align-items: center; gap: 8px;
+            color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.87rem;
+            margin-bottom: 10px; transition: color 0.2s;
+        }
+        .footer-col a:hover { color: var(--accent-mid); }
+        .footer-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .divine-sig { font-family: 'Noto Serif Devanagari', serif; font-size: 1.1rem; letter-spacing: 3px; color: rgba(255,255,255,0.4); }
+        .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+
+        /* ─── BACK TO TOP ─── */
+        #back-top {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--accent); color: #fff; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; box-shadow: 0 4px 20px rgba(212,80,10,0.4);
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s; z-index: 998;
+        }
+        #back-top.visible { opacity: 1; pointer-events: auto; }
+        #back-top:hover { transform: translateY(-3px); }
+
         /* ─── RESPONSIVE ─── */
         @media (max-width: 768px) {
             .nav-links { display: none; }
             .nav-hamburger { display: flex; align-items: center; }
-
-            .hero { padding: 56px 5% 48px; }
-            .hero h1 { letter-spacing: -1px; }
-
-            .hero-stats { gap: 24px; }
-            .stat-num { font-size: 1.5rem; }
-
-            .section { padding: 48px 16px; }
-
+            .hero-stats-bar { flex-wrap: wrap; }
+            .stat-item { flex: 1 1 calc(50% - 1px); padding: 12px 16px; }
             .tools-grid { grid-template-columns: 1fr; }
             .link-grid { grid-template-columns: 1fr; }
             .video-grid { grid-template-columns: 1fr; }
-
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 28px;
-            }
-
+            .footer-grid { grid-template-columns: 1fr; gap: 28px; }
             .cricket-hero { padding: 28px 22px; }
             .noticeboard { padding: 20px 18px; }
+            .hero-title { letter-spacing: -1px; }
         }
-
         @media (max-width: 480px) {
             .hero-actions { flex-direction: column; align-items: center; }
             .btn-primary, .btn-outline { width: 100%; justify-content: center; }
             .pomo-display { font-size: 2.2rem; }
         }
 
-        /* ─── FLOATING BACK TO TOP ─── */
-        #back-top {
-            position: fixed; bottom: 24px; right: 24px;
-            width: 42px; height: 42px; border-radius: 50%;
-            background: var(--accent); color: #fff;
-            border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; box-shadow: 0 4px 16px rgba(212,80,10,0.35);
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.3s, transform 0.3s;
-            z-index: 998;
+        /* ─── SECTION BG VARIATIONS ─── */
+        .section-dark-bg {
+            background: var(--space-bg);
+            position: relative;
         }
-        #back-top.visible { opacity: 1; pointer-events: auto; }
-        #back-top:hover { transform: translateY(-3px); }
-
-        /* ─── CHIP ─── */
         .chip {
             display: inline-flex; align-items: center; gap: 5px;
             background: var(--accent-light); color: var(--accent);
             padding: 4px 12px; border-radius: 20px;
             font-size: 0.78rem; font-weight: 600;
             border: 1px solid rgba(212,80,10,0.15);
-        }
-
-        /* Separator */
-        .sep {
-            border: none; border-top: 1px solid var(--border);
-            margin: 24px 0;
         }
     </style>
 </head>
@@ -662,9 +600,9 @@
 </button>
 
 <!-- ─── NAV ─── -->
-<nav>
+<nav id="main-nav">
     <a class="logo" href="#">
-        <i class="fa-solid fa-satellite-dish" style="color:var(--accent)"></i>
+        <i class="fa-solid fa-satellite-dish" style="color:var(--accent-mid)"></i>
         Atri's Physics <span class="dot">Orbit</span>
     </a>
     <ul class="nav-links">
@@ -685,37 +623,53 @@
     <a href="#events" onclick="closeMobileMenu()"><i class="fa-solid fa-calendar"></i> Events</a>
 </div>
 
-<!-- ─── HERO ─── -->
-<header class="hero">
-    <div class="hero-dots"></div>
-    <div class="hero-eyebrow">
-        <i class="fa-solid fa-circle-dot fa-beat" style="font-size:0.65rem"></i>
-        M.Sc. Physics · DU · Batch 2027
+<!-- ─── HERO / SOLAR SYSTEM CANVAS ─── -->
+<header id="hero-canvas-wrap">
+    <canvas id="solar-canvas"></canvas>
+
+    <div class="hero-overlay">
+        <div class="hero-eyebrow">
+            <i class="fa-solid fa-circle-dot fa-beat" style="font-size:0.65rem"></i>
+            M.Sc. Physics · DU · Batch 2027
+        </div>
+        <h1 class="hero-title">
+            Physics in Mind,<br>Adventure in Soul —<br><em>Atri Mishra</em>
+        </h1>
+        <p class="hero-sub">
+            Navigating advanced M.Sc. Physics, crafting robotics networks, decoding cricket trajectories, and charting immersive campus vlogs from DU.
+        </p>
+        <div class="hero-actions">
+            <button class="btn-primary" onclick="document.getElementById('tools-section').scrollIntoView({behavior:'smooth'})">
+                <i class="fa-solid fa-sliders"></i> Open Student Tools
+            </button>
+            <a class="btn-outline" href="https://youtube.com/@sageatrimishra" target="_blank">
+                <i class="fa-brands fa-youtube"></i> Watch on YouTube
+            </a>
+        </div>
     </div>
-    <h1>Physics in Mind,<br>Adventure in Soul —<br><em>Atri Mishra</em></h1>
-    <p class="hero-sub">
-        Navigating advanced M.Sc. Physics, crafting robotics networks, decoding cricket trajectories, and charting immersive campus travel vlogs from DU.
-    </p>
-    <div class="hero-actions">
-        <button class="btn-primary" onclick="openTools()">
-            <i class="fa-solid fa-sliders"></i> Open Student Tools
-        </button>
-        <a class="btn-outline" href="https://youtube.com/@sageatrimishra" target="_blank">
-            <i class="fa-brands fa-youtube"></i> Watch on YouTube
-        </a>
+
+    <div id="planet-tooltip">
+        <div class="p-name" id="tt-name">Mercury</div>
+        <div class="p-desc" id="tt-desc">Notes Vault</div>
+        <div class="p-cta"><i class="fa-solid fa-arrow-right" style="font-size:0.65rem"></i> Click to explore</div>
     </div>
-    <div class="hero-stats">
+
+    <div class="hero-hint">
+        <i class="fa-solid fa-computer-mouse" style="margin-right:6px"></i> Hover planets to explore
+    </div>
+
+    <div class="hero-stats-bar">
         <div class="stat-item">
             <span class="stat-num" data-count="10">0</span>
             <div class="stat-label">Physics Modules</div>
         </div>
         <div class="stat-item">
             <span class="stat-num" data-count="4">0</span>
-            <div class="stat-label">Year Notes Covered</div>
+            <div class="stat-label">Years Covered</div>
         </div>
         <div class="stat-item">
             <span class="stat-num" data-count="5">0</span>
-            <div class="stat-label">Cricket Physics Facts</div>
+            <div class="stat-label">Cricket Facts</div>
         </div>
         <div class="stat-item">
             <span class="stat-num" data-count="4">0</span>
@@ -725,16 +679,13 @@
 </header>
 
 <main>
-
     <!-- ─── STUDENT TOOLS ─── -->
     <section class="section reveal" id="tools-section">
         <div class="section-header">
             <div class="section-label"><i class="fa-solid fa-sliders"></i> Utilities</div>
             <h2 class="section-title">Interactive Student Toolkit</h2>
         </div>
-
         <div class="tools-grid">
-
             <!-- Attendance Monitor -->
             <div class="tool-card">
                 <div class="tool-icon"><i class="fa-solid fa-clipboard-user"></i></div>
@@ -743,24 +694,18 @@
                 <input type="number" class="form-input" id="held" placeholder="e.g. 60">
                 <label class="form-label">Slots Attended</label>
                 <input type="number" class="form-input" id="attended" placeholder="e.g. 48">
-                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calcAttendance()">
-                    Calculate
-                </button>
+                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calcAttendance()">Calculate</button>
                 <div id="calc-res" class="tool-result"></div>
             </div>
-
             <!-- CGPA Converter -->
             <div class="tool-card">
                 <div class="tool-icon"><i class="fa-solid fa-calculator"></i></div>
                 <h4>UGCF / NEP CGPA Converter</h4>
                 <label class="form-label">CGPA Score (out of 10)</label>
                 <input type="number" class="form-input" id="cgpa" step="0.01" placeholder="e.g. 8.75">
-                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calcCgpa()">
-                    Convert to %
-                </button>
+                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calcCgpa()">Convert to %</button>
                 <div id="cgpa-res" class="tool-result"></div>
             </div>
-
             <!-- Pomodoro -->
             <div class="tool-card">
                 <div class="tool-icon"><i class="fa-solid fa-stopwatch"></i></div>
@@ -777,7 +722,6 @@
                     <option value="15">Deep Break — 15 min</option>
                 </select>
             </div>
-
             <!-- Deadline Tracker -->
             <div class="tool-card">
                 <div class="tool-icon"><i class="fa-solid fa-hourglass-half"></i></div>
@@ -786,23 +730,19 @@
                 <input type="text" class="form-input" id="target-name" placeholder="e.g. Quantum Mechanics Sem">
                 <label class="form-label">Target Date</label>
                 <input type="date" class="form-input" id="target-date">
-                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calculateDeadline()">
-                    Track Time
-                </button>
+                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calculateDeadline()">Track Time</button>
                 <div id="deadline-res" class="tool-result"></div>
             </div>
-
         </div>
-
         <div style="margin-top:16px;">
-            <a href="https://www.du.ac.in" target="_blank" class="link-card" style="display:flex;">
+            <a href="https://www.du.ac.in" target="_blank" class="link-card">
                 <span><i class="fa-solid fa-calendar-days" style="color:var(--accent); margin-right:8px"></i>DU Official Academic Calendar Portal</span>
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </a>
         </div>
     </section>
 
-    <hr style="border:none; border-top:1px solid var(--border); max-width:1120px; margin:0 auto;">
+    <hr class="content-divider">
 
     <!-- ─── ACADEMICS ─── -->
     <section class="section reveal" id="academics">
@@ -810,7 +750,6 @@
             <div class="section-label"><i class="fa-solid fa-book-open"></i> Academic</div>
             <h2 class="section-title">Free Study Notes Matrix — DU (NEP)</h2>
         </div>
-
         <div class="accordion" id="bsc-accordion">
             <button class="accordion-trigger" onclick="toggleAccordion('bsc-body', this)">
                 <i class="fa-solid fa-atom icon"></i>
@@ -832,7 +771,6 @@
                 </div>
             </div>
         </div>
-
         <div class="accordion" id="msc-accordion">
             <button class="accordion-trigger" onclick="toggleAccordion('msc-body', this)">
                 <i class="fa-solid fa-graduation-cap icon"></i>
@@ -850,7 +788,7 @@
         </div>
     </section>
 
-    <hr style="border:none; border-top:1px solid var(--border); max-width:1120px; margin:0 auto;">
+    <hr class="content-divider">
 
     <!-- ─── TECH ─── -->
     <section class="section reveal" id="tech">
@@ -858,7 +796,6 @@
             <div class="section-label"><i class="fa-solid fa-code"></i> Tech Lab</div>
             <h2 class="section-title">Engineering, Coding & Robotics Matrix</h2>
         </div>
-
         <div class="sub-heading">Python Scripts — B.Sc. Graduation (DU Physics Hons)</div>
         <div class="link-grid" style="margin-bottom:28px;">
             <a href="#" class="link-card">
@@ -866,15 +803,12 @@
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
             </a>
         </div>
-
         <div class="sub-heading">Robotics Society — Experimental Deployments & Logic Guides</div>
         <div class="video-grid">
             <div class="video-card">
                 <div class="video-thumb" onclick="window.open('https://youtu.be/4dOz21ePUJU','_blank')">
                     <img src="https://img.youtube.com/vi/4dOz21ePUJU/maxresdefault.jpg" alt="Hardware Automation Video">
-                    <div class="video-thumb-overlay">
-                        <div class="play-btn"><i class="fa-solid fa-play"></i></div>
-                    </div>
+                    <div class="video-thumb-overlay"><div class="play-btn"><i class="fa-solid fa-play"></i></div></div>
                 </div>
                 <div class="video-info">
                     <div class="video-tag">Robotics</div>
@@ -885,9 +819,7 @@
             <div class="video-card">
                 <div class="video-thumb" onclick="window.open('https://youtube.com/shorts/cEoO9o54UVU','_blank')">
                     <img src="https://img.youtube.com/vi/cEoO9o54UVU/maxresdefault.jpg" alt="Micro-Controller Short">
-                    <div class="video-thumb-overlay">
-                        <div class="play-btn"><i class="fa-solid fa-play"></i></div>
-                    </div>
+                    <div class="video-thumb-overlay"><div class="play-btn"><i class="fa-solid fa-play"></i></div></div>
                 </div>
                 <div class="video-info">
                     <div class="video-tag">Embedded</div>
@@ -898,7 +830,7 @@
         </div>
     </section>
 
-    <hr style="border:none; border-top:1px solid var(--border); max-width:1120px; margin:0 auto;">
+    <hr class="content-divider">
 
     <!-- ─── CRICKET ─── -->
     <section class="section reveal" id="cricket">
@@ -906,20 +838,16 @@
             <div class="section-label"><i class="fa-solid fa-baseball"></i> Cricket Analytics</div>
             <h2 class="section-title">Physics of Cricket</h2>
         </div>
-
         <div class="cricket-hero">
             <h3>💡 Kya Tum Jaante Ho?</h3>
             <div id="knowledge-box" class="cricket-fact"></div>
             <div class="cricket-dots" id="cricket-dots"></div>
         </div>
-
         <div class="video-grid">
             <div class="video-card">
                 <div class="video-thumb" onclick="window.open('https://youtube.com/shorts/bOuT8H2kJzs','_blank')">
                     <img src="https://img.youtube.com/vi/bOuT8H2kJzs/maxresdefault.jpg" alt="Swing Aerodynamics">
-                    <div class="video-thumb-overlay">
-                        <div class="play-btn"><i class="fa-solid fa-play"></i></div>
-                    </div>
+                    <div class="video-thumb-overlay"><div class="play-btn"><i class="fa-solid fa-play"></i></div></div>
                 </div>
                 <div class="video-info">
                     <div class="video-tag">Aerodynamics</div>
@@ -930,9 +858,7 @@
             <div class="video-card">
                 <div class="video-thumb" onclick="window.open('https://youtube.com/shorts/ordHjYO2BsI','_blank')">
                     <img src="https://img.youtube.com/vi/ordHjYO2BsI/maxresdefault.jpg" alt="Sweet Spot Equation">
-                    <div class="video-thumb-overlay">
-                        <div class="play-btn"><i class="fa-solid fa-play"></i></div>
-                    </div>
+                    <div class="video-thumb-overlay"><div class="play-btn"><i class="fa-solid fa-play"></i></div></div>
                 </div>
                 <div class="video-info">
                     <div class="video-tag">Vibration Physics</div>
@@ -943,7 +869,7 @@
         </div>
     </section>
 
-    <hr style="border:none; border-top:1px solid var(--border); max-width:1120px; margin:0 auto;">
+    <hr class="content-divider">
 
     <!-- ─── EVENTS ─── -->
     <section class="section reveal" id="events">
@@ -951,21 +877,19 @@
             <div class="section-label"><i class="fa-solid fa-clipboard-list"></i> Campus Life</div>
             <h2 class="section-title">Live Campus Event Tracker & Vlogs</h2>
         </div>
-
         <div class="noticeboard">
             <div class="notice-header">
-                <span class="notice-pin">📌</span>
+                <span style="font-size:1.1rem">📌</span>
                 <span class="notice-title">Active Fest Schedule Log — Internal Update</span>
             </div>
             <p>
                 🎉 <strong>Important Update:</strong> अरे भाई-भाई! कॉलेज के छोटे-मोटे फेस्ट और सेमिनार तो चलते रहेंगे, उनमे क्या ही रखा है... असली सुख-शांति चाहिए तो बस <strong>DUSU Elections (दिल्ली यूनिवर्सिटी छात्र संघ चुनाव)</strong> का चुपचाप इंतजार करो! पूरे कैंपस में जो भौकाल, फ्री के छोले-भटूरे, लक्ज़री गाड़ियों के काफिले और हाई-लेवल ड्रामा वाला 'असली एन्जॉयमेंट' मिलेगा ना, उसके आगे सारे कॉलेज फेस्ट फीके हैं! 🤝🔥
             </p>
         </div>
-
         <div class="sub-heading">Festival & Campus Vlogs</div>
         <div class="video-grid">
             <div class="video-card">
-                <div class="video-thumb" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')" style="background:#1a1410; display:flex; align-items:center; justify-content:center;">
+                <div class="video-thumb" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')" style="background:#1a1410;">
                     <div class="video-thumb-overlay" style="background:rgba(0,0,0,0.5)">
                         <div class="play-btn"><i class="fa-brands fa-youtube" style="color:#ef4444"></i></div>
                     </div>
@@ -977,7 +901,7 @@
                 </div>
             </div>
             <div class="video-card">
-                <div class="video-thumb" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')" style="background:#1a1410; display:flex; align-items:center; justify-content:center;">
+                <div class="video-thumb" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')" style="background:#1a1410;">
                     <div class="video-thumb-overlay" style="background:rgba(0,0,0,0.5)">
                         <div class="play-btn"><i class="fa-brands fa-youtube" style="color:#ef4444"></i></div>
                     </div>
@@ -990,7 +914,6 @@
             </div>
         </div>
     </section>
-
 </main>
 
 <!-- ─── FOOTER ─── -->
@@ -1025,210 +948,455 @@
     </div>
 </footer>
 
+<!-- THREE.JS CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <script>
-    /* ─── SCROLL PROGRESS & BACK TO TOP ─── */
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.body.scrollHeight - window.innerHeight;
-        const pct = (scrollTop / docHeight) * 100;
-        document.getElementById('progress-bar').style.width = pct + '%';
-        const btn = document.getElementById('back-top');
-        btn.classList.toggle('visible', scrollTop > 400);
+/* ════════════════════════════════════════════
+   3D SOLAR SYSTEM HERO
+   ════════════════════════════════════════════ */
+(function() {
+    const canvas = document.getElementById('solar-canvas');
+    const wrap = document.getElementById('hero-canvas-wrap');
+    const tooltip = document.getElementById('planet-tooltip');
+
+    let W = wrap.clientWidth, H = wrap.clientHeight;
+
+    // Scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, W / H, 0.1, 2000);
+    camera.position.set(0, 22, 68);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(W, H);
+    renderer.setClearColor(0x04060f, 1);
+    renderer.shadowMap.enabled = false;
+
+    // ─── STARFIELD ───
+    const starCount = 1400;
+    const starGeo = new THREE.BufferGeometry();
+    const starPos = new Float32Array(starCount * 3);
+    const starSizes = new Float32Array(starCount);
+    for (let i = 0; i < starCount; i++) {
+        const r = 400 + Math.random() * 800;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        starPos[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+        starPos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+        starPos[i*3+2] = r * Math.cos(phi);
+        starSizes[i] = 0.6 + Math.random() * 1.8;
+    }
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    starGeo.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+
+    const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 1.0, sizeAttenuation: true });
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+
+    // ─── SUN ───
+    const sunGeo = new THREE.SphereGeometry(5.5, 32, 32);
+    const sunMat = new THREE.MeshBasicMaterial({ color: 0xffa230 });
+    const sun = new THREE.Mesh(sunGeo, sunMat);
+    scene.add(sun);
+
+    // Sun glow
+    const glowGeo = new THREE.SphereGeometry(8.5, 32, 32);
+    const glowMat = new THREE.MeshBasicMaterial({
+        color: 0xff6600,
+        transparent: true,
+        opacity: 0.12,
+        side: THREE.BackSide
     });
+    const sunGlow = new THREE.Mesh(glowGeo, glowMat);
+    sun.add(sunGlow);
 
-    /* ─── REVEAL ON SCROLL ─── */
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    // Sun light
+    const sunLight = new THREE.PointLight(0xffaa44, 2.2, 300);
+    scene.add(sunLight);
+    const ambientLight = new THREE.AmbientLight(0x0a0d1a, 1.0);
+    scene.add(ambientLight);
 
-    /* ─── COUNT UP ANIMATION ─── */
-    const countObserver = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-            if (e.isIntersecting) {
-                const el = e.target;
-                const target = parseInt(el.dataset.count);
-                let current = 0;
-                const step = target / 30;
-                const timer = setInterval(() => {
-                    current = Math.min(current + step, target);
-                    el.textContent = Math.round(current) + '+';
-                    if (current >= target) clearInterval(timer);
-                }, 40);
-                countObserver.unobserve(el);
-            }
-        });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('[data-count]').forEach((el) => countObserver.observe(el));
-
-    /* ─── MOBILE MENU ─── */
-    function toggleMenu() {
-        const m = document.getElementById('mobile-menu');
-        const icon = document.getElementById('ham-icon');
-        m.classList.toggle('open');
-        icon.className = m.classList.contains('open') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
-    }
-    function closeMobileMenu() {
-        const m = document.getElementById('mobile-menu');
-        m.classList.remove('open');
-        document.getElementById('ham-icon').className = 'fa-solid fa-bars';
-    }
-
-    /* ─── OPEN TOOLS ─── */
-    function openTools() {
-        const el = document.getElementById('tools-section');
-        el.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    /* ─── ACCORDION ─── */
-    function toggleAccordion(id, btn) {
-        const body = document.getElementById(id);
-        const isOpen = body.classList.contains('open');
-        body.classList.toggle('open');
-        btn.classList.toggle('open');
-    }
-
-    /* ─── ATTENDANCE ─── */
-    function calcAttendance() {
-        const held = parseInt(document.getElementById('held').value);
-        const attended = parseInt(document.getElementById('attended').value);
-        const res = document.getElementById('calc-res');
-        if (isNaN(held) || isNaN(attended) || held <= 0 || attended < 0 || attended > held) {
-            res.style.display = 'block';
-            res.style.background = '#fef2f2'; res.style.color = '#dc2626'; res.style.border = '1px solid #fecaca';
-            res.innerHTML = '⚠️ Please enter valid values.'; return;
-        }
-        const ratio = ((attended / held) * 100).toFixed(1);
-        res.style.display = 'block';
-        if (ratio >= 75) {
-            const bunk = Math.floor((attended - 0.75 * held) / 0.75);
-            res.style.background = '#f0fdf4'; res.style.color = '#16a34a'; res.style.border = '1px solid #bbf7d0';
-            res.innerHTML = `✅ ${ratio}% — Safe to skip next <strong>${bunk}</strong> slots.`;
-        } else {
-            const req = Math.ceil((0.75 * held - attended) / 0.25);
-            res.style.background = '#fff7ed'; res.style.color = '#c2410c'; res.style.border = '1px solid #fed7aa';
-            res.innerHTML = `⚠️ ${ratio}% — Attend next <strong>${req}</strong> consecutive slots.`;
-        }
-    }
-
-    /* ─── CGPA ─── */
-    function calcCgpa() {
-        const cgpa = parseFloat(document.getElementById('cgpa').value);
-        const res = document.getElementById('cgpa-res');
-        if (isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
-            res.style.display = 'block';
-            res.style.background = '#fef2f2'; res.style.color = '#dc2626'; res.style.border = '1px solid #fecaca';
-            res.innerHTML = '⚠️ Enter a valid CGPA (0–10).'; return;
-        }
-        const pct = (cgpa * 9.5).toFixed(2);
-        res.style.display = 'block';
-        res.style.background = '#eff6ff'; res.style.color = '#1d4ed8'; res.style.border = '1px solid #bfdbfe';
-        res.innerHTML = `🎓 Equivalent Percentage: <strong>${pct}%</strong>`;
-    }
-
-    /* ─── POMODORO ─── */
-    let pomoInterval = null, pomoMinutes = 25, pomoSeconds = 0, pomoRunning = false;
-    function updatePomo() {
-        const m = String(pomoMinutes).padStart(2, '0');
-        const s = String(pomoSeconds).padStart(2, '0');
-        document.getElementById('pomo-display').textContent = `${m}:${s}`;
-    }
-    function changePomodoroMode() {
-        clearInterval(pomoInterval); pomoRunning = false;
-        pomoMinutes = parseInt(document.getElementById('pomo-mode').value);
-        pomoSeconds = 0; updatePomo();
-        document.getElementById('pomo-start').textContent = '▶ Start';
-        document.getElementById('pomo-start').classList.remove('active');
-    }
-    function togglePomodoro() {
-        const btn = document.getElementById('pomo-start');
-        if (pomoRunning) {
-            clearInterval(pomoInterval); pomoRunning = false;
-            btn.textContent = '▶ Start'; btn.classList.remove('active');
-        } else {
-            pomoRunning = true; btn.textContent = '⏸ Pause'; btn.classList.add('active');
-            pomoInterval = setInterval(() => {
-                if (pomoSeconds === 0) {
-                    if (pomoMinutes === 0) {
-                        clearInterval(pomoInterval); pomoRunning = false;
-                        btn.textContent = '▶ Start'; btn.classList.remove('active');
-                        alert("⏰ Time's up! Session complete."); resetPomodoro(); return;
-                    }
-                    pomoMinutes--; pomoSeconds = 59;
-                } else { pomoSeconds--; }
-                updatePomo();
-            }, 1000);
-        }
-    }
-    function resetPomodoro() {
-        clearInterval(pomoInterval); pomoRunning = false;
-        pomoMinutes = parseInt(document.getElementById('pomo-mode').value);
-        pomoSeconds = 0; updatePomo();
-        document.getElementById('pomo-start').textContent = '▶ Start';
-        document.getElementById('pomo-start').classList.remove('active');
-    }
-
-    /* ─── DEADLINE ─── */
-    function calculateDeadline() {
-        const name = document.getElementById('target-name').value.trim();
-        const dateVal = document.getElementById('target-date').value;
-        const res = document.getElementById('deadline-res');
-        if (!dateVal) {
-            res.style.display = 'block';
-            res.style.background = '#fef2f2'; res.style.color = '#dc2626'; res.style.border = '1px solid #fecaca';
-            res.innerHTML = '⚠️ Please select a target date.'; return;
-        }
-        const target = new Date(dateVal); const today = new Date();
-        today.setHours(0,0,0,0); target.setHours(0,0,0,0);
-        const diff = Math.ceil((target - today) / 86400000);
-        const label = name ? `"${name}"` : 'your exam';
-        res.style.display = 'block';
-        if (diff < 0) {
-            res.style.background = '#f8fafc'; res.style.color = '#64748b'; res.style.border = '1px solid #e2e8f0';
-            res.innerHTML = `⌛ ${label} was ${Math.abs(diff)} days ago.`;
-        } else if (diff === 0) {
-            res.style.background = '#fff7ed'; res.style.color = '#c2410c'; res.style.border = '1px solid #fed7aa';
-            res.innerHTML = `🚨 ${label} is <strong>TODAY!</strong>`;
-        } else {
-            res.style.background = '#f0fdf4'; res.style.color = '#16a34a'; res.style.border = '1px solid #bbf7d0';
-            res.innerHTML = `⏳ <strong>${diff} days</strong> remaining until ${label}.`;
-        }
-    }
-
-    /* ─── CRICKET FACTS CAROUSEL ─── */
-    const facts = [
-        "A premium fast ball swings because of the <strong>Magnus Effect</strong> and asymmetric boundary-layer air friction! When launch velocity matches an angle of exactly 45°, energy transfer reaches maximum range efficiency.",
-        "Spin bowling uncovers the true magic of <strong>Fluid Dynamics</strong>. Heavy top-spin forces high-velocity air under the ball, generating a downward pressure differential that causes it to dip abruptly before hitting the deck.",
-        "The 'Sweet Spot': when the leather ball collides at this precise node, <strong>fundamental vibrational harmonics</strong> drop to zero — transmitting near-maximum kinetic energy without stinging the hands.",
-        "The <strong>Coefficient of Restitution (COR)</strong> dictates how high a cricket ball bounces. As pitch wear alters surface elasticity, energy absorption profiles shift drastically across days 1 to 5.",
-        "Rough vs. smooth side creates an air velocity mismatch. This uneven boundary layer triggers a pressure drop — producing legendary <strong>Conventional and Reverse Swing</strong> trajectories."
+    // ─── PLANET DATA ───
+    const planetData = [
+        { name: 'Mercury', desc: 'Notes Vault',      section: '#academics', radius: 0.7,  orbitR: 11,  speed: 0.025, color: 0xa8a8a8, tilt: 0.1,  emissive: 0x222222 },
+        { name: 'Venus',   desc: 'Tech Lab',          section: '#tech',      radius: 1.1,  orbitR: 16,  speed: 0.018, color: 0xe8b86d, tilt: 0.05, emissive: 0x331100 },
+        { name: 'Earth',   desc: 'Cricket Physics',   section: '#cricket',   radius: 1.2,  orbitR: 22,  speed: 0.013, color: 0x3a7bd5, tilt: 0.41, emissive: 0x001133 },
+        { name: 'Mars',    desc: 'Events & Vlogs',    section: '#events',    radius: 0.9,  orbitR: 28,  speed: 0.01,  color: 0xc1440e, tilt: 0.44, emissive: 0x220500 },
+        { name: 'Jupiter', desc: 'Robotics Lab',      section: '#tech',      radius: 2.5,  orbitR: 37,  speed: 0.006, color: 0xc8a882, tilt: 0.05, emissive: 0x221100 },
+        { name: 'Saturn',  desc: 'Research Hub',      section: '#academics', radius: 2.0,  orbitR: 47,  speed: 0.004, color: 0xd4b896, tilt: 0.47, emissive: 0x221500 },
+        { name: 'Neptune', desc: 'Campus Vlogs',      section: '#events',    radius: 1.3,  orbitR: 56,  speed: 0.003, color: 0x3f6fbf, tilt: 0.49, emissive: 0x001122 },
     ];
 
-    let factIdx = 0;
-    const dotsContainer = document.getElementById('cricket-dots');
-    const factBox = document.getElementById('knowledge-box');
+    const planetMeshes = [];
+    const orbitAngles = planetData.map(() => Math.random() * Math.PI * 2);
+    const pivots = [];
 
-    // Build dots
-    facts.forEach((_, i) => {
-        const d = document.createElement('div');
-        d.className = 'cricket-dot' + (i === 0 ? ' active' : '');
-        dotsContainer.appendChild(d);
+    planetData.forEach((pd, i) => {
+        // Orbit ring
+        const orbitGeo = new THREE.RingGeometry(pd.orbitR - 0.04, pd.orbitR + 0.04, 80);
+        const orbitMat = new THREE.MeshBasicMaterial({
+            color: 0x334455, transparent: true, opacity: 0.35,
+            side: THREE.DoubleSide
+        });
+        const orbitRing = new THREE.Mesh(orbitGeo, orbitMat);
+        orbitRing.rotation.x = -Math.PI / 2;
+        scene.add(orbitRing);
+
+        // Planet
+        const geo = new THREE.SphereGeometry(pd.radius, 24, 24);
+        const mat = new THREE.MeshPhongMaterial({
+            color: pd.color,
+            emissive: pd.emissive,
+            shininess: pd.name === 'Earth' ? 40 : 15,
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.rotation.z = pd.tilt;
+        mesh.userData = { ...pd, idx: i, orbitRing };
+
+        // Saturn rings
+        if (pd.name === 'Saturn') {
+            const ringGeo = new THREE.RingGeometry(pd.radius * 1.45, pd.radius * 2.4, 40);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: 0xc4a86e, transparent: true, opacity: 0.55, side: THREE.DoubleSide
+            });
+            const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+            ringMesh.rotation.x = Math.PI / 2.8;
+            mesh.add(ringMesh);
+        }
+
+        // Pivot
+        const pivot = new THREE.Object3D();
+        pivot.add(mesh);
+        scene.add(pivot);
+        pivots.push(pivot);
+
+        // Initial position
+        mesh.position.set(pd.orbitR, 0, 0);
+        pivots[i].rotation.y = orbitAngles[i];
+
+        planetMeshes.push(mesh);
     });
 
-    function setFact(idx) {
-        factBox.style.opacity = 0;
-        setTimeout(() => {
-            factBox.innerHTML = facts[idx];
-            factBox.style.opacity = 1;
-            document.querySelectorAll('.cricket-dot').forEach((d, i) => {
-                d.classList.toggle('active', i === idx);
-            });
-        }, 350);
+    // ─── MOUSE / RAYCASTER ───
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2(-9999, -9999);
+    let hoveredPlanet = null;
+    let mouseX = 0, mouseY = 0;
+
+    wrap.addEventListener('mousemove', (e) => {
+        const rect = wrap.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+        mouse.x = (mouseX / W) * 2 - 1;
+        mouse.y = -((mouseY / H) * 2 - 1);
+
+        // Position tooltip
+        let tx = mouseX + 18;
+        let ty = mouseY - 60;
+        if (tx + 180 > W) tx = mouseX - 180;
+        if (ty < 10) ty = mouseY + 20;
+        tooltip.style.left = tx + 'px';
+        tooltip.style.top = ty + 'px';
+    });
+
+    wrap.addEventListener('click', () => {
+        if (hoveredPlanet) {
+            const section = hoveredPlanet.userData.section;
+            const el = document.querySelector(section);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    wrap.addEventListener('mouseleave', () => {
+        mouse.set(-9999, -9999);
+        hoveredPlanet = null;
+        tooltip.style.opacity = '0';
+    });
+
+    // ─── CAMERA DRIFT ───
+    let camBaseY = 22, camBaseZ = 68;
+    let targetCamX = 0, targetCamY = camBaseY;
+    let currentCamX = 0, currentCamY = camBaseY;
+
+    // ─── ANIMATE ───
+    let time = 0;
+    function animate() {
+        requestAnimationFrame(animate);
+        time += 0.008;
+
+        // Rotate sun
+        sun.rotation.y += 0.003;
+
+        // Orbit planets
+        planetData.forEach((pd, i) => {
+            orbitAngles[i] += pd.speed * 0.016 * 60 * 0.012;
+            pivots[i].rotation.y = orbitAngles[i];
+            planetMeshes[i].rotation.y += 0.008;
+        });
+
+        // Gentle camera drift based on mouse
+        targetCamX = (mouse.x !== -9999 ? mouse.x * 4 : Math.sin(time * 0.18) * 2);
+        targetCamY = camBaseY + (mouse.y !== -9999 ? -mouse.y * 2 : Math.sin(time * 0.12) * 1.2);
+        currentCamX += (targetCamX - currentCamX) * 0.04;
+        currentCamY += (targetCamY - currentCamY) * 0.04;
+        camera.position.x = currentCamX;
+        camera.position.y = currentCamY;
+        camera.position.z = camBaseZ + Math.sin(time * 0.1) * 1.5;
+        camera.lookAt(0, 0, 0);
+
+        // Raycasting
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(planetMeshes, true);
+
+        // Reset all
+        planetMeshes.forEach((m, i) => {
+            const target = m.userData.orbitRing;
+            target.material.opacity = 0.35;
+            target.material.color.set(0x334455);
+        });
+
+        if (intersects.length > 0) {
+            let obj = intersects[0].object;
+            while (obj.parent && !obj.userData.name) obj = obj.parent;
+            if (obj.userData.name) {
+                hoveredPlanet = obj;
+                // Brighten orbit
+                obj.userData.orbitRing.material.opacity = 0.7;
+                obj.userData.orbitRing.material.color.set(0xf97316);
+                // Show tooltip
+                document.getElementById('tt-name').textContent = obj.userData.name;
+                document.getElementById('tt-desc').textContent = obj.userData.desc;
+                tooltip.style.opacity = '1';
+                wrap.style.cursor = 'pointer';
+            } else {
+                hoveredPlanet = null;
+                tooltip.style.opacity = '0';
+                wrap.style.cursor = 'default';
+            }
+        } else {
+            hoveredPlanet = null;
+            tooltip.style.opacity = '0';
+            wrap.style.cursor = 'default';
+        }
+
+        // Sun corona pulse
+        sunGlow.material.opacity = 0.1 + Math.sin(time * 2.2) * 0.03;
+
+        // Star slow drift
+        stars.rotation.y += 0.0001;
+
+        renderer.render(scene, camera);
     }
+    animate();
 
-    setFact(0);
-    setInterval(() => { factIdx = (factIdx + 1) % facts.length; setFact(factIdx); }, 5500);
+    // ─── RESIZE ───
+    window.addEventListener('resize', () => {
+        W = wrap.clientWidth;
+        H = wrap.clientHeight;
+        camera.aspect = W / H;
+        camera.updateProjectionMatrix();
+        renderer.setSize(W, H);
+    });
+
+    // ─── MOBILE: disable heavy 3D on very small screens ───
+    if (window.innerWidth < 480) {
+        starMat.size = 0.8;
+        planetData.forEach((_, i) => {
+            planetMeshes[i].geometry.dispose();
+            const simpleGeo = new THREE.SphereGeometry(planetData[i].radius, 12, 12);
+            planetMeshes[i].geometry = simpleGeo;
+        });
+    }
+})();
+
+/* ════════════════════════════════════════════
+   SCROLL & UI
+   ════════════════════════════════════════════ */
+const heroWrap = document.getElementById('hero-canvas-wrap');
+const nav = document.getElementById('main-nav');
+const heroH = () => heroWrap.offsetHeight;
+
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const pct = (scrollTop / docHeight) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('back-top').classList.toggle('visible', scrollTop > 400);
+    nav.classList.toggle('light-nav', scrollTop > heroH() - 80);
+});
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+// Count-up animation
+const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+        if (e.isIntersecting) {
+            const el = e.target;
+            const target = parseInt(el.dataset.count);
+            let current = 0;
+            const step = target / 28;
+            const timer = setInterval(() => {
+                current = Math.min(current + step, target);
+                el.textContent = Math.round(current) + '+';
+                if (current >= target) clearInterval(timer);
+            }, 45);
+            countObserver.unobserve(el);
+        }
+    });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach((el) => countObserver.observe(el));
+
+// Mobile menu
+function toggleMenu() {
+    const m = document.getElementById('mobile-menu');
+    const icon = document.getElementById('ham-icon');
+    m.classList.toggle('open');
+    icon.className = m.classList.contains('open') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+}
+function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+    document.getElementById('ham-icon').className = 'fa-solid fa-bars';
+}
+
+// Accordion
+function toggleAccordion(id, btn) {
+    document.getElementById(id).classList.toggle('open');
+    btn.classList.toggle('open');
+}
+
+/* ─── ATTENDANCE ─── */
+function calcAttendance() {
+    const held = parseInt(document.getElementById('held').value);
+    const attended = parseInt(document.getElementById('attended').value);
+    const res = document.getElementById('calc-res');
+    if (isNaN(held) || isNaN(attended) || held <= 0 || attended < 0 || attended > held) {
+        res.style.cssText = 'display:block; background:#fef2f2; color:#dc2626; border:1px solid #fecaca;';
+        res.innerHTML = '⚠️ Please enter valid values.'; return;
+    }
+    const ratio = ((attended / held) * 100).toFixed(1);
+    res.style.display = 'block';
+    if (ratio >= 75) {
+        const bunk = Math.floor((attended - 0.75 * held) / 0.75);
+        res.style.cssText = 'display:block; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;';
+        res.innerHTML = `✅ ${ratio}% — Safe to skip next <strong>${bunk}</strong> slots.`;
+    } else {
+        const req = Math.ceil((0.75 * held - attended) / 0.25);
+        res.style.cssText = 'display:block; background:#fff7ed; color:#c2410c; border:1px solid #fed7aa;';
+        res.innerHTML = `⚠️ ${ratio}% — Attend next <strong>${req}</strong> consecutive slots.`;
+    }
+}
+
+/* ─── CGPA ─── */
+function calcCgpa() {
+    const cgpa = parseFloat(document.getElementById('cgpa').value);
+    const res = document.getElementById('cgpa-res');
+    if (isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
+        res.style.cssText = 'display:block; background:#fef2f2; color:#dc2626; border:1px solid #fecaca;';
+        res.innerHTML = '⚠️ Enter a valid CGPA (0–10).'; return;
+    }
+    const pct = (cgpa * 9.5).toFixed(2);
+    res.style.cssText = 'display:block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;';
+    res.innerHTML = `🎓 Equivalent Percentage: <strong>${pct}%</strong>`;
+}
+
+/* ─── POMODORO ─── */
+let pomoInterval = null, pomoMinutes = 25, pomoSeconds = 0, pomoRunning = false;
+function updatePomo() {
+    document.getElementById('pomo-display').textContent =
+        String(pomoMinutes).padStart(2,'0') + ':' + String(pomoSeconds).padStart(2,'0');
+}
+function changePomodoroMode() {
+    clearInterval(pomoInterval); pomoRunning = false;
+    pomoMinutes = parseInt(document.getElementById('pomo-mode').value);
+    pomoSeconds = 0; updatePomo();
+    const btn = document.getElementById('pomo-start');
+    btn.textContent = '▶ Start'; btn.classList.remove('active');
+}
+function togglePomodoro() {
+    const btn = document.getElementById('pomo-start');
+    if (pomoRunning) {
+        clearInterval(pomoInterval); pomoRunning = false;
+        btn.textContent = '▶ Start'; btn.classList.remove('active');
+    } else {
+        pomoRunning = true; btn.textContent = '⏸ Pause'; btn.classList.add('active');
+        pomoInterval = setInterval(() => {
+            if (pomoSeconds === 0) {
+                if (pomoMinutes === 0) {
+                    clearInterval(pomoInterval); pomoRunning = false;
+                    btn.textContent = '▶ Start'; btn.classList.remove('active');
+                    alert("⏰ Time's up! Session complete."); resetPomodoro(); return;
+                }
+                pomoMinutes--; pomoSeconds = 59;
+            } else { pomoSeconds--; }
+            updatePomo();
+        }, 1000);
+    }
+}
+function resetPomodoro() {
+    clearInterval(pomoInterval); pomoRunning = false;
+    pomoMinutes = parseInt(document.getElementById('pomo-mode').value);
+    pomoSeconds = 0; updatePomo();
+    const btn = document.getElementById('pomo-start');
+    btn.textContent = '▶ Start'; btn.classList.remove('active');
+}
+
+/* ─── DEADLINE ─── */
+function calculateDeadline() {
+    const name = document.getElementById('target-name').value.trim();
+    const dateVal = document.getElementById('target-date').value;
+    const res = document.getElementById('deadline-res');
+    if (!dateVal) {
+        res.style.cssText = 'display:block; background:#fef2f2; color:#dc2626; border:1px solid #fecaca;';
+        res.innerHTML = '⚠️ Please select a target date.'; return;
+    }
+    const target = new Date(dateVal); const today = new Date();
+    today.setHours(0,0,0,0); target.setHours(0,0,0,0);
+    const diff = Math.ceil((target - today) / 86400000);
+    const label = name ? `"${name}"` : 'your exam';
+    if (diff < 0) {
+        res.style.cssText = 'display:block; background:#f8fafc; color:#64748b; border:1px solid #e2e8f0;';
+        res.innerHTML = `⌛ ${label} was ${Math.abs(diff)} days ago.`;
+    } else if (diff === 0) {
+        res.style.cssText = 'display:block; background:#fff7ed; color:#c2410c; border:1px solid #fed7aa;';
+        res.innerHTML = `🚨 ${label} is <strong>TODAY!</strong>`;
+    } else {
+        res.style.cssText = 'display:block; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;';
+        res.innerHTML = `⏳ <strong>${diff} days</strong> remaining until ${label}.`;
+    }
+}
+
+/* ─── CRICKET FACTS ─── */
+const facts = [
+    "A premium fast ball swings because of the <strong>Magnus Effect</strong> and asymmetric boundary-layer air friction! When launch velocity matches an angle of exactly 45°, energy transfer reaches maximum range efficiency.",
+    "Spin bowling uncovers the true magic of <strong>Fluid Dynamics</strong>. Heavy top-spin forces high-velocity air under the ball, generating a downward pressure differential that causes it to dip abruptly before hitting the deck.",
+    "The 'Sweet Spot': when the leather ball collides at this precise node, <strong>fundamental vibrational harmonics</strong> drop to zero — transmitting near-maximum kinetic energy without stinging the hands.",
+    "The <strong>Coefficient of Restitution (COR)</strong> dictates how high a cricket ball bounces. As pitch wear alters surface elasticity, energy absorption profiles shift drastically across days 1 to 5.",
+    "Rough vs. smooth side creates an air velocity mismatch. This uneven boundary layer triggers a pressure drop — producing legendary <strong>Conventional and Reverse Swing</strong> trajectories."
+];
+let factIdx = 0;
+const dotsContainer = document.getElementById('cricket-dots');
+const factBox = document.getElementById('knowledge-box');
+facts.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'cricket-dot' + (i === 0 ? ' active' : '');
+    dotsContainer.appendChild(d);
+});
+function setFact(idx) {
+    factBox.style.opacity = 0;
+    setTimeout(() => {
+        factBox.innerHTML = facts[idx];
+        factBox.style.opacity = 1;
+        document.querySelectorAll('.cricket-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    }, 380);
+}
+setFact(0);
+setInterval(() => { factIdx = (factIdx + 1) % facts.length; setFact(factIdx); }, 5500);
 </script>
-
 </body>
 </html>
