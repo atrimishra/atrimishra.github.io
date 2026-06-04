@@ -2,642 +2,1233 @@
 <html lang="en">
 <head>
     <meta name="google-site-verification" content="Mi35g6BkETP4aM2wQzKWtprPnjQy7NkM253EgVOS4XU" />
-    <meta name="google-site-verification" content="Mi35g6BkETP4aM2wQzKWtprPnjQy7NkM253EgVOS4XU" />
     <title>Atri's Physics Orbit | M.Sc. Notes, Robotics, Cricket Analysis & Vlogs</title>
     <meta name="description" content="Explore advanced M.Sc. & B.Sc. Physics notes, robotics society blueprints, the physics of cricket hacks, and personal campus travel vlogs by Atri Mishra.">
     <meta name="keywords" content="Atri Mishra, Atri's Physics Orbit, DU Physics Notes, B.Sc Physics NEP Notes, M.Sc Physics DU, Robotics Project Guide, Physics of Cricket, Atri Mishra Vlogs, Hari Sharnam">
     <meta name="author" content="Atri Mishra">
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lexend:wght@500;600;700;800&family=Noto+Serif+Devanagari:wght@600&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&family=Noto+Serif+Devanagari:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
-            /* CYBER-DEEP SPACE PROFESSIONAL THEME VARIABLES */
-            --bg-deep-space: #0a0a0c; /* Clean Professional Black */
-            --bg-panel: #0f172a;      /* Deep Team India Navy Blue */
-            --bg-surface: #050911;    /* Subtle Complex Grey-Blue */
-            --brand-accent: #ea580c;  /* Clean Corporate Orange */
-            --brand-glow: #ff7800;    /* Stark Highlight Orange */
-            --text-main: #ffffff;      /* Stark Clear White */
-            --text-muted: #94a3b8;    /* Muted Blue-Grey */
-            --border-color: #1e293b;  /* Subtle Deep Blue Border */
+            --white: #ffffff;
+            --bg: #f7f5f0;
+            --bg-card: #ffffff;
+            --accent: #d4500a;
+            --accent-light: #fff0e8;
+            --accent-mid: #f97316;
+            --ink: #1a1410;
+            --ink-2: #3d3530;
+            --ink-muted: #7a6f68;
+            --border: #e8e2d8;
+            --border-dark: #d4cdc2;
+            --shadow-sm: 0 1px 4px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.10), 0 24px 64px rgba(0,0,0,0.06);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            background-color: var(--bg-deep-space);
-            color: var(--text-main);
-            line-height: 1.6;
-            position: relative;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.65;
             overflow-x: hidden;
         }
 
-        /* Pure Black Sticky Header with Subtles Shadows */
+        /* ─── SCROLL PROGRESS BAR ─── */
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-mid));
+            width: 0%; z-index: 9999; transition: width 0.1s;
+        }
+
+        /* ─── NAV ─── */
         nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 8%; background: #000000;
             position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            border-bottom: 1px solid var(--border-color);
+            background: rgba(247, 245, 240, 0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 5%;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 62px;
+            animation: slideDown 0.5s ease both;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .logo {
-            font-family: 'Lexend', sans-serif;
-            font-size: 1.4rem; font-weight: 800; color: var(--text-main);
-            display: flex; align-items: center; gap: 10px;
+            font-family: 'Fraunces', serif;
+            font-size: 1.15rem; font-weight: 700; color: var(--ink);
+            display: flex; align-items: center; gap: 8px; text-decoration: none;
         }
+        .logo .dot { color: var(--accent); }
 
-        .logo span { color: var(--brand-accent); }
-
-        .nav-links { display: flex; list-style: none; gap: 25px; }
+        .nav-links {
+            display: flex; list-style: none; gap: 4px;
+        }
         .nav-links a {
-            color: var(--text-main); text-decoration: none;
-            font-size: 0.95rem; font-weight: 500; transition: 0.2s;
+            color: var(--ink-2); text-decoration: none; font-size: 0.85rem;
+            font-weight: 500; padding: 6px 12px; border-radius: 30px;
+            transition: all 0.2s;
         }
-        .nav-links a:hover { color: var(--brand-accent); }
+        .nav-links a:hover { background: var(--accent-light); color: var(--accent); }
 
-        /* Premium Center Layout with Name Highlighted */
+        .nav-hamburger {
+            display: none; background: none; border: none; cursor: pointer;
+            font-size: 1.3rem; color: var(--ink);
+        }
+
+        .mobile-menu {
+            display: none; position: fixed; top: 62px; left: 0; right: 0;
+            background: var(--white); border-bottom: 1px solid var(--border);
+            z-index: 999; padding: 12px 5%; flex-direction: column; gap: 4px;
+        }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a {
+            color: var(--ink-2); text-decoration: none; font-size: 0.9rem;
+            font-weight: 500; padding: 10px 14px; border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+        .mobile-menu a:hover { background: var(--accent-light); color: var(--accent); }
+
+        /* ─── HERO ─── */
         .hero {
-            padding: 90px 8% 70px 8%; text-align: center;
-            background: linear-gradient(180deg, #050911 0%, var(--bg-deep-space) 100%);
-            border-bottom: 1px solid var(--border-color);
+            padding: 80px 5% 70px;
+            text-align: center;
             position: relative;
+            overflow: hidden;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Decorative radial blob */
+        .hero::before {
+            content: '';
+            position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+            width: 700px; height: 400px;
+            background: radial-gradient(ellipse, rgba(212,80,10,0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Animated dot-grid background */
+        .hero-dots {
+            position: absolute; inset: 0; opacity: 0.4;
+            background-image: radial-gradient(circle, #c5bdb0 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 80%);
+        }
+
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--accent-light); color: var(--accent);
+            font-size: 0.8rem; font-weight: 600; padding: 5px 14px;
+            border-radius: 30px; margin-bottom: 20px;
+            border: 1px solid rgba(212,80,10,0.2);
+            animation: fadeUp 0.6s 0.2s ease both;
         }
 
         .hero h1 {
-            font-family: 'Lexend', sans-serif;
-            font-size: 2.8rem; font-weight: 800; color: var(--text-main);
-            letter-spacing: -1px; margin-bottom: 20px; line-height: 1.3;
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 6vw, 4rem);
+            font-weight: 900; color: var(--ink);
+            line-height: 1.1; letter-spacing: -1.5px;
+            margin-bottom: 18px;
+            animation: fadeUp 0.6s 0.35s ease both;
         }
 
-        .hero h1 .highlight-name {
-            color: var(--brand-accent);
-            position: relative;
-            display: inline-block;
-            filter: drop-shadow(0 0 10px var(--brand-accent));
-        }
-
-        .hero p {
-            font-size: 1.15rem; color: var(--text-muted);
-            max-width: 800px; margin: 0 auto 35px auto;
-        }
-
-        .hero-btn {
-            background: var(--brand-accent); color: #ffffff;
-            padding: 14px 35px; border-radius: 6px; font-weight: 600;
-            text-decoration: none; display: inline-block; cursor: pointer;
-            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25); transition: 0.2s;
-            border: none;
-        }
-        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(234, 88, 12, 0.35); }
-
-        /* Complex, curious, math-inspired background grid overlap */
-        .main-container {
-            max-width: 1200px; margin: 0 auto; padding: 60px 20px;
+        .hero h1 em {
+            color: var(--accent); font-style: italic;
             position: relative;
         }
-        .main-container::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            opacity: 0.5;
-            mask-image: radial-gradient(circle at center, black, transparent 80%);
+
+        .hero-sub {
+            font-size: 1.05rem; color: var(--ink-muted); max-width: 600px;
+            margin: 0 auto 36px; line-height: 1.7;
+            animation: fadeUp 0.6s 0.5s ease both;
         }
 
-        /* Professional dark dropdown architecture */
-        .accordion-section {
-            background: var(--bg-panel); border: 1px solid var(--border-color);
-            border-radius: 12px; margin-bottom: 20px; overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        .hero-actions {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+            animation: fadeUp 0.6s 0.65s ease both;
+        }
+
+        .btn-primary {
+            background: var(--accent); color: #fff;
+            padding: 13px 28px; border-radius: 30px; font-weight: 600;
+            font-size: 0.9rem; text-decoration: none; display: inline-flex;
+            align-items: center; gap: 7px; border: none; cursor: pointer;
+            transition: all 0.25s; box-shadow: 0 4px 14px rgba(212,80,10,0.3);
+            font-family: 'DM Sans', sans-serif;
+        }
+        .btn-primary:hover {
+            background: #b8430a; transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212,80,10,0.35);
+        }
+
+        .btn-outline {
+            background: transparent; color: var(--ink);
+            padding: 13px 28px; border-radius: 30px; font-weight: 500;
+            font-size: 0.9rem; text-decoration: none; display: inline-flex;
+            align-items: center; gap: 7px; border: 1.5px solid var(--border-dark);
+            cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+        }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+        /* Stats strip */
+        .hero-stats {
+            display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+            margin-top: 50px; padding-top: 30px;
+            border-top: 1px solid var(--border);
+            animation: fadeUp 0.6s 0.8s ease both;
+        }
+        .stat-item { text-align: center; }
+        .stat-num {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem; font-weight: 900; color: var(--accent);
+            display: block; line-height: 1;
+        }
+        .stat-label { font-size: 0.78rem; color: var(--ink-muted); font-weight: 500; margin-top: 4px; }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .reveal {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ─── SECTION LAYOUT ─── */
+        .section {
+            max-width: 1120px; margin: 0 auto; padding: 64px 20px;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-label {
+            font-size: 0.78rem; font-weight: 600; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-bottom: 8px;
+        }
+        .section-label::before {
+            content: '';
+            width: 20px; height: 2px; background: var(--accent);
+            display: inline-block; border-radius: 2px;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700; color: var(--ink); line-height: 1.2;
+        }
+
+        /* ─── CARDS ─── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            transition: all 0.25s ease;
+            overflow: hidden;
+        }
+        .card:hover {
+            border-color: var(--border-dark);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        /* ─── TOOL GRID ─── */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: all 0.25s ease;
+            display: flex; flex-direction: column;
+        }
+        .tool-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+
+        .tool-icon {
+            width: 42px; height: 42px; border-radius: 10px;
+            background: var(--accent-light);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: var(--accent);
+            margin-bottom: 14px; flex-shrink: 0;
+        }
+
+        .tool-card h4 {
+            font-family: 'Fraunces', serif;
+            font-size: 1rem; font-weight: 700; color: var(--ink);
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block; font-size: 0.78rem; font-weight: 600;
+            color: var(--ink-muted); margin-bottom: 6px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .form-input, .form-select {
+            width: 100%; padding: 10px 12px;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); color: var(--ink);
+            font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+            outline: none; transition: all 0.2s; margin-bottom: 12px;
+        }
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212,80,10,0.1);
+            background: var(--white);
+        }
+
+        .tool-result {
+            margin-top: 10px; padding: 10px 14px;
+            border-radius: var(--radius-sm); font-size: 0.85rem;
+            font-weight: 600; display: none;
+        }
+
+        /* Pomodoro special styles */
+        .pomo-display {
+            font-family: 'Fraunces', serif;
+            font-size: 2.8rem; font-weight: 900;
+            text-align: center; color: var(--ink);
+            letter-spacing: -2px; line-height: 1;
+            margin: 8px 0 16px;
+        }
+        .pomo-actions { display: flex; gap: 8px; }
+        .pomo-btn {
+            flex: 1; padding: 9px 12px; border: 1.5px solid var(--border-dark);
+            border-radius: var(--radius-sm); background: var(--bg);
+            color: var(--ink); font-weight: 600; font-size: 0.85rem;
+            cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+        }
+        .pomo-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+        .pomo-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* ─── ACCORDION NOTES ─── */
+        .accordion {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 14px;
+            background: var(--bg-card);
         }
 
         .accordion-trigger {
-            width: 100%; padding: 22px 30px; background: var(--bg-panel);
-            border: none; text-align: left; display: flex; justify-content: space-between;
-            align-items: center; font-family: 'Lexend', sans-serif;
-            font-size: 1.25rem; font-weight: 700; color: var(--text-main);
-            cursor: pointer; transition: 0.2s;
-        }
-        .accordion-trigger:hover { background: var(--bg-surface); }
-        .accordion-trigger i { color: var(--brand-accent); transition: 0.3s; }
-
-        .accordion-content {
-            display: none; padding: 30px; background: var(--bg-surface);
-            border-top: 1px solid var(--border-color);
-        }
-
-        /* Clean Dashboard Grids */
-        .sub-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
-        }
-
-        .node-link-card {
-            background: var(--bg-panel); border: 1px solid var(--border-color);
-            padding: 20px; border-radius: 8px; text-decoration: none;
+            width: 100%; padding: 18px 22px;
+            background: var(--bg-card); border: none; text-align: left;
             display: flex; align-items: center; justify-content: space-between;
-            color: var(--text-main); font-weight: 600; transition: 0.2s;
+            font-family: 'Fraunces', serif; font-size: 1.05rem;
+            font-weight: 700; color: var(--ink); cursor: pointer; transition: all 0.2s;
+            gap: 12px;
         }
-        .node-link-card:hover { border-color: var(--brand-accent); background: rgba(234,88,12,0.03); }
-        .node-link-card i { color: var(--brand-accent); }
+        .accordion-trigger:hover { background: var(--bg); }
+        .accordion-trigger .icon { color: var(--accent); width: 32px; flex-shrink: 0; }
+        .accordion-trigger .chevron { color: var(--ink-muted); transition: transform 0.3s; flex-shrink: 0; }
+        .accordion-trigger.open .chevron { transform: rotate(180deg); }
 
-        /* Thesis specific container */
-        .thesis-container {
-            background: var(--bg-panel); border: 1px solid var(--border-color);
-            padding: 25px; border-radius: 8px; margin-top: 20px;
+        .accordion-body {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+            border-top: 0 solid var(--border);
+        }
+        .accordion-body.open {
+            max-height: 1200px;
+            border-top-width: 1px;
+        }
+        .accordion-body-inner { padding: 22px; }
+
+        /* ─── LINK CARDS ─── */
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px;
         }
 
-        /* Tool Input Configurations with subtle borders */
-        .tool-panel { background: var(--bg-panel); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
-        .form-group input, .form-group select { width: 100%; padding: 10px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; outline: none; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--brand-accent); box-shadow: 0 0 10px rgba(234,88,12,0.1); }
-
-        /* Pomodoro Specific Styles */
-        .pomo-digits { font-family: 'Lexend', sans-serif; font-size: 2.2rem; font-weight: 800; text-align: center; color: #fff; margin: 10px 0; letter-spacing: 2px; text-shadow: 0 0 10px rgba(234,88,12,0.3); }
-        .pomo-controls { display: flex; gap: 10px; margin-bottom: 10px; }
-        .pomo-btn { flex: 1; padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-surface); color: #fff; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .pomo-btn:hover { border-color: var(--brand-accent); background: rgba(234,88,12,0.05); }
-
-        /* Cricket Blackboard Theme Overlay */
-        .cricket-banner {
-            background: rgba(15,23,42,0.9); color: #ffffff; border-radius: 16px;
-            padding: 40px; text-align: center; margin-bottom: 40px;
-            box-shadow: 0 10px 15px -3px rgba(15,23,42,0.3);
-            border: 2px solid var(--brand-accent);
-            position: relative;
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .link-card {
+            background: var(--bg); border: 1px solid var(--border);
+            padding: 14px 18px; border-radius: var(--radius-md);
+            text-decoration: none; display: flex; align-items: center;
+            justify-content: space-between; color: var(--ink);
+            font-size: 0.9rem; font-weight: 500; transition: all 0.2s;
         }
-        .cricket-banner h3 { font-family: 'Lexend', sans-serif; color: #ff9d00; font-size: 1.6rem; margin-bottom: 15px; }
-        .knowledge-text { font-size: 1.15rem; max-width: 850px; margin: 0 auto; color: #fff; transition: opacity 0.5s ease; min-height: 54px; }
+        .link-card:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+        .link-card i { color: var(--accent); font-size: 0.85rem; }
 
-        /* Media Responsive Blocks and subtle video shadows */
-        .vlog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .vlog-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
-        .vlog-card:hover { transform: translateY(-5px); border-color: var(--brand-accent); }
-        
-        /* Thumbnail Layout with Aspect Ratio */
-        .media-shell {
-            width: 100%; aspect-ratio: 16/9; background: #000;
+        .sub-heading {
+            font-family: 'Fraunces', serif;
+            font-size: 1.1rem; font-weight: 700; color: var(--ink);
+            margin: 22px 0 12px;
+            padding-left: 12px;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* ─── VIDEO GRID ─── */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .video-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+        .video-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); border-color: var(--border-dark); }
+
+        .video-thumb {
+            width: 100%; aspect-ratio: 16/9;
+            background: var(--bg); position: relative;
             display: flex; align-items: center; justify-content: center;
-            font-size: 3rem; color: #ffffff; cursor: pointer; transition: 0.3s;
-            background-size: cover; background-position: center; position: relative;
+            cursor: pointer; overflow: hidden;
         }
-        .media-shell::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4); transition: 0.3s;
+        .video-thumb img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.4s ease;
         }
-        .media-shell:hover::before { background: rgba(0, 0, 0, 0.2); }
-        .media-shell i { z-index: 2; text-shadow: 0 4px 12px rgba(0,0,0,0.5); filter: drop-shadow(0 0 10px rgba(234,88,12,0.6)); }
-        .media-shell:hover i { color: var(--brand-accent); transform: scale(1.1); }
+        .video-card:hover .video-thumb img { transform: scale(1.05); }
+        .video-thumb-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.3s;
+        }
+        .video-card:hover .video-thumb-overlay { background: rgba(0,0,0,0.1); }
+        .play-btn {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-size: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            transition: transform 0.2s;
+        }
+        .video-card:hover .play-btn { transform: scale(1.12); }
 
-        /* Dynamic Editable Noticeboard Style for Event Tracker */
-        .board-canvas {
-            background: #fff6e0; border: 2px dashed #f59e0b; border-radius: 12px;
-            padding: 30px; color: #78350f; font-weight: 500; text-align: left;
-            box-shadow: inset 0 0 10px rgba(120,53,15,0.05);
+        .video-info { padding: 16px 18px; }
+        .video-info h5 {
+            font-family: 'Fraunces', serif;
+            font-size: 0.95rem; font-weight: 700; color: var(--ink);
+            margin-bottom: 6px; line-height: 1.35;
+        }
+        .video-info p { font-size: 0.82rem; color: var(--ink-muted); line-height: 1.5; }
+        .video-tag {
+            display: inline-block; padding: 3px 10px;
+            background: var(--accent-light); color: var(--accent);
+            border-radius: 20px; font-size: 0.72rem; font-weight: 600;
+            margin-bottom: 8px;
         }
 
-        /* Premium Corporate Footer - Deeper Dark */
-        footer { background: #000000; color: #ffffff; padding: 60px 8% 30px 8%; margin-top: 80px; border-top: 1px solid var(--border-color); }
-        .footer-wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding-bottom: 30px; border-bottom: 1px solid #1e293b; }
-        .footer-wrap h4 { font-family: 'Lexend', sans-serif; color: #ffffff; margin-bottom: 15px; }
-        .footer-wrap a { color: #94a3b8; text-decoration: none; transition: 0.2s; }
-        .footer-wrap a:hover { color: var(--brand-accent); }
+        /* ─── CRICKET SECTION ─── */
+        .cricket-hero {
+            background: var(--ink);
+            border-radius: var(--radius-xl);
+            padding: 40px 36px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+        .cricket-hero::before {
+            content: '';
+            position: absolute; top: -60px; right: -60px;
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            background: rgba(212,80,10,0.15);
+            pointer-events: none;
+        }
+        .cricket-hero::after {
+            content: '';
+            position: absolute; bottom: -40px; left: -40px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: rgba(212,80,10,0.08);
+            pointer-events: none;
+        }
+        .cricket-hero h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.3rem; font-weight: 700;
+            color: var(--accent-mid); margin-bottom: 14px;
+            position: relative;
+        }
+        .cricket-fact {
+            font-size: 1.05rem; line-height: 1.7; color: rgba(255,255,255,0.88);
+            max-width: 760px; min-height: 68px;
+            transition: opacity 0.5s ease;
+            position: relative;
+        }
+        .cricket-dots {
+            display: flex; gap: 6px; margin-top: 20px;
+        }
+        .cricket-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            transition: all 0.3s;
+        }
+        .cricket-dot.active {
+            background: var(--accent-mid); width: 20px; border-radius: 3px;
+        }
 
-        /* The Divine Signature - Stark white alignment */
+        /* ─── EVENT NOTICEBOARD ─── */
+        .noticeboard {
+            background: #fffbf0;
+            border: 1.5px dashed #f59e0b;
+            border-radius: var(--radius-lg);
+            padding: 26px 28px;
+            margin-bottom: 28px;
+        }
+        .notice-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 14px;
+        }
+        .notice-pin {
+            font-size: 1.1rem;
+        }
+        .notice-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1rem; font-weight: 700; color: #92400e;
+        }
+        .noticeboard p {
+            font-size: 0.95rem; color: #78350f; line-height: 1.7;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--ink);
+            color: #fff;
+            padding: 56px 5% 28px;
+            margin-top: 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 24px;
+        }
+
+        .footer-logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem; font-weight: 700; color: #fff;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+        }
+        .footer-logo .dot { color: var(--accent-mid); }
+
+        .footer-desc {
+            font-size: 0.88rem; color: rgba(255,255,255,0.55);
+            line-height: 1.65; max-width: 320px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.4);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 14px;
+        }
+        .footer-col a {
+            display: flex; align-items: center; gap: 8px;
+            color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.88rem;
+            margin-bottom: 10px; transition: color 0.2s;
+        }
+        .footer-col a:hover { color: var(--accent-mid); }
+
+        .footer-bottom {
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 12px;
+        }
+
         .divine-sig {
-            text-align: center; padding-top: 30px; color: var(--text-main);
-            font-family: 'Noto Serif Devanagari', serif; font-size: 1.5rem; letter-spacing: 4px;
+            font-family: 'Noto Serif Devanagari', serif;
+            font-size: 1.1rem; letter-spacing: 3px; color: rgba(255,255,255,0.5);
+        }
+
+        .footer-copy {
+            font-size: 0.8rem; color: rgba(255,255,255,0.3);
+        }
+
+        /* ─── THESIS BOX ─── */
+        .thesis-box {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 20px 22px; margin-top: 18px;
+        }
+        .thesis-box h5 {
+            font-family: 'Fraunces', serif;
+            font-size: 0.95rem; font-weight: 700; color: var(--ink);
+            margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+        }
+        .thesis-box p { font-size: 0.85rem; color: var(--ink-muted); line-height: 1.65; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-hamburger { display: flex; align-items: center; }
+
+            .hero { padding: 56px 5% 48px; }
+            .hero h1 { letter-spacing: -1px; }
+
+            .hero-stats { gap: 24px; }
+            .stat-num { font-size: 1.5rem; }
+
+            .section { padding: 48px 16px; }
+
+            .tools-grid { grid-template-columns: 1fr; }
+            .link-grid { grid-template-columns: 1fr; }
+            .video-grid { grid-template-columns: 1fr; }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .cricket-hero { padding: 28px 22px; }
+            .noticeboard { padding: 20px 18px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-actions { flex-direction: column; align-items: center; }
+            .btn-primary, .btn-outline { width: 100%; justify-content: center; }
+            .pomo-display { font-size: 2.2rem; }
+        }
+
+        /* ─── FLOATING BACK TO TOP ─── */
+        #back-top {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 42px; height: 42px; border-radius: 50%;
+            background: var(--accent); color: #fff;
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; box-shadow: 0 4px 16px rgba(212,80,10,0.35);
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 998;
+        }
+        #back-top.visible { opacity: 1; pointer-events: auto; }
+        #back-top:hover { transform: translateY(-3px); }
+
+        /* ─── CHIP ─── */
+        .chip {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: var(--accent-light); color: var(--accent);
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 600;
+            border: 1px solid rgba(212,80,10,0.15);
+        }
+
+        /* Separator */
+        .sep {
+            border: none; border-top: 1px solid var(--border);
+            margin: 24px 0;
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo"><i class="fa-solid fa-satellite-dish"></i> Atri's Physics <span>Orbit</span></div>
-        <ul class="nav-links">
-            <li><a href="#academics">Academic Vault</a></li>
-            <li><a href="#tech">Tech Matrix</a></li>
-            <li><a href="#cricket">Cricket Analytics</a></li>
-            <li><a href="#events">Live Tracks</a></li>
-        </ul>
-    </nav>
+<div id="progress-bar"></div>
+<button id="back-top" onclick="scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <i class="fa-solid fa-chevron-up"></i>
+</button>
 
-    <header class="hero">
-        <h1>Physics in Mind, Adventure in Soul — Meet <br><span class="highlight-name">Atri Mishra</span></h1>
-        <p>Currently navigating advanced M.Sc. Physics modules, crafting automated robotics networks, decoding dynamic cricket physics parameters, and charting immersive travel vlogs.</p>
-        <button class="hero-btn" onclick="toggleAccordion('student-tools')">Access Interactive Student Tools</button>
-    </header>
+<!-- ─── NAV ─── -->
+<nav>
+    <a class="logo" href="#">
+        <i class="fa-solid fa-satellite-dish" style="color:var(--accent)"></i>
+        Atri's Physics <span class="dot">Orbit</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="#academics">Notes Vault</a></li>
+        <li><a href="#tech">Tech Lab</a></li>
+        <li><a href="#cricket">Cricket Physics</a></li>
+        <li><a href="#events">Events</a></li>
+    </ul>
+    <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <i class="fa-solid fa-bars" id="ham-icon"></i>
+    </button>
+</nav>
 
-    <main class="main-container">
+<div class="mobile-menu" id="mobile-menu">
+    <a href="#academics" onclick="closeMobileMenu()"><i class="fa-solid fa-book-open"></i> Notes Vault</a>
+    <a href="#tech" onclick="closeMobileMenu()"><i class="fa-solid fa-code"></i> Tech Lab</a>
+    <a href="#cricket" onclick="closeMobileMenu()"><i class="fa-solid fa-baseball"></i> Cricket Physics</a>
+    <a href="#events" onclick="closeMobileMenu()"><i class="fa-solid fa-calendar"></i> Events</a>
+</div>
 
-        <!-- STUDENT UTILITIES PORTAL WITH 4 INTERACTIVE TOOLS -->
-        <div class="accordion-section" id="student-tools-wrapper">
-            <button class="accordion-trigger" onclick="toggleAccordion('student-tools')">
-                <span><i class="fa-solid fa-sliders"></i> Interactive Student Utilities Portal</span>
-                <i class="fa-solid fa-chevron-down"></i>
+<!-- ─── HERO ─── -->
+<header class="hero">
+    <div class="hero-dots"></div>
+    <div class="hero-eyebrow">
+        <i class="fa-solid fa-circle-dot fa-beat" style="font-size:0.65rem"></i>
+        M.Sc. Physics · DU · Batch 2024
+    </div>
+    <h1>Physics in Mind,<br>Adventure in Soul —<br><em>Atri Mishra</em></h1>
+    <p class="hero-sub">
+        Navigating advanced M.Sc. Physics, crafting robotics networks, decoding cricket trajectories, and charting immersive campus travel vlogs from DU.
+    </p>
+    <div class="hero-actions">
+        <button class="btn-primary" onclick="openTools()">
+            <i class="fa-solid fa-sliders"></i> Open Student Tools
+        </button>
+        <a class="btn-outline" href="https://youtube.com/@sageatrimishra" target="_blank">
+            <i class="fa-brands fa-youtube"></i> Watch on YouTube
+        </a>
+    </div>
+    <div class="hero-stats">
+        <div class="stat-item">
+            <span class="stat-num" data-count="10">0</span>
+            <div class="stat-label">Physics Modules</div>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num" data-count="4">0</span>
+            <div class="stat-label">Year Notes Covered</div>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num" data-count="5">0</span>
+            <div class="stat-label">Cricket Physics Facts</div>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num" data-count="4">0</span>
+            <div class="stat-label">Student Tools</div>
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <!-- ─── STUDENT TOOLS ─── -->
+    <section class="section reveal" id="tools-section">
+        <div class="section-header">
+            <div class="section-label"><i class="fa-solid fa-sliders"></i> Utilities</div>
+            <h2 class="section-title">Interactive Student Toolkit</h2>
+        </div>
+
+        <div class="tools-grid">
+
+            <!-- Attendance Monitor -->
+            <div class="tool-card">
+                <div class="tool-icon"><i class="fa-solid fa-clipboard-user"></i></div>
+                <h4>Attendance Monitor</h4>
+                <label class="form-label">Total Conducted Slots</label>
+                <input type="number" class="form-input" id="held" placeholder="e.g. 60">
+                <label class="form-label">Slots Attended</label>
+                <input type="number" class="form-input" id="attended" placeholder="e.g. 48">
+                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calcAttendance()">
+                    Calculate
+                </button>
+                <div id="calc-res" class="tool-result"></div>
+            </div>
+
+            <!-- CGPA Converter -->
+            <div class="tool-card">
+                <div class="tool-icon"><i class="fa-solid fa-calculator"></i></div>
+                <h4>UGCF / NEP CGPA Converter</h4>
+                <label class="form-label">CGPA Score (out of 10)</label>
+                <input type="number" class="form-input" id="cgpa" step="0.01" placeholder="e.g. 8.75">
+                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calcCgpa()">
+                    Convert to %
+                </button>
+                <div id="cgpa-res" class="tool-result"></div>
+            </div>
+
+            <!-- Pomodoro -->
+            <div class="tool-card">
+                <div class="tool-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                <h4>Quantum Focus Timer</h4>
+                <div class="pomo-display" id="pomo-display">25:00</div>
+                <div class="pomo-actions" style="margin-bottom:12px;">
+                    <button class="pomo-btn" id="pomo-start" onclick="togglePomodoro()">▶ Start</button>
+                    <button class="pomo-btn" onclick="resetPomodoro()">↺ Reset</button>
+                </div>
+                <label class="form-label">Session Mode</label>
+                <select class="form-select" id="pomo-mode" onchange="changePomodoroMode()" style="margin-bottom:0">
+                    <option value="25">Study Block — 25 min</option>
+                    <option value="5">Short Rest — 5 min</option>
+                    <option value="15">Deep Break — 15 min</option>
+                </select>
+            </div>
+
+            <!-- Deadline Tracker -->
+            <div class="tool-card">
+                <div class="tool-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                <h4>Exam Deadline Tracker</h4>
+                <label class="form-label">Assessment / Exam Name</label>
+                <input type="text" class="form-input" id="target-name" placeholder="e.g. Quantum Mechanics Sem">
+                <label class="form-label">Target Date</label>
+                <input type="date" class="form-input" id="target-date">
+                <button class="btn-primary" style="width:100%; margin-top:auto;" onclick="calculateDeadline()">
+                    Track Time
+                </button>
+                <div id="deadline-res" class="tool-result"></div>
+            </div>
+
+        </div>
+
+        <div style="margin-top:16px;">
+            <a href="https://www.du.ac.in" target="_blank" class="link-card" style="display:flex;">
+                <span><i class="fa-solid fa-calendar-days" style="color:var(--accent); margin-right:8px"></i>DU Official Academic Calendar Portal</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+        </div>
+    </section>
+
+    <hr style="border:none; border-top:1px solid var(--border); max-width:1120px; margin:0 auto;">
+
+    <!-- ─── ACADEMICS ─── -->
+    <section class="section reveal" id="academics">
+        <div class="section-header">
+            <div class="section-label"><i class="fa-solid fa-book-open"></i> Academic</div>
+            <h2 class="section-title">Free Study Notes Matrix — DU (NEP)</h2>
+        </div>
+
+        <div class="accordion" id="bsc-accordion">
+            <button class="accordion-trigger" onclick="toggleAccordion('bsc-body', this)">
+                <i class="fa-solid fa-atom icon"></i>
+                <span style="flex:1">B.Sc. Physics (Hons) — Complete Vault</span>
+                <i class="fa-solid fa-chevron-down chevron"></i>
             </button>
-            <div class="accordion-content" id="student-tools">
-                <div class="sub-grid" style="margin-bottom: 25px;">
-                    
-                    <!-- TOOL 1: Attendance Monitor -->
-                    <div class="tool-panel">
-                        <div>
-                            <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-clipboard-user" style="color:var(--brand-accent)"></i> Attendance Monitor</h4>
-                            <div class="form-group"><label>Total Conducted Slots</label><input type="number" id="held" placeholder="0"></div>
-                            <div class="form-group"><label>Attended Slots Logged</label><input type="number" id="attended" placeholder="0"></div>
-                        </div>
-                        <div>
-                            <button class="hero-btn" style="width:100%;" onclick="calcAttendance()">Run Calibration</button>
-                            <div id="calc-res" style="margin-top:15px; padding:12px; display:none; border-radius:6px; font-weight:600; font-size:0.9rem;"></div>
-                        </div>
+            <div class="accordion-body" id="bsc-body">
+                <div class="accordion-body-inner">
+                    <div class="link-grid">
+                        <a href="#" class="link-card"><span>1st Year Core Framework Notes</span><i class="fa-solid fa-cloud-arrow-down"></i></a>
+                        <a href="#" class="link-card"><span>2nd Year Core Framework Notes</span><i class="fa-solid fa-cloud-arrow-down"></i></a>
+                        <a href="#" class="link-card"><span>3rd Year Core Framework Notes</span><i class="fa-solid fa-cloud-arrow-down"></i></a>
+                        <a href="#" class="link-card"><span>4th Year Core Framework Notes</span><i class="fa-solid fa-cloud-arrow-down"></i></a>
                     </div>
-
-                    <!-- TOOL 2: CGPA Converter -->
-                    <div class="tool-panel">
-                        <div>
-                            <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-calculator" style="color:var(--brand-accent)"></i> UGCF / NEP CGPA Converter</h4>
-                            <div class="form-group"><label>Enter CGPA Score (Scale of 10)</label><input type="number" id="cgpa" step="0.01" placeholder="0.00"></div>
-                        </div>
-                        <div style="margin-top: 35px;">
-                            <button class="hero-btn" style="width:100%;" onclick="calcCgpa()">Convert to Percentage</button>
-                            <div id="cgpa-res" style="margin-top:22px; font-weight:700; color:var(--text-main); text-align:center;"></div>
-                        </div>
+                    <div class="thesis-box">
+                        <h5><i class="fa-solid fa-feather-pointed" style="color:var(--accent)"></i> 4th Year Research Thesis Incubator</h5>
+                        <p>Focus fields map to kinetic automation loops, mathematical optimization parameters, and semiconductor junction variations. Reference specific framework layouts shared inside internal laboratory streams.</p>
                     </div>
-
-                    <!-- TOOL 3: Study Session Pomodoro Timer -->
-                    <div class="tool-panel">
-                        <div>
-                            <h4 style="font-family:'Lexend'; margin-bottom: 5px; color:#fff;"><i class="fa-solid fa-stopwatch" style="color:var(--brand-accent)"></i> Quantum Focus Timer</h4>
-                            <div class="pomo-digits" id="pomo-display">25:00</div>
-                            <div class="pomo-controls">
-                                <button class="pomo-btn" id="pomo-start" onclick="togglePomodoro()">Start</button>
-                                <button class="pomo-btn" onclick="resetPomodoro()">Reset</button>
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0; margin-top:10px;">
-                            <label>Session Mode</label>
-                            <select id="pomo-mode" onchange="changePomodoroMode()">
-                                <option value="25">Study Block (25 Mins)</option>
-                                <option value="5">Short Rest (5 Mins)</option>
-                                <option value="15">Deep Break (15 Mins)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- TOOL 4: Deadline Tracker -->
-                    <div class="tool-panel">
-                        <div>
-                            <h4 style="font-family:'Lexend'; margin-bottom: 15px; color:#fff;"><i class="fa-solid fa-hourglass-half" style="color:var(--brand-accent)"></i> Academic Horizon Tracker</h4>
-                            <div class="form-group"><label>Target Assessment/Exam Name</label><input type="text" id="target-name" placeholder="e.g., Quantum Mechanics Sem Exam"></div>
-                            <div class="form-group"><label>Target Date</label><input type="date" id="target-date"></div>
-                        </div>
-                        <div>
-                            <button class="hero-btn" style="width:100%;" onclick="calculateDeadline()">Track Remaining Time</button>
-                            <div id="deadline-res" style="margin-top:15px; font-weight:600; color:#fff; text-align:center; font-size:0.9rem;"></div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div style="max-width: 100%;">
-                    <a href="https://www.du.ac.in" target="_blank" class="node-link-card"><span><i class="fa-solid fa-calendar-days"></i> Launch Official DU Academic Calendar Portal</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                 </div>
             </div>
         </div>
 
-        <div class="accordion-section" id="academics">
-            <button class="accordion-trigger" onclick="toggleAccordion('notes-vault')">
-                <span><i class="fa-solid fa-book-open-reader"></i> Free Study Notes Matrix — DU (NEP)</span>
-                <i class="fa-solid fa-chevron-down"></i>
+        <div class="accordion" id="msc-accordion">
+            <button class="accordion-trigger" onclick="toggleAccordion('msc-body', this)">
+                <i class="fa-solid fa-graduation-cap icon"></i>
+                <span style="flex:1">M.Sc. Physics — DU Advanced Vault</span>
+                <i class="fa-solid fa-chevron-down chevron"></i>
             </button>
-            <div class="accordion-content" id="notes-vault">
-                
-                <h3 style="font-family:'Lexend'; margin-bottom:15px; border-left:4px solid var(--brand-accent); padding-left:10px; color:#fff;">B.Sc. Physics (Hons) Vault</h3>
-                <div class="sub-grid" style="margin-bottom: 30px;">
-                    <a href="#" target="_blank" class="node-link-card"><span>1st Year Core Framework Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
-                    <a href="#" target="_blank" class="node-link-card"><span>2nd Year Core Framework Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
-                    <a href="#" target="_blank" class="node-link-card"><span>3rd Year Core Framework Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
-                    <a href="#" target="_blank" class="node-link-card"><span>4th Year Core Framework Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
-                </div>
-                
-                <div class="thesis-container">
-                    <h4><i class="fa-solid fa-feather-pointed"></i> 4th Year Research Thesis Idea Incubator</h4>
-                    <p style="color:var(--text-muted); font-size:0.95rem; margin-top:5px;">
-                        [Academic Guidance Log] Focus fields map to kinetic automation loops, mathematical optimization parameters, and semiconductor junction variations. Reference specific framework layouts shared inside internal laboratory streams.
-                    </p>
-                </div>
-
-                <h3 style="font-family:'Lexend'; margin:30px 0 15px 0; border-left:4px solid var(--brand-accent); padding-left:10px; color:#fff;">M.Sc. Physics (Hons) Vault — DU</h3>
-                <div class="sub-grid">
-                    <a href="#" target="_blank" class="node-link-card"><span>M.Sc. 1st Year Advanced Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
-                    <a href="#" target="_blank" class="node-link-card"><span>M.Sc. 2nd Year Advanced Notes</span> <i class="fa-solid fa-cloud-arrow-down"></i></a>
+            <div class="accordion-body" id="msc-body">
+                <div class="accordion-body-inner">
+                    <div class="link-grid">
+                        <a href="#" class="link-card"><span>M.Sc. 1st Year Advanced Notes</span><i class="fa-solid fa-cloud-arrow-down"></i></a>
+                        <a href="#" class="link-card"><span>M.Sc. 2nd Year Advanced Notes</span><i class="fa-solid fa-cloud-arrow-down"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- TECH & ROBOTICS VAULT SECTION -->
-        <div class="accordion-section" id="tech">
-            <button class="accordion-trigger" onclick="toggleAccordion('tech-vault')">
-                <span><i class="fa-solid fa-code"></i> Engineering Tech & Practical Coding Matrix</span>
-                <i class="fa-solid fa-chevron-down"></i>
-            </button>
-            <div class="accordion-content" id="tech-vault">
-                <h4 style="font-family:'Lexend'; margin-bottom:12px; color:#fff;">Python Scripts Required for B.Sc. Graduation (DU Physics Hons)</h4>
-                <div class="sub-grid" style="margin-bottom:30px;">
-                    <a href="#" target="_blank" class="node-link-card"><span>Download Core Python Graduation Scripts</span> <i class="fa-brands fa-python"></i></a>
+    <hr style="border:none; border-top:1px solid var(--border); max-width:1120px; margin:0 auto;">
+
+    <!-- ─── TECH ─── -->
+    <section class="section reveal" id="tech">
+        <div class="section-header">
+            <div class="section-label"><i class="fa-solid fa-code"></i> Tech Lab</div>
+            <h2 class="section-title">Engineering, Coding & Robotics Matrix</h2>
+        </div>
+
+        <div class="sub-heading">Python Scripts — B.Sc. Graduation (DU Physics Hons)</div>
+        <div class="link-grid" style="margin-bottom:28px;">
+            <a href="#" class="link-card">
+                <span><i class="fa-brands fa-python" style="color:var(--accent); margin-right:8px"></i>Download Core Python Graduation Scripts</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+        </div>
+
+        <div class="sub-heading">Robotics Society — Experimental Deployments & Logic Guides</div>
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-thumb" onclick="window.open('https://youtu.be/4dOz21ePUJU','_blank')">
+                    <img src="https://img.youtube.com/vi/4dOz21ePUJU/maxresdefault.jpg" alt="Hardware Automation Video">
+                    <div class="video-thumb-overlay">
+                        <div class="play-btn"><i class="fa-solid fa-play"></i></div>
+                    </div>
                 </div>
-
-                <h4 style="font-family:'Lexend'; margin-bottom:15px; color:#fff;">Robotics Society Experimental Deployments & Logic Guides</h4>
-                <div class="vlog-grid">
-                    
-                    <!-- NEW VIDEO CARD 1 (Robotics/Python Playlist/Video Link 1) -->
-                    <div class="vlog-card">
-                        <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/4dOz21ePUJU/maxresdefault.jpg');" onclick="window.open('https://youtu.be/4dOz21ePUJU','_blank')">
-                            <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
-                        </div>
-                        <div style="padding:15px;">
-                            <h5 style="font-family:'Lexend'; color:#fff; font-size:1rem; margin-bottom:5px;">Advanced Hardware Automation & Control Mechanics</h5>
-                            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:10px;">Decoding algorithmic frameworks and embedding logic setups for next-gen automation pipelines.</p>
-                            <a href="#" style="color:var(--brand-accent); font-size:0.85rem; font-weight:700; text-decoration:none;">Download System Blueprints →</a>
-                        </div>
+                <div class="video-info">
+                    <div class="video-tag">Robotics</div>
+                    <h5>Advanced Hardware Automation & Control Mechanics</h5>
+                    <p>Decoding algorithmic frameworks and embedding logic setups for next-gen automation pipelines.</p>
+                </div>
+            </div>
+            <div class="video-card">
+                <div class="video-thumb" onclick="window.open('https://youtube.com/shorts/cEoO9o54UVU','_blank')">
+                    <img src="https://img.youtube.com/vi/cEoO9o54UVU/maxresdefault.jpg" alt="Micro-Controller Short">
+                    <div class="video-thumb-overlay">
+                        <div class="play-btn"><i class="fa-solid fa-play"></i></div>
                     </div>
-
-                    <!-- NEW VIDEO CARD 2 (Robotics Shorts Link 2) -->
-                    <div class="vlog-card">
-                        <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/cEoO9o54UVU/maxresdefault.jpg');" onclick="window.open('https://youtube.com/shorts/cEoO9o54UVU?si=bfhOEDe8PDn4UE_6','_blank')">
-                            <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
-                        </div>
-                        <div style="padding:15px;">
-                            <h5 style="font-family:'Lexend'; color:#fff; font-size:1rem; margin-bottom:5px;">Micro-Controller Logic Interfacing & Rapid Testing</h5>
-                            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:10px;">Quick transmission brief exploring real-time script processing loops inside embedded environments.</p>
-                            <a href="#" style="color:var(--brand-accent); font-size:0.85rem; font-weight:700; text-decoration:none;">View Deployment Logs →</a>
-                        </div>
-                    </div>
-
+                </div>
+                <div class="video-info">
+                    <div class="video-tag">Embedded</div>
+                    <h5>Micro-Controller Logic Interfacing & Rapid Testing</h5>
+                    <p>Real-time script processing loops inside embedded environments — quick transmission brief.</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- PHYSICS OF CRICKET SECTION -->
-        <section id="cricket" style="margin-top: 40px;">
-            <div class="cricket-banner">
-                <h3>💡 Kya Tum Jaante Ho? — The Physics of Cricket</h3>
-                <p id="knowledge-box" class="knowledge-text">
-                    A premium fast ball swings because of the <strong>Magnus Effect</strong> and asymmetric boundary-layer air friction! When launch velocity matches an angle of exactly 45°, energy transfer reaches maximum range efficiency.
-                </p>
-            </div>
-            
-            <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;"><i class="fa-solid fa-play"></i> Cricket Trajectory Breakdown Transmissions</h3>
-            <div class="vlog-grid">
-                
-                <!-- VIDEO CARD 1 -->
-                <div class="vlog-card">
-                    <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/bOuT8H2kJzs/maxresdefault.jpg');" onclick="window.open('https://youtube.com/shorts/bOuT8H2kJzs?si=0q7Bb48v24TNBOJz','_blank')">
-                        <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
-                    </div>
-                    <div style="padding:15px;">
-                        <h5 style="font-family:'Lexend'; color:#fff; font-size: 1rem; margin-bottom: 5px;">The Aerodynamics of Swing & Swing Velocity Matrix</h5>
-                        <p style="color: var(--text-muted); font-size: 0.85rem;">Decoding fluid dynamics parameters behind standard late swing delivery mechanics.</p>
-                    </div>
-                </div>
-                
-                <!-- VIDEO CARD 2 -->
-                <div class="vlog-card">
-                    <div class="media-shell" style="background-image: url('https://img.youtube.com/vi/ordHjYO2BsI/maxresdefault.jpg');" onclick="window.open('https://youtube.com/shorts/ordHjYO2BsI?si=4-E4x9qXF24EO8ES','_blank')">
-                        <i class="fa-brands fa-youtube" style="color: #ef4444;"></i>
-                    </div>
-                    <div style="padding:15px;">
-                        <h5 style="font-family:'Lexend'; color:#fff; font-size: 1rem; margin-bottom: 5px;">The Sweet Spot Equation: Eliminating Bat Vibration Traps</h5>
-                        <p style="color: var(--text-muted); font-size: 0.85rem;">Locating the fundamental vibrational node where energy conversion reaches peak efficiency.</p>
+    <hr style="border:none; border-top:1px solid var(--border); max-width:1120px; margin:0 auto;">
+
+    <!-- ─── CRICKET ─── -->
+    <section class="section reveal" id="cricket">
+        <div class="section-header">
+            <div class="section-label"><i class="fa-solid fa-baseball"></i> Cricket Analytics</div>
+            <h2 class="section-title">Physics of Cricket</h2>
+        </div>
+
+        <div class="cricket-hero">
+            <h3>💡 Kya Tum Jaante Ho?</h3>
+            <div id="knowledge-box" class="cricket-fact"></div>
+            <div class="cricket-dots" id="cricket-dots"></div>
+        </div>
+
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-thumb" onclick="window.open('https://youtube.com/shorts/bOuT8H2kJzs','_blank')">
+                    <img src="https://img.youtube.com/vi/bOuT8H2kJzs/maxresdefault.jpg" alt="Swing Aerodynamics">
+                    <div class="video-thumb-overlay">
+                        <div class="play-btn"><i class="fa-solid fa-play"></i></div>
                     </div>
                 </div>
-
-            </div>
-        </section>
-
-        <!-- LIVE CAMPUS EVENT TRACKER (FUNNY NOTEPAD UPDATE) -->
-        <section id="events" style="margin-top: 60px;">
-            <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;"><i class="fa-solid fa-clipboard-list"></i> Live Campus Event Tracker</h3>
-            <div class="board-canvas" style="margin-bottom:30px;">
-                <h4 style="font-family:'Lexend'; margin-bottom:10px; color: #9a3412;"><i class="fa-solid fa-thumbtack"></i> Active Fest Schedule Log [Internal Display]</h4>
-                <p style="font-size: 1.05rem; line-height: 1.5;">
-                    🎉 <strong>Important Update:</strong> अरे भाई-भाई! कॉलेज के छोटे-मोटे फेस्ट और सेमिनार तो चलते रहेंगे, उनमे क्या ही रखा है... असली सुख-शांति चाहिए तो बस <strong>DUSU Elections (दिल्ली यूनिवर्सिटी छात्र संघ चुनाव)</strong> का चुपचाप इंतजार करो! पूरे कैंपस में जो भौकाल, फ्री के छोले-भटूरे, लक्ज़री गाड़ियों के काफिले और हाई-लेवल ड्रामा वाला 'असली एन्जॉयमेंट' मिलेगा ना, उसके आगे सारे कॉलेज फेस्ट फीके हैं! 🤝🔥
-                </p>
-            </div>
-            <div class="vlog-grid">
-                <div class="vlog-card">
-                    <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
-                    <div style="padding:15px;"><h5 style="font-family:'Lexend'; color:#fff;">Kirori Mal & Hindu College Premium Fest Coverage Vlog</h5></div>
+                <div class="video-info">
+                    <div class="video-tag">Aerodynamics</div>
+                    <h5>Aerodynamics of Swing & Swing Velocity Matrix</h5>
+                    <p>Decoding fluid dynamics parameters behind standard late swing delivery mechanics.</p>
                 </div>
             </div>
-        </section>
-
-        <section style="margin-top: 60px;">
-            <h3 class="logo" style="font-size:1.5rem; margin-bottom:20px; color:#fff;"><i class="fa-solid fa-compass"></i> Atri's Personal Campus Tours & Travel Chronicles</h3>
-            <div class="vlog-grid">
-                <div class="vlog-card">
-                    <div class="media-shell" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')"><i class="fa-brands fa-youtube"></i></div>
-                    <div style="padding:15px;"><h5 style="font-family:'Lexend'; color:#fff;">Exclusive Walkthrough Logs: Deep Campus Explorations</h5></div>
+            <div class="video-card">
+                <div class="video-thumb" onclick="window.open('https://youtube.com/shorts/ordHjYO2BsI','_blank')">
+                    <img src="https://img.youtube.com/vi/ordHjYO2BsI/maxresdefault.jpg" alt="Sweet Spot Equation">
+                    <div class="video-thumb-overlay">
+                        <div class="play-btn"><i class="fa-solid fa-play"></i></div>
+                    </div>
                 </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="footer-wrap">
-            <div>
-                <h4>Atri's Physics Orbit</h4>
-                <p style="color:#94a3b8; max-width:400px; font-size:0.95rem;">Bridging applied physics research fields, advanced robotic arrays, and premium digital campus portfolios.</p>
-            </div>
-            <div>
-                <h4>Secure Inquiries</h4>
-                <p style="color:#94a3b8;"><i class="fa-solid fa-envelope"></i> business.atrimishra@gmail.com</p>
-            </div>
-            <div>
-                <h4>Network Directives</h4>
-                <p style="margin-bottom:10px;"><a href="https://youtube.com/@sageatrimishra" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube Channel</a></p>
-                <p><a href="https://instagram.com/atrimishra18" target="_blank"><i class="fa-brands fa-instagram"></i> @atrimishra18</a></p>
+                <div class="video-info">
+                    <div class="video-tag">Vibration Physics</div>
+                    <h5>The Sweet Spot Equation: Eliminating Bat Vibration Traps</h5>
+                    <p>Locating the fundamental vibrational node where energy conversion reaches peak efficiency.</p>
+                </div>
             </div>
         </div>
-        
-        <div class="divine-sig">
-            हरिशरणम्
-        </div>
-    </footer>
+    </section>
 
-    <script>
-        function toggleAccordion(id) {
-            const panel = document.getElementById(id);
-            if(panel.style.display === "block") {
-                panel.style.display = "none";
-            } else {
-                panel.style.display = "block";
+    <hr style="border:none; border-top:1px solid var(--border); max-width:1120px; margin:0 auto;">
+
+    <!-- ─── EVENTS ─── -->
+    <section class="section reveal" id="events">
+        <div class="section-header">
+            <div class="section-label"><i class="fa-solid fa-clipboard-list"></i> Campus Life</div>
+            <h2 class="section-title">Live Campus Event Tracker & Vlogs</h2>
+        </div>
+
+        <div class="noticeboard">
+            <div class="notice-header">
+                <span class="notice-pin">📌</span>
+                <span class="notice-title">Active Fest Schedule Log — Internal Update</span>
+            </div>
+            <p>
+                🎉 <strong>Important Update:</strong> अरे भाई-भाई! कॉलेज के छोटे-मोटे फेस्ट और सेमिनार तो चलते रहेंगे, उनमे क्या ही रखा है... असली सुख-शांति चाहिए तो बस <strong>DUSU Elections (दिल्ली यूनिवर्सिटी छात्र संघ चुनाव)</strong> का चुपचाप इंतजार करो! पूरे कैंपस में जो भौकाल, फ्री के छोले-भटूरे, लक्ज़री गाड़ियों के काफिले और हाई-लेवल ड्रामा वाला 'असली एन्जॉयमेंट' मिलेगा ना, उसके आगे सारे कॉलेज फेस्ट फीके हैं! 🤝🔥
+            </p>
+        </div>
+
+        <div class="sub-heading">Festival & Campus Vlogs</div>
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-thumb" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')" style="background:#1a1410; display:flex; align-items:center; justify-content:center;">
+                    <div class="video-thumb-overlay" style="background:rgba(0,0,0,0.5)">
+                        <div class="play-btn"><i class="fa-brands fa-youtube" style="color:#ef4444"></i></div>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-tag">Fest Vlog</div>
+                    <h5>Kirori Mal & Hindu College Premium Fest Coverage</h5>
+                    <p>Immersive walkthrough of DU's most iconic college festivals and cultural events.</p>
+                </div>
+            </div>
+            <div class="video-card">
+                <div class="video-thumb" onclick="window.open('https://youtube.com/@sageatrimishra','_blank')" style="background:#1a1410; display:flex; align-items:center; justify-content:center;">
+                    <div class="video-thumb-overlay" style="background:rgba(0,0,0,0.5)">
+                        <div class="play-btn"><i class="fa-brands fa-youtube" style="color:#ef4444"></i></div>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-tag">Campus Tour</div>
+                    <h5>Exclusive Campus Explorations & Travel Chronicles</h5>
+                    <p>Deep walkthrough logs and personal travel vlogs from DU's sprawling North Campus.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+    <div class="footer-grid">
+        <div>
+            <div class="footer-logo">
+                <i class="fa-solid fa-satellite-dish" style="color:var(--accent-mid)"></i>
+                Atri's Physics <span class="dot">Orbit</span>
+            </div>
+            <p class="footer-desc">Bridging applied physics research, advanced robotics, and premium digital campus portfolios. From the classrooms of Delhi University.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Contact</h4>
+            <a href="mailto:business.atrimishra@gmail.com">
+                <i class="fa-solid fa-envelope"></i> business.atrimishra@gmail.com
+            </a>
+        </div>
+        <div class="footer-col">
+            <h4>Network</h4>
+            <a href="https://youtube.com/@sageatrimishra" target="_blank">
+                <i class="fa-brands fa-youtube"></i> YouTube Channel
+            </a>
+            <a href="https://instagram.com/atrimishra18" target="_blank">
+                <i class="fa-brands fa-instagram"></i> @atrimishra18
+            </a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p class="footer-copy">© 2024 Atri Mishra. All rights reserved.</p>
+        <div class="divine-sig">हरिशरणम्</div>
+    </div>
+</footer>
+
+<script>
+    /* ─── SCROLL PROGRESS & BACK TO TOP ─── */
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const pct = (scrollTop / docHeight) * 100;
+        document.getElementById('progress-bar').style.width = pct + '%';
+        const btn = document.getElementById('back-top');
+        btn.classList.toggle('visible', scrollTop > 400);
+    });
+
+    /* ─── REVEAL ON SCROLL ─── */
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    /* ─── COUNT UP ANIMATION ─── */
+    const countObserver = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+            if (e.isIntersecting) {
+                const el = e.target;
+                const target = parseInt(el.dataset.count);
+                let current = 0;
+                const step = target / 30;
+                const timer = setInterval(() => {
+                    current = Math.min(current + step, target);
+                    el.textContent = Math.round(current) + '+';
+                    if (current >= target) clearInterval(timer);
+                }, 40);
+                countObserver.unobserve(el);
             }
-        }
+        });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-count]').forEach((el) => countObserver.observe(el));
 
-        function calcAttendance() {
-            const held = parseInt(document.getElementById('held').value);
-            const attended = parseInt(document.getElementById('attended').value);
-            const res = document.getElementById('calc-res');
-            if(isNaN(held) || isNaN(attended) || held <= 0 || attended < 0 || attended > held) {
-                res.style.display = 'block'; res.style.background = '#fef2f2'; res.style.color = '#ef4444';
-                res.innerHTML = "⚠️ Configuration mismatch logs."; return;
-            }
-            const ratio = ((attended / held) * 100).toFixed(1);
+    /* ─── MOBILE MENU ─── */
+    function toggleMenu() {
+        const m = document.getElementById('mobile-menu');
+        const icon = document.getElementById('ham-icon');
+        m.classList.toggle('open');
+        icon.className = m.classList.contains('open') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+    }
+    function closeMobileMenu() {
+        const m = document.getElementById('mobile-menu');
+        m.classList.remove('open');
+        document.getElementById('ham-icon').className = 'fa-solid fa-bars';
+    }
+
+    /* ─── OPEN TOOLS ─── */
+    function openTools() {
+        const el = document.getElementById('tools-section');
+        el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ─── ACCORDION ─── */
+    function toggleAccordion(id, btn) {
+        const body = document.getElementById(id);
+        const isOpen = body.classList.contains('open');
+        body.classList.toggle('open');
+        btn.classList.toggle('open');
+    }
+
+    /* ─── ATTENDANCE ─── */
+    function calcAttendance() {
+        const held = parseInt(document.getElementById('held').value);
+        const attended = parseInt(document.getElementById('attended').value);
+        const res = document.getElementById('calc-res');
+        if (isNaN(held) || isNaN(attended) || held <= 0 || attended < 0 || attended > held) {
             res.style.display = 'block';
-            if(ratio >= 75) {
-                res.style.background = '#f0fdf4'; res.style.color = '#15803d';
-                const bunk = Math.floor((attended - (0.75 * held)) / 0.75);
-                res.innerHTML = `Safe Horizon: ${ratio}% | Safe to bypass next ${bunk} slots.`;
-            } else {
-                res.style.background = '#fff7ed'; res.style.color = '#c2410c';
-                const req = Math.ceil(((0.75 * held) - attended) / 0.25);
-                res.innerHTML = `Clearance Breach: ${ratio}% | Compulsory attendance for next ${req} slots consecutively.`;
-            }
+            res.style.background = '#fef2f2'; res.style.color = '#dc2626'; res.style.border = '1px solid #fecaca';
+            res.innerHTML = '⚠️ Please enter valid values.'; return;
         }
-
-        function calcCgpa() {
-            const cgpa = parseFloat(document.getElementById('cgpa').value);
-            const res = document.getElementById('cgpa-res');
-            if(isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
-                res.innerHTML = "⚠️ Enter valid decimal scale."; return;
-            }
-            const pct = (cgpa * 9.5).toFixed(2);
-            res.innerHTML = `Calibrated Equating Log: ${pct}%`;
+        const ratio = ((attended / held) * 100).toFixed(1);
+        res.style.display = 'block';
+        if (ratio >= 75) {
+            const bunk = Math.floor((attended - 0.75 * held) / 0.75);
+            res.style.background = '#f0fdf4'; res.style.color = '#16a34a'; res.style.border = '1px solid #bbf7d0';
+            res.innerHTML = `✅ ${ratio}% — Safe to skip next <strong>${bunk}</strong> slots.`;
+        } else {
+            const req = Math.ceil((0.75 * held - attended) / 0.25);
+            res.style.background = '#fff7ed'; res.style.color = '#c2410c'; res.style.border = '1px solid #fed7aa';
+            res.innerHTML = `⚠️ ${ratio}% — Attend next <strong>${req}</strong> consecutive slots.`;
         }
+    }
 
-        /* POMODORO TIMER LOGIC */
-        let pomoInterval = null;
-        let pomoMinutes = 25;
-        let pomoSeconds = 0;
-        let pomoIsRunning = false;
-
-        function updatePomoDisplay() {
-            const display = document.getElementById('pomo-display');
-            const m = pomoMinutes < 10 ? '0' + pomoMinutes : pomoMinutes;
-            const s = pomoSeconds < 10 ? '0' + pomoSeconds : pomoSeconds;
-            display.innerHTML = `${m}:${s}`;
+    /* ─── CGPA ─── */
+    function calcCgpa() {
+        const cgpa = parseFloat(document.getElementById('cgpa').value);
+        const res = document.getElementById('cgpa-res');
+        if (isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
+            res.style.display = 'block';
+            res.style.background = '#fef2f2'; res.style.color = '#dc2626'; res.style.border = '1px solid #fecaca';
+            res.innerHTML = '⚠️ Enter a valid CGPA (0–10).'; return;
         }
+        const pct = (cgpa * 9.5).toFixed(2);
+        res.style.display = 'block';
+        res.style.background = '#eff6ff'; res.style.color = '#1d4ed8'; res.style.border = '1px solid #bfdbfe';
+        res.innerHTML = `🎓 Equivalent Percentage: <strong>${pct}%</strong>`;
+    }
 
-        function changePomodoroMode() {
-            const modeVal = parseInt(document.getElementById('pomo-mode').value);
-            clearInterval(pomoInterval);
-            pomoIsRunning = false;
-            document.getElementById('pomo-start').innerHTML = "Start";
-            pomoMinutes = modeVal;
-            pomoSeconds = 0;
-            updatePomoDisplay();
-        }
-
-        function togglePomodoro() {
-            const startBtn = document.getElementById('pomo-start');
-            if (pomoIsRunning) {
-                clearInterval(pomoInterval);
-                pomoIsRunning = false;
-                startBtn.innerHTML = "Start";
-            } else {
-                pomoIsRunning = true;
-                startBtn.innerHTML = "Pause";
-                pomoInterval = setInterval(() => {
-                    if (pomoSeconds === 0) {
-                        if (pomoMinutes === 0) {
-                            clearInterval(pomoInterval);
-                            pomoIsRunning = false;
-                            startBtn.innerHTML = "Start";
-                            alert("Time's up! Session matrix complete.");
-                            resetPomodoro();
-                            return;
-                        }
-                        pomoMinutes--;
-                        pomoSeconds = 59;
-                    } else {
-                        pomoSeconds--;
+    /* ─── POMODORO ─── */
+    let pomoInterval = null, pomoMinutes = 25, pomoSeconds = 0, pomoRunning = false;
+    function updatePomo() {
+        const m = String(pomoMinutes).padStart(2, '0');
+        const s = String(pomoSeconds).padStart(2, '0');
+        document.getElementById('pomo-display').textContent = `${m}:${s}`;
+    }
+    function changePomodoroMode() {
+        clearInterval(pomoInterval); pomoRunning = false;
+        pomoMinutes = parseInt(document.getElementById('pomo-mode').value);
+        pomoSeconds = 0; updatePomo();
+        document.getElementById('pomo-start').textContent = '▶ Start';
+        document.getElementById('pomo-start').classList.remove('active');
+    }
+    function togglePomodoro() {
+        const btn = document.getElementById('pomo-start');
+        if (pomoRunning) {
+            clearInterval(pomoInterval); pomoRunning = false;
+            btn.textContent = '▶ Start'; btn.classList.remove('active');
+        } else {
+            pomoRunning = true; btn.textContent = '⏸ Pause'; btn.classList.add('active');
+            pomoInterval = setInterval(() => {
+                if (pomoSeconds === 0) {
+                    if (pomoMinutes === 0) {
+                        clearInterval(pomoInterval); pomoRunning = false;
+                        btn.textContent = '▶ Start'; btn.classList.remove('active');
+                        alert("⏰ Time's up! Session complete."); resetPomodoro(); return;
                     }
-                    updatePomoDisplay();
-                }, 1000);
-            }
+                    pomoMinutes--; pomoSeconds = 59;
+                } else { pomoSeconds--; }
+                updatePomo();
+            }, 1000);
         }
+    }
+    function resetPomodoro() {
+        clearInterval(pomoInterval); pomoRunning = false;
+        pomoMinutes = parseInt(document.getElementById('pomo-mode').value);
+        pomoSeconds = 0; updatePomo();
+        document.getElementById('pomo-start').textContent = '▶ Start';
+        document.getElementById('pomo-start').classList.remove('active');
+    }
 
-        function resetPomodoro() {
-            clearInterval(pomoInterval);
-            pomoIsRunning = false;
-            document.getElementById('pomo-start').innerHTML = "Start";
-            const modeVal = parseInt(document.getElementById('pomo-mode').value);
-            pomoMinutes = modeVal;
-            pomoSeconds = 0;
-            updatePomoDisplay();
+    /* ─── DEADLINE ─── */
+    function calculateDeadline() {
+        const name = document.getElementById('target-name').value.trim();
+        const dateVal = document.getElementById('target-date').value;
+        const res = document.getElementById('deadline-res');
+        if (!dateVal) {
+            res.style.display = 'block';
+            res.style.background = '#fef2f2'; res.style.color = '#dc2626'; res.style.border = '1px solid #fecaca';
+            res.innerHTML = '⚠️ Please select a target date.'; return;
         }
-
-        /* DEADLINE TRACKER LOGIC */
-        function calculateDeadline() {
-            const tName = document.getElementById('target-name').value.trim();
-            const tDateVal = document.getElementById('target-date').value;
-            const res = document.getElementById('deadline-res');
-
-            if (!tDateVal) {
-                res.innerHTML = "⚠️ Please configure a target date.";
-                res.style.color = "#ef4444";
-                return;
-            }
-
-            const targetDate = new Date(tDateVal);
-            const today = new Date();
-            
-            today.setHours(0,0,0,0);
-            targetDate.setHours(0,0,0,0);
-
-            const diffTime = targetDate - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            const eventLabel = tName ? `"${tName}"` : "Target Event";
-
-            if (diffDays < 0) {
-                res.innerHTML = `⌛ ${eventLabel} matrix passed ${Math.abs(diffDays)} days ago.`;
-                res.style.color = "#94a3b8";
-            } else if (diffDays === 0) {
-                res.innerHTML = `🚨 Quantum Node Reached! ${eventLabel} is TODAY.`;
-                res.style.color = "#ff7800";
-            } else {
-                res.innerHTML = `⏳ ${diffDays} Days remaining until ${eventLabel}.`;
-                res.style.color = "#4ade80";
-            }
+        const target = new Date(dateVal); const today = new Date();
+        today.setHours(0,0,0,0); target.setHours(0,0,0,0);
+        const diff = Math.ceil((target - today) / 86400000);
+        const label = name ? `"${name}"` : 'your exam';
+        res.style.display = 'block';
+        if (diff < 0) {
+            res.style.background = '#f8fafc'; res.style.color = '#64748b'; res.style.border = '1px solid #e2e8f0';
+            res.innerHTML = `⌛ ${label} was ${Math.abs(diff)} days ago.`;
+        } else if (diff === 0) {
+            res.style.background = '#fff7ed'; res.style.color = '#c2410c'; res.style.border = '1px solid #fed7aa';
+            res.innerHTML = `🚨 ${label} is <strong>TODAY!</strong>`;
+        } else {
+            res.style.background = '#f0fdf4'; res.style.color = '#16a34a'; res.style.border = '1px solid #bbf7d0';
+            res.innerHTML = `⏳ <strong>${diff} days</strong> remaining until ${label}.`;
         }
+    }
 
-        /* LIVE DYNAMIC PHYSICS-CRICKET KNOWLEDGE SLIDER */
-        const cricketFacts = [
-            "A premium fast ball swings because of the <strong>Magnus Effect</strong> and asymmetric boundary-layer air friction! When launch velocity matches an angle of exactly 45°, energy transfer reaches maximum range efficiency.",
-            "Spin bowling uncovers the true magic of <strong>Fluid Dynamics</strong>! A heavy top-spin forces high-velocity air under the ball, generating a massive downward pressure differential that causes it to dip abruptly before hitting the deck.",
-            "Ever wondered about the 'Sweet Spot'? When a leather ball collides at this precise node, the <strong>fundamental vibrational harmonics</strong> drop to zero, transmitting near-maximum kinetic energy into the trajectory without stinging the hands.",
-            "The <strong>Coefficient of Restitution (COR)</strong> dictates how high a cricket ball bounces. As pitch wear alters moisture loops and surface elasticity, energy absorption profiles shift drastically across days 1 to 5.",
-            "A rough vs smooth side layout creates an air velocity mismatch. This uneven boundary layer transition triggers a localized pressure drop, resulting in legendary **Conventional and Reverse Swing** paths."
-        ];
-        
-        let factIndex = 0;
-        setInterval(() => {
-            const box = document.getElementById('knowledge-box');
-            box.style.opacity = 0;
-            setTimeout(() => {
-                factIndex = (factIndex + 1) % cricketFacts.length;
-                box.innerHTML = cricketFacts[factIndex];
-                box.style.opacity = 1;
-            }, 500);
-        }, 5000);
-    </script>
+    /* ─── CRICKET FACTS CAROUSEL ─── */
+    const facts = [
+        "A premium fast ball swings because of the <strong>Magnus Effect</strong> and asymmetric boundary-layer air friction! When launch velocity matches an angle of exactly 45°, energy transfer reaches maximum range efficiency.",
+        "Spin bowling uncovers the true magic of <strong>Fluid Dynamics</strong>. Heavy top-spin forces high-velocity air under the ball, generating a downward pressure differential that causes it to dip abruptly before hitting the deck.",
+        "The 'Sweet Spot': when the leather ball collides at this precise node, <strong>fundamental vibrational harmonics</strong> drop to zero — transmitting near-maximum kinetic energy without stinging the hands.",
+        "The <strong>Coefficient of Restitution (COR)</strong> dictates how high a cricket ball bounces. As pitch wear alters surface elasticity, energy absorption profiles shift drastically across days 1 to 5.",
+        "Rough vs. smooth side creates an air velocity mismatch. This uneven boundary layer triggers a pressure drop — producing legendary <strong>Conventional and Reverse Swing</strong> trajectories."
+    ];
+
+    let factIdx = 0;
+    const dotsContainer = document.getElementById('cricket-dots');
+    const factBox = document.getElementById('knowledge-box');
+
+    // Build dots
+    facts.forEach((_, i) => {
+        const d = document.createElement('div');
+        d.className = 'cricket-dot' + (i === 0 ? ' active' : '');
+        dotsContainer.appendChild(d);
+    });
+
+    function setFact(idx) {
+        factBox.style.opacity = 0;
+        setTimeout(() => {
+            factBox.innerHTML = facts[idx];
+            factBox.style.opacity = 1;
+            document.querySelectorAll('.cricket-dot').forEach((d, i) => {
+                d.classList.toggle('active', i === idx);
+            });
+        }, 350);
+    }
+
+    setFact(0);
+    setInterval(() => { factIdx = (factIdx + 1) % facts.length; setFact(factIdx); }, 5500);
+</script>
+
 </body>
 </html>
