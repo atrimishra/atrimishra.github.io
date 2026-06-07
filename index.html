@@ -1,82 +1,241 @@
-<section class="section reveal" id="tools-section">
-        <div class="section-header">
-            <div class="section-label"><i class="fa-solid fa-sliders"></i> Utilities</div>
-            <h2 class="section-title">Advanced Physics Toolkit</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atri's Physics Orbit | Interactive Tools</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- COLOR COMBINATION (Based on the Image) --- */
+        :root {
+            --bg-dark: #161B28;       /* Hero & Footer Background */
+            --bg-light: #F4F6F8;      /* Main Page Background */
+            --card-bg: #FFFFFF;       /* Tool Cards */
+            --text-dark: #111827;     /* Main Headings */
+            --text-muted: #6B7280;    /* Descriptions */
+            --text-light: #F9FAFB;    /* Text on Dark BG */
+            
+            /* Accent Colors */
+            --accent-orange: #FF7A00;
+            --accent-orange-hover: #E06A00;
+            --accent-purple: #7C3AED;
+            --accent-green: #10B981;
+            --accent-blue: #3B82F6;
+            
+            --border-color: #E5E7EB;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        
+        /* --- NAVBAR --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: var(--card-bg); border-bottom: 1px solid var(--border-color); }
+        .logo { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 700; color: var(--text-dark); text-decoration: none; }
+        .logo span { color: var(--accent-orange); }
+        .nav-links { list-style: none; display: flex; gap: 24px; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.95rem; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-orange); }
+
+        /* --- HERO SECTION --- */
+        .hero { background: var(--bg-dark); color: var(--text-light); padding: 80px 5%; border-radius: 0 0 var(--radius-lg) var(--radius-lg); margin: 0 10px; display: flex; flex-direction: column; align-items: flex-start; position: relative; overflow: hidden; }
+        .eyebrow { background: rgba(255, 122, 0, 0.15); color: var(--accent-orange); padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase; }
+        .hero h1 { font-family: 'Fraunces', serif; font-size: 3.5rem; line-height: 1.1; margin-bottom: 20px; max-width: 600px; }
+        .hero h1 span { color: var(--accent-orange); }
+        .hero p { font-size: 1.1rem; color: #9CA3AF; max-width: 500px; margin-bottom: 30px; }
+        .btn-main { background: var(--accent-orange); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: background 0.3s; border: none; cursor: pointer; }
+        .btn-main:hover { background: var(--accent-orange-hover); }
+
+        /* --- MAIN DASHBOARD CONTENT --- */
+        main { padding: 60px 5%; max-width: 1300px; margin: 0 auto; }
+        .category-title { font-family: 'Fraunces', serif; font-size: 1.8rem; margin: 40px 0 20px; color: var(--text-dark); display: flex; align-items: center; gap: 10px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+        
+        /* --- TOOL CARDS --- */
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: #D1D5DB; }
+        
+        .card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .icon-box { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+        .icon-orange { background: rgba(255, 122, 0, 0.1); color: var(--accent-orange); }
+        .icon-purple { background: rgba(124, 58, 237, 0.1); color: var(--accent-purple); }
+        .icon-green { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
+        .icon-blue { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+        
+        .card h3 { font-size: 1.15rem; color: var(--text-dark); margin-bottom: 4px; }
+        .card p { font-size: 0.9rem; color: var(--text-muted); flex-grow: 1; margin-bottom: 24px; }
+        
+        .btn-tool { display: block; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: opacity 0.3s; color: white; }
+        .btn-tool:hover { opacity: 0.9; }
+        
+        .btn-orange { background: var(--accent-orange); }
+        .btn-purple { background: var(--accent-purple); }
+        .btn-green { background: var(--accent-green); }
+        .btn-blue { background: var(--accent-blue); }
+
+        /* --- FOOTER --- */
+        footer { background: var(--bg-dark); color: var(--text-light); padding: 40px 5%; text-align: center; margin-top: 60px; font-size: 0.9rem; }
+        footer p { color: #9CA3AF; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; } /* Add hamburger menu logic later if needed */
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo"><i class="fa-solid fa-atom"></i> Atri's Physics <span>Orbit</span></a>
+        <ul class="nav-links">
+            <li><a href="#">Notes Vault</a></li>
+            <li><a href="#">Tech Lab</a></li>
+            <li><a href="#" class="active">Utilities</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <div class="eyebrow"><i class="fa-solid fa-toolbox"></i> Utilities</div>
+        <h1>Smart Tools for<br><span>Physics Students</span></h1>
+        <p>Explore interactive modular tools designed to simplify your studies, boost productivity, and master advanced physics concepts.</p>
+        <button class="btn-main" onclick="document.getElementById('tools').scrollIntoView({behavior: 'smooth'})">Explore All Tools <i class="fa-solid fa-arrow-right"></i></button>
+    </header>
+
+    <main id="tools">
+        
+        <h2 class="category-title"><i class="fa-solid fa-square-root-variable" style="color: var(--accent-purple)"></i> Mathematical & Core Tools</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-green"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3>Dynamic Graph Plotter</h3>
+                </div>
+                <p>Plot mathematical functions instantly (y=x^2) and analyze manual X, Y datasets with ease.</p>
+                <a href="graph-plotter.html" class="btn-tool btn-green">Open Plotter</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-purple"><i class="fa-solid fa-file-signature"></i></div>
+                    <h3>LaTeX Notes Editor</h3>
+                </div>
+                <p>Type markdown alongside equations and get LaTeX code rendered instantly with live preview.</p>
+                <a href="latex-editor.html" class="btn-tool btn-purple">Generate LaTeX</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-orange"><i class="fa-solid fa-calculator"></i></div>
+                    <h3>Algebra & Calculus Solver</h3>
+                </div>
+                <p>Instant differentiation, integration, and step-by-step solutions for complex equations.</p>
+                <a href="algebra-solver.html" class="btn-tool btn-orange">Solve Equations</a>
+            </div>
         </div>
 
-        <h3 class="sub-heading">Category A: Mathematical & Core Tools</h3>
-        <div class="tools-grid">
-            <a href="graph-plotter.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-chart-line"></i></div>
-                <h4>1. Dynamic Graph Plotter</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Plot functions and manual X-Y data instantly.</p>
-            </a>
-            <a href="latex-notes.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-file-pen"></i></div>
-                <h4>2. LaTeX Notes Editor</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Write Markdown and render physics equations live.</p>
-            </a>
-            <a href="algebra-solver.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-square-root-variable"></i></div>
-                <h4>3. Calculus & Algebra Solver</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Instant differentiation and integration solver.</p>
-            </a>
+        <h2 class="category-title"><i class="fa-solid fa-atom" style="color: var(--accent-blue)"></i> Quantum & Statistical Mechanics</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-blue"><i class="fa-solid fa-wave-square"></i></div>
+                    <h3>1D Quantum Visualizer</h3>
+                </div>
+                <p>Visualize wavefunctions and probability densities for Infinite Square Well & Harmonic Oscillators.</p>
+                <a href="quantum-visualizer.html" class="btn-tool btn-blue">Launch Visualizer</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-orange"><i class="fa-solid fa-chart-area"></i></div>
+                    <h3>Quantum Statistics Curve</h3>
+                </div>
+                <p>Live comparison of Maxwell-Boltzmann, Bose-Einstein, and Fermi-Dirac distributions.</p>
+                <a href="quantum-stats.html" class="btn-tool btn-orange">Compare Curves</a>
+            </div>
         </div>
 
-        <h3 class="sub-heading">Category B: Quantum & Statistical Mechanics</h3>
-        <div class="tools-grid">
-            <a href="quantum-visualizer.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-wave-square"></i></div>
-                <h4>4. 1D Quantum Visualizer</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Live graphs for Infinite Square Well & Harmonic Oscillator.</p>
-            </a>
-            <a href="quantum-statistics.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-chart-area"></i></div>
-                <h4>5. Stats Curve Comparer</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Compare MB, BE, and FD distributions instantly.</p>
-            </a>
+        <h2 class="category-title"><i class="fa-solid fa-cubes" style="color: var(--accent-green)"></i> Solid State & Nuclear Physics</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-green"><i class="fa-solid fa-cube"></i></div>
+                    <h3>3D Crystal Lattice Viewer</h3>
+                </div>
+                <p>Rotate SC, BCC, FCC structures in 3D and visualize Miller Indices planes interactively.</p>
+                <a href="crystal-viewer.html" class="btn-tool btn-green">View 3D Lattices</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-purple"><i class="fa-solid fa-radiation"></i></div>
+                    <h3>Radioactive Decay Simulator</h3>
+                </div>
+                <p>Simulate Parent to Daughter nuclei decay chains and view exponential graphs instantly.</p>
+                <a href="decay-simulator.html" class="btn-tool btn-purple">Run Simulation</a>
+            </div>
         </div>
 
-        <h3 class="sub-heading">Category C: Solid State & Nuclear Physics</h3>
-        <div class="tools-grid">
-            <a href="crystal-viewer.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-cubes"></i></div>
-                <h4>6. 3D Crystal Lattice Viewer</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Rotate SC, BCC, FCC structures in 3D space.</p>
-            </a>
-            <a href="decay-simulator.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-radiation"></i></div>
-                <h4>7. Radioactive Decay Sim</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Exponential decay graphs and daughter nuclei tracking.</p>
-            </a>
-        </div>
+        <h2 class="category-title"><i class="fa-solid fa-flask" style="color: var(--accent-orange)"></i> Lab Analysis & Utilities</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-blue"><i class="fa-solid fa-ruler-combined"></i></div>
+                    <h3>Lab Data Error Fitter</h3>
+                </div>
+                <p>Calculate Least-Square fits, slopes, intercepts, and error bars for your lab readings.</p>
+                <a href="lab-fitter.html" class="btn-tool btn-blue">Fit Lab Data</a>
+            </div>
 
-        <h3 class="sub-heading">Category D: Lab Analysis & Advanced Utilities</h3>
-        <div class="tools-grid" style="margin-bottom: 20px;">
-            <a href="curve-fitting.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-chart-scatter"></i></div>
-                <h4>8. Lab Error & Curve Fitting</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Least-Square fits for your BSc/MSc lab readings.</p>
-            </a>
-            <a href="spectroscopy.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-barcode"></i></div>
-                <h4>9. Atomic Spectroscopy</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Generate wavelengths and colors for Rydberg series.</p>
-            </a>
-            <a href="focus-timer.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-stopwatch"></i></div>
-                <h4>10. Quantum Focus Timer</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Pomodoro timer optimized for deep study sessions.</p>
-            </a>
-            <a href="matrix-workspace.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-solid fa-table-cells"></i></div>
-                <h4>11. Vector & Matrix Space</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Calculate Eigenvalues and cross products easily.</p>
-            </a>
-            <a href="python-playground.html" class="tool-card" style="text-decoration: none;">
-                <div class="tool-icon"><i class="fa-brands fa-python"></i></div>
-                <h4>12. Python Playground</h4>
-                <p style="font-size: 0.85rem; color: var(--ink-muted);">Run tiny NumPy physics scripts right in the browser.</p>
-            </a>
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-purple"><i class="fa-solid fa-barcode"></i></div>
+                    <h3>Atomic Spectroscopy</h3>
+                </div>
+                <p>Generate Rydberg series wavelengths and actual spectrum line color codes.</p>
+                <a href="spectroscopy.html" class="btn-tool btn-purple">Generate Spectra</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-orange"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <h3>Quantum Focus Timer</h3>
+                </div>
+                <p>Customizable Pomodoro-style timer with study sessions, breaks, and alerts.</p>
+                <a href="focus-timer.html" class="btn-tool btn-orange">Start Timer</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-green"><i class="fa-solid fa-table-cells"></i></div>
+                    <h3>Vector & Matrix Workspace</h3>
+                </div>
+                <p>Solve Determinants, Eigenvalues, Matrix Multiplications, and Cross Products.</p>
+                <a href="matrix-workspace.html" class="btn-tool btn-green">Open Workspace</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box icon-dark"><i class="fa-brands fa-python"></i></div>
+                    <h3>Python Sandbox</h3>
+                </div>
+                <p>In-browser computational playground to run quick Numpy and Scipy scripts.</p>
+                <a href="python-sandbox.html" style="background: #1F2937;" class="btn-tool">Launch Terminal</a>
+            </div>
         </div>
-    </section>
+    </main>
+
+    <footer>
+        <h2 style="font-family: 'Fraunces', serif; margin-bottom: 10px;"><i class="fa-solid fa-atom" style="color: var(--accent-orange)"></i> Atri's Physics Orbit</h2>
+        <p>&copy; 2026 Atri's Physics Orbit. Built by a student for fellow learners.</p>
+    </footer>
+
+</body>
+</html>
