@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tools — Atri's Physics Orbit</title>
+    <meta name="description" content="12 interactive physics tools for BSc & MSc students — Graph Plotter, Quantum Visualizer, Crystal Lattice, and more.">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg:        #04060f;
+            --bg-card:   #0c0f1e;
+            --bg-card2:  #111428;
+            --border:    rgba(255,255,255,0.07);
+            --border-hover: rgba(249,115,22,0.45);
+            --accent:    #d4500a;
+            --accent-mid:#f97316;
+            --accent-glow: rgba(249,115,22,0.18);
+            --white:     #ffffff;
+            --text:      rgba(255,255,255,0.88);
+            --muted:     rgba(255,255,255,0.42);
+            --cat-a:     #f97316;
+            --cat-b:     #8b5cf6;
+            --cat-c:     #06b6d4;
+            --cat-d:     #10b981;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        /* ── SCROLL BAR ── */
+        ::-webkit-scrollbar { width:5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius:3px; }
+
+        /* ── PROGRESS BAR ── */
+        #progress-bar {
+            position:fixed; top:0; left:0; height:2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-mid));
+            width:0%; z-index:9999; transition:width 0.1s;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position:fixed; top:0; left:0; right:0; z-index:1000;
+            background: rgba(4,6,15,0.82);
+            backdrop-filter: blur(22px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 5%;
+            display:flex; align-items:center; justify-content:space-between;
+            height:62px;
+        }
+        .logo {
+            font-family:'Fraunces',serif;
+            font-size:1.1rem; font-weight:700; color:var(--white);
+            display:flex; align-items:center; gap:9px; text-decoration:none;
+        }
+        .logo .dot { color:var(--accent-mid); }
+        .nav-links { display:flex; list-style:none; gap:2px; }
+        .nav-links a {
+            color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.84rem;
+            font-weight:500; padding:6px 13px; border-radius:30px; transition:all 0.2s;
+        }
+        .nav-links a:hover { color:var(--accent-mid); background:var(--accent-glow); }
+        .nav-links a.active { color:var(--accent-mid); background:var(--accent-glow); }
+        .nav-hamburger { display:none; background:none; border:none; cursor:pointer; font-size:1.3rem; color:#fff; }
+        .mobile-menu {
+            display:none; position:fixed; top:62px; left:0; right:0;
+            background:rgba(4,6,15,0.97); border-bottom:1px solid var(--border);
+            z-index:999; padding:12px 5%; flex-direction:column; gap:4px;
+            backdrop-filter:blur(20px);
+        }
+        .mobile-menu.open { display:flex; }
+        .mobile-menu a {
+            color:rgba(255,255,255,0.75); text-decoration:none; font-size:0.9rem;
+            padding:10px 14px; border-radius:8px; transition:all 0.2s; font-weight:500;
+        }
+        .mobile-menu a:hover { background:var(--accent-glow); color:var(--accent-mid); }
+        @media(max-width:768px){
+            .nav-links { display:none; }
+            .nav-hamburger { display:flex; align-items:center; }
+        }
+
+        /* ── HERO BANNER ── */
+        .hero {
+            margin-top:62px;
+            background: linear-gradient(135deg, #080c1a 0%, #0f1328 50%, #0a0d18 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 64px 5% 56px;
+            position:relative; overflow:hidden;
+            display:flex; align-items:center; justify-content:space-between; gap:40px;
+        }
+        .hero::before {
+            content:''; position:absolute; top:-100px; right:-80px;
+            width:500px; height:500px; border-radius:50%;
+            background: radial-gradient(circle, rgba(249,115,22,0.09) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        .hero::after {
+            content:''; position:absolute; bottom:-60px; left:10%;
+            width:300px; height:300px; border-radius:50%;
+            background: radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        /* Grid math background */
+        .hero-grid-bg {
+            position:absolute; inset:0; opacity:0.03;
+            background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events:none;
+        }
+        .hero-content { position:relative; z-index:2; max-width:600px; }
+        .hero-eyebrow {
+            display:inline-flex; align-items:center; gap:7px;
+            background:rgba(249,115,22,0.12); color:var(--accent-mid);
+            font-size:0.75rem; font-weight:600; padding:5px 14px;
+            border-radius:30px; margin-bottom:18px;
+            border:1px solid rgba(249,115,22,0.25);
+        }
+        .hero-title {
+            font-family:'Fraunces',serif;
+            font-size:clamp(2rem,4.5vw,3.2rem);
+            font-weight:900; color:var(--white);
+            line-height:1.08; letter-spacing:-1.5px;
+            margin-bottom:14px;
+        }
+        .hero-title em { color:var(--accent-mid); font-style:italic; }
+        .hero-sub {
+            font-size:1rem; color:var(--muted); max-width:480px;
+            margin-bottom:28px; line-height:1.75;
+        }
+        .hero-btn {
+            display:inline-flex; align-items:center; gap:8px;
+            background:var(--accent); color:#fff;
+            padding:12px 26px; border-radius:30px; font-weight:600;
+            font-size:0.9rem; text-decoration:none; border:none; cursor:pointer;
+            font-family:'DM Sans',sans-serif;
+            transition:all 0.25s;
+            box-shadow: 0 4px 24px rgba(212,80,10,0.35);
+        }
+        .hero-btn:hover { background:#b8430a; transform:translateY(-2px); box-shadow:0 8px 32px rgba(212,80,10,0.45); }
+        /* Atom SVG right side */
+        .hero-visual {
+            position:relative; z-index:2; flex-shrink:0;
+            width:280px; height:220px;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .hero-visual svg { width:100%; height:100%; }
+        @media(max-width:768px){
+            .hero { flex-direction:column; padding:48px 5% 40px; }
+            .hero-visual { width:200px; height:160px; }
+        }
+
+        /* ── STATS STRIP ── */
+        .stats-strip {
+            background: rgba(12,15,30,0.9);
+            border-bottom: 1px solid var(--border);
+            display:flex; justify-content:center; flex-wrap:wrap;
+        }
+        .stat-item {
+            text-align:center; padding:16px 40px;
+            border-right: 1px solid var(--border);
+        }
+        .stat-item:last-child { border-right:none; }
+        .stat-num {
+            font-family:'Fraunces',serif;
+            font-size:1.8rem; font-weight:900; color:var(--accent-mid);
+            display:block; line-height:1;
+        }
+        .stat-label { font-size:0.72rem; color:var(--muted); font-weight:500; margin-top:4px; }
+        @media(max-width:600px){
+            .stat-item { flex:1 1 50%; padding:12px; border-right:none; border-bottom:1px solid var(--border); }
+        }
+
+        /* ── MAIN CONTENT ── */
+        .container { max-width:1180px; margin:0 auto; padding:0 20px; }
+
+        /* Category filter tabs */
+        .filter-bar {
+            display:flex; gap:8px; flex-wrap:wrap;
+            padding:36px 0 28px;
+            align-items:center;
+        }
+        .filter-label { font-size:0.8rem; color:var(--muted); font-weight:600; margin-right:4px; }
+        .filter-btn {
+            padding:7px 18px; border-radius:30px; border:1px solid var(--border);
+            background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif;
+            font-size:0.83rem; font-weight:500; cursor:pointer; transition:all 0.2s;
+        }
+        .filter-btn:hover { border-color:var(--accent-mid); color:var(--accent-mid); }
+        .filter-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+        .filter-btn[data-cat="A"].active { background:var(--cat-a); border-color:var(--cat-a); }
+        .filter-btn[data-cat="B"].active { background:var(--cat-b); border-color:var(--cat-b); }
+        .filter-btn[data-cat="C"].active { background:var(--cat-c); border-color:var(--cat-c); color:#000; }
+        .filter-btn[data-cat="D"].active { background:var(--cat-d); border-color:var(--cat-d); color:#000; }
+
+        /* ── TOOLS GRID ── */
+        .tools-grid {
+            display:grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap:20px;
+            padding-bottom:72px;
+        }
+
+        .tool-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius:18px;
+            padding:28px 26px;
+            text-decoration:none;
+            display:flex; flex-direction:column; gap:0;
+            position:relative; overflow:hidden;
+            transition:all 0.3s ease;
+            cursor:pointer;
+        }
+        .tool-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:2.5px;
+            border-radius:18px 18px 0 0;
+            opacity:0; transition:opacity 0.3s;
+        }
+        .tool-card:hover {
+            border-color:var(--border-hover);
+            background:var(--bg-card2);
+            transform:translateY(-5px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(249,115,22,0.12);
+        }
+        .tool-card:hover::before { opacity:1; }
+
+        /* Category color accents */
+        .tool-card[data-cat="A"]::before { background:linear-gradient(90deg,var(--cat-a),#fb923c); }
+        .tool-card[data-cat="B"]::before { background:linear-gradient(90deg,var(--cat-b),#a78bfa); }
+        .tool-card[data-cat="C"]::before { background:linear-gradient(90deg,var(--cat-c),#22d3ee); }
+        .tool-card[data-cat="D"]::before { background:linear-gradient(90deg,var(--cat-d),#34d399); }
+
+        .tool-card[data-cat="A"]:hover { box-shadow:0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(249,115,22,0.2); }
+        .tool-card[data-cat="B"]:hover { box-shadow:0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(139,92,246,0.2); }
+        .tool-card[data-cat="C"]:hover { box-shadow:0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(6,182,212,0.2); }
+        .tool-card[data-cat="D"]:hover { box-shadow:0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(16,185,129,0.2); }
+
+        .tool-card-top {
+            display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px;
+        }
+        .tool-icon-wrap {
+            width:48px; height:48px; border-radius:13px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.15rem; flex-shrink:0;
+        }
+        .tool-card[data-cat="A"] .tool-icon-wrap { background:rgba(249,115,22,0.12); color:var(--cat-a); }
+        .tool-card[data-cat="B"] .tool-icon-wrap { background:rgba(139,92,246,0.12); color:var(--cat-b); }
+        .tool-card[data-cat="C"] .tool-icon-wrap { background:rgba(6,182,212,0.12); color:var(--cat-c); }
+        .tool-card[data-cat="D"] .tool-icon-wrap { background:rgba(16,185,129,0.12); color:var(--cat-d); }
+
+        .tool-badge {
+            font-size:0.68rem; font-weight:600; padding:3px 10px;
+            border-radius:20px; letter-spacing:0.3px;
+        }
+        .badge-A { background:rgba(249,115,22,0.12); color:var(--cat-a); }
+        .badge-B { background:rgba(139,92,246,0.12); color:var(--cat-b); }
+        .badge-C { background:rgba(6,182,212,0.12); color:var(--cat-c); }
+        .badge-D { background:rgba(16,185,129,0.12); color:var(--cat-d); }
+
+        .tool-num {
+            position:absolute; top:22px; right:58px;
+            font-family:'Fraunces',serif;
+            font-size:0.72rem; font-weight:700; color:rgba(255,255,255,0.08);
+            letter-spacing:1px;
+        }
+
+        .tool-title {
+            font-family:'Fraunces',serif;
+            font-size:1.05rem; font-weight:700; color:var(--white);
+            margin-bottom:8px; line-height:1.3;
+        }
+        .tool-desc {
+            font-size:0.84rem; color:var(--muted); line-height:1.65; margin-bottom:20px;
+            flex:1;
+        }
+        .tool-footer {
+            display:flex; align-items:center; justify-content:space-between;
+            border-top:1px solid var(--border); padding-top:14px; margin-top:auto;
+        }
+        .tool-libs {
+            display:flex; gap:5px; flex-wrap:wrap;
+        }
+        .tool-lib {
+            font-size:0.67rem; padding:2px 8px;
+            background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.35);
+            border-radius:4px; border:1px solid rgba(255,255,255,0.07);
+        }
+        .tool-arrow {
+            width:30px; height:30px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            border:1px solid rgba(255,255,255,0.1);
+            color:var(--muted); font-size:0.75rem;
+            transition:all 0.2s; flex-shrink:0;
+        }
+        .tool-card:hover .tool-arrow {
+            background:var(--accent); border-color:var(--accent); color:#fff;
+            transform:rotate(-45deg);
+        }
+
+        /* COMING SOON overlay */
+        .tool-card.coming-soon {
+            opacity:0.55; pointer-events:none; cursor:default;
+        }
+        .coming-tag {
+            font-size:0.67rem; font-weight:600; padding:2px 9px;
+            background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.35);
+            border-radius:4px; border:1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ── CATEGORY SECTION HEADERS ── */
+        .cat-header {
+            display:flex; align-items:center; gap:14px;
+            margin:48px 0 24px;
+        }
+        .cat-header-line {
+            flex:1; height:1px; background:var(--border);
+        }
+        .cat-header-label {
+            display:flex; align-items:center; gap:8px;
+            font-size:0.75rem; font-weight:700; letter-spacing:1.5px;
+            text-transform:uppercase; padding:6px 16px;
+            border-radius:30px; border:1px solid; white-space:nowrap;
+        }
+        .cat-header[data-cat="A"] .cat-header-label { color:var(--cat-a); border-color:rgba(249,115,22,0.25); background:rgba(249,115,22,0.06); }
+        .cat-header[data-cat="B"] .cat-header-label { color:var(--cat-b); border-color:rgba(139,92,246,0.25); background:rgba(139,92,246,0.06); }
+        .cat-header[data-cat="C"] .cat-header-label { color:var(--cat-c); border-color:rgba(6,182,212,0.25); background:rgba(6,182,212,0.06); }
+        .cat-header[data-cat="D"] .cat-header-label { color:var(--cat-d); border-color:rgba(16,185,129,0.25); background:rgba(16,185,129,0.06); }
+
+        /* ── FOOTER ── */
+        footer {
+            background: #020408;
+            border-top: 1px solid var(--border);
+            padding: 52px 5% 28px;
+        }
+        .footer-grid {
+            max-width:1180px; margin:0 auto;
+            display:grid; grid-template-columns:2fr 1fr 1fr; gap:40px;
+            padding-bottom:32px; border-bottom:1px solid var(--border); margin-bottom:22px;
+        }
+        .footer-logo {
+            font-family:'Fraunces',serif;
+            font-size:1.15rem; font-weight:700; color:#fff;
+            display:flex; align-items:center; gap:8px; margin-bottom:10px;
+        }
+        .footer-logo .dot { color:var(--accent-mid); }
+        .footer-desc { font-size:0.85rem; color:var(--muted); line-height:1.7; max-width:300px; }
+        .footer-col h4 {
+            font-size:0.72rem; color:rgba(255,255,255,0.25);
+            text-transform:uppercase; letter-spacing:1.5px; margin-bottom:14px; font-weight:600;
+        }
+        .footer-col a {
+            display:flex; align-items:center; gap:7px;
+            color:rgba(255,255,255,0.55); text-decoration:none; font-size:0.85rem;
+            margin-bottom:9px; transition:color 0.2s;
+        }
+        .footer-col a:hover { color:var(--accent-mid); }
+        .footer-bottom {
+            max-width:1180px; margin:0 auto;
+            display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+        }
+        .footer-copy { font-size:0.78rem; color:rgba(255,255,255,0.2); }
+        .divine-sig { font-size:1rem; letter-spacing:3px; color:rgba(255,255,255,0.3); }
+        @media(max-width:768px){
+            .footer-grid { grid-template-columns:1fr; gap:24px; }
+            .tools-grid { grid-template-columns:1fr; }
+        }
+
+        /* ── BACK TO TOP ── */
+        #back-top {
+            position:fixed; bottom:24px; right:24px;
+            width:42px; height:42px; border-radius:50%;
+            background:var(--accent); color:#fff; border:none; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.95rem; box-shadow:0 4px 20px rgba(212,80,10,0.4);
+            opacity:0; pointer-events:none; transition:opacity 0.3s, transform 0.3s; z-index:998;
+        }
+        #back-top.visible { opacity:1; pointer-events:auto; }
+        #back-top:hover { transform:translateY(-3px); }
+
+        /* Reveal animation */
+        .reveal { opacity:0; transform:translateY(22px); transition:opacity 0.55s ease, transform 0.55s ease; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+
+        /* Hidden for filter */
+        .tool-card.hidden { display:none; }
+    </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<button id="back-top" onclick="scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<!-- ── NAV ── -->
+<nav>
+    <a class="logo" href="index.html">
+        <i class="fa-solid fa-satellite-dish" style="color:var(--accent-mid)"></i>
+        Atri's Physics <span class="dot">Orbit</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="index.html#academics">Notes Vault</a></li>
+        <li><a href="index.html#tech">Tech Lab</a></li>
+        <li><a href="index.html#cricket">Cricket Physics</a></li>
+        <li><a href="index.html#events">Events</a></li>
+        <li><a href="utilities.html" class="active">Utilities</a></li>
+    </ul>
+    <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <i class="fa-solid fa-bars" id="ham-icon"></i>
+    </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+    <a href="index.html#academics" onclick="closeMobileMenu()"><i class="fa-solid fa-book-open"></i> Notes Vault</a>
+    <a href="index.html#tech" onclick="closeMobileMenu()"><i class="fa-solid fa-code"></i> Tech Lab</a>
+    <a href="index.html#cricket" onclick="closeMobileMenu()"><i class="fa-solid fa-baseball"></i> Cricket Physics</a>
+    <a href="index.html#events" onclick="closeMobileMenu()"><i class="fa-solid fa-calendar"></i> Events</a>
+    <a href="utilities.html" onclick="closeMobileMenu()"><i class="fa-solid fa-sliders"></i> Utilities</a>
+</div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-content">
+        <div class="hero-eyebrow">
+            <i class="fa-solid fa-sliders" style="font-size:0.65rem"></i>
+            Smart Tools for Physics Students
+        </div>
+        <h1 class="hero-title">
+            Interactive<br><em>Physics Toolkit</em>
+        </h1>
+        <p class="hero-sub">
+            12 advanced tools built for BSc & MSc Physics students — from Quantum Wavefunctions to Crystal Lattices. All free, all in-browser.
+        </p>
+        <a class="hero-btn" href="#tools-grid">
+            <i class="fa-solid fa-rocket"></i> Explore All Tools
+        </a>
+    </div>
+    <!-- Animated Atom SVG -->
+    <div class="hero-visual">
+        <svg viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Orbit rings -->
+            <ellipse cx="140" cy="110" rx="120" ry="38" stroke="rgba(249,115,22,0.3)" stroke-width="1.2">
+                <animateTransform attributeName="transform" type="rotate" from="0 140 110" to="360 140 110" dur="8s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="140" cy="110" rx="90" ry="90" stroke="rgba(139,92,246,0.25)" stroke-width="1" transform="rotate(60 140 110)">
+                <animateTransform attributeName="transform" type="rotate" from="60 140 110" to="420 140 110" dur="12s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="140" cy="110" rx="110" ry="30" stroke="rgba(6,182,212,0.2)" stroke-width="1" transform="rotate(-60 140 110)">
+                <animateTransform attributeName="transform" type="rotate" from="-60 140 110" to="300 140 110" dur="10s" repeatCount="indefinite"/>
+            </ellipse>
+            <!-- Nucleus -->
+            <circle cx="140" cy="110" r="16" fill="rgba(249,115,22,0.9)"/>
+            <circle cx="140" cy="110" r="22" fill="rgba(249,115,22,0.12)"/>
+            <circle cx="140" cy="110" r="30" fill="rgba(249,115,22,0.05)"/>
+            <!-- Electrons -->
+            <circle r="5" fill="#f97316">
+                <animateMotion dur="8s" repeatCount="indefinite">
+                    <mpath href="#orbit1"/>
+                </animateMotion>
+            </circle>
+            <circle r="4" fill="#8b5cf6">
+                <animateMotion dur="12s" repeatCount="indefinite">
+                    <mpath href="#orbit2"/>
+                </animateMotion>
+            </circle>
+            <circle r="4" fill="#06b6d4">
+                <animateMotion dur="10s" repeatCount="indefinite">
+                    <mpath href="#orbit3"/>
+                </animateMotion>
+            </circle>
+            <!-- Hidden paths for animation -->
+            <defs>
+                <path id="orbit1" d="M 260,110 A 120,38 0 1,1 259.9,110"/>
+                <path id="orbit2" d="M 190,27 A 90,90 0 1,1 189.9,27" transform="rotate(60 140 110)"/>
+                <path id="orbit3" d="M 250,110 A 110,30 0 1,1 249.9,110" transform="rotate(-60 140 110)"/>
+            </defs>
+        </svg>
+    </div>
+</div>
+
+<!-- ── STATS STRIP ── -->
+<div class="stats-strip">
+    <div class="stat-item">
+        <span class="stat-num">12</span>
+        <div class="stat-label">Physics Tools</div>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">4</span>
+        <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">100%</span>
+        <div class="stat-label">Free & In-Browser</div>
+    </div>
+    <div class="stat-item">
+        <span class="stat-num">0</span>
+        <div class="stat-label">Backend Needed</div>
+    </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main>
+<div class="container">
+    <!-- Filter Bar -->
+    <div class="filter-bar reveal">
+        <span class="filter-label">Filter:</span>
+        <button class="filter-btn active" data-cat="ALL" onclick="filterTools('ALL')">All 12</button>
+        <button class="filter-btn" data-cat="A" onclick="filterTools('A')">⚡ Math & Core</button>
+        <button class="filter-btn" data-cat="B" onclick="filterTools('B')">🔮 Quantum</button>
+        <button class="filter-btn" data-cat="C" onclick="filterTools('C')">🔵 Solid State & Nuclear</button>
+        <button class="filter-btn" data-cat="D" onclick="filterTools('D')">🧪 Lab & Utilities</button>
+    </div>
+
+    <!-- ══ CATEGORY A ══ -->
+    <div class="cat-header reveal" data-cat="A" id="cat-header-A">
+        <div class="cat-header-line"></div>
+        <div class="cat-header-label">
+            <i class="fa-solid fa-square-root-variable"></i> Category A — Mathematical & Core Tools
+        </div>
+        <div class="cat-header-line"></div>
+    </div>
+
+    <div class="tools-grid" id="tools-grid">
+
+        <!-- Tool 1 -->
+        <a class="tool-card reveal" data-cat="A" href="tools/graph-plotter.html">
+            <span class="tool-num">01</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-chart-line"></i></div>
+                <span class="tool-badge badge-A">Math & Core</span>
+            </div>
+            <div class="tool-title">Dynamic Function & Data Plotter</div>
+            <div class="tool-desc">Plot any mathematical function (y = x², sin(x), e^x) or enter manual X-Y data. Instant interactive graphs with zoom & export.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Plotly.js</span>
+                    <span class="tool-lib">Math.js</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Tool 2 -->
+        <a class="tool-card reveal" data-cat="A" href="tools/latex-editor.html">
+            <span class="tool-num">02</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-file-code"></i></div>
+                <span class="tool-badge badge-A">Math & Core</span>
+            </div>
+            <div class="tool-title">LaTeX Physics Notes Editor</div>
+            <div class="tool-desc">Write notes in Markdown, see live LaTeX equation rendering side-by-side. Export as .md file for your study vault.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">KaTeX</span>
+                    <span class="tool-lib">EasyMDE</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Tool 3 -->
+        <a class="tool-card reveal" data-cat="A" href="tools/calculus-solver.html">
+            <span class="tool-num">03</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-infinity"></i></div>
+                <span class="tool-badge badge-A">Math & Core</span>
+            </div>
+            <div class="tool-title">Algebra & Calculus Solver</div>
+            <div class="tool-desc">Enter any expression — get instant symbolic differentiation (d/dx) and numerical integration. Step-by-step output.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Math.js</span>
+                    <span class="tool-lib">KaTeX</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- ══ CATEGORY B ══ -->
+        <div class="cat-header reveal" data-cat="B" id="cat-header-B" style="grid-column:1/-1; margin:24px 0 8px;">
+            <div class="cat-header-line"></div>
+            <div class="cat-header-label">
+                <i class="fa-solid fa-atom"></i> Category B — Quantum & Statistical Mechanics
+            </div>
+            <div class="cat-header-line"></div>
+        </div>
+
+        <!-- Tool 4 -->
+        <a class="tool-card reveal" data-cat="B" href="tools/quantum-visualizer.html">
+            <span class="tool-num">04</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-wave-square"></i></div>
+                <span class="tool-badge badge-B">Quantum</span>
+            </div>
+            <div class="tool-title">1D Quantum Wavefunction Visualizer</div>
+            <div class="tool-desc">Live ψ and |ψ|² graphs for Infinite Square Well & Harmonic Oscillator. Adjust quantum number n and watch the wavefunction evolve.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Plotly.js</span>
+                    <span class="tool-lib">Math.js</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Tool 5 -->
+        <a class="tool-card reveal" data-cat="B" href="tools/quantum-stats.html">
+            <span class="tool-num">05</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-chart-area"></i></div>
+                <span class="tool-badge badge-B">Quantum</span>
+            </div>
+            <div class="tool-title">Quantum Statistics Curve Comparer</div>
+            <div class="tool-desc">Compare Maxwell-Boltzmann, Bose-Einstein & Fermi-Dirac distributions on one graph. Live temperature slider included.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Plotly.js</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- ══ CATEGORY C ══ -->
+        <div class="cat-header reveal" data-cat="C" id="cat-header-C" style="grid-column:1/-1; margin:24px 0 8px;">
+            <div class="cat-header-line"></div>
+            <div class="cat-header-label">
+                <i class="fa-solid fa-cubes"></i> Category C — Solid State & Nuclear Physics
+            </div>
+            <div class="cat-header-line"></div>
+        </div>
+
+        <!-- Tool 6 -->
+        <a class="tool-card reveal" data-cat="C" href="tools/crystal-lattice.html">
+            <span class="tool-num">06</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-cube"></i></div>
+                <span class="tool-badge badge-C">Solid State</span>
+            </div>
+            <div class="tool-title">3D Crystal Lattice & Miller Indices Viewer</div>
+            <div class="tool-desc">Rotate SC, BCC, FCC structures in 3D. Enter Miller Indices (h,k,l) to draw crystallographic planes interactively.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Three.js</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Tool 7 -->
+        <a class="tool-card reveal" data-cat="C" href="tools/decay-simulator.html">
+            <span class="tool-num">07</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-radiation"></i></div>
+                <span class="tool-badge badge-C">Nuclear</span>
+            </div>
+            <div class="tool-title">Radioactive Decay Chain Simulator</div>
+            <div class="tool-desc">Simulate A → B → C decay chains. Live exponential graph (N = N₀e^−λt) with adjustable half-lives and initial count.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Plotly.js</span>
+                    <span class="tool-lib">Math.js</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- ══ CATEGORY D ══ -->
+        <div class="cat-header reveal" data-cat="D" id="cat-header-D" style="grid-column:1/-1; margin:24px 0 8px;">
+            <div class="cat-header-line"></div>
+            <div class="cat-header-label">
+                <i class="fa-solid fa-flask"></i> Category D — Lab Analysis & Advanced Utilities
+            </div>
+            <div class="cat-header-line"></div>
+        </div>
+
+        <!-- Tool 8 -->
+        <a class="tool-card reveal" data-cat="D" href="tools/curve-fitting.html">
+            <span class="tool-num">08</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-ruler-combined"></i></div>
+                <span class="tool-badge badge-D">Lab Analysis</span>
+            </div>
+            <div class="tool-title">Lab Data Error & Curve Fitting Tool</div>
+            <div class="tool-desc">Paste your lab readings — get Least-Square linear/polynomial fit with slope, intercept, R² and error bars automatically.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Plotly.js</span>
+                    <span class="tool-lib">Math.js</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Tool 9 -->
+        <a class="tool-card reveal" data-cat="D" href="tools/spectroscopy.html">
+            <span class="tool-num">09</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-rainbow"></i></div>
+                <span class="tool-badge badge-D">Spectroscopy</span>
+            </div>
+            <div class="tool-title">Atomic Spectroscopy & Rydberg Generator</div>
+            <div class="tool-desc">Enter n₁ and n₂ quantum numbers — instantly generate wavelength, series name and the actual visible color of the spectral line.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Canvas API</span>
+                    <span class="tool-lib">Math.js</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Tool 10 -->
+        <a class="tool-card reveal" data-cat="D" href="tools/focus-timer.html">
+            <span class="tool-num">10</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-stopwatch"></i></div>
+                <span class="tool-badge badge-D">Utilities</span>
+            </div>
+            <div class="tool-title">Quantum Focus Timer (Customisable)</div>
+            <div class="tool-desc">Pomodoro-style study timer with custom session/break lengths, audio alerts and session history — all saved locally.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Web Audio API</span>
+                    <span class="tool-lib">LocalStorage</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Tool 11 -->
+        <a class="tool-card reveal" data-cat="D" href="tools/matrix-workspace.html">
+            <span class="tool-num">11</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-solid fa-table-cells"></i></div>
+                <span class="tool-badge badge-D">Linear Algebra</span>
+            </div>
+            <div class="tool-title">Vector & Matrix Workspace</div>
+            <div class="tool-desc">Matrix Multiplication, Determinants, Eigenvalues, and Vector Cross Products — all in one interactive grid dashboard for QM.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Math.js</span>
+                    <span class="tool-lib">KaTeX</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Tool 12 -->
+        <a class="tool-card reveal" data-cat="D" href="tools/python-playground.html">
+            <span class="tool-num">12</span>
+            <div class="tool-card-top">
+                <div class="tool-icon-wrap"><i class="fa-brands fa-python"></i></div>
+                <span class="tool-badge badge-D">Computational</span>
+            </div>
+            <div class="tool-title">Computational Physics Python Playground</div>
+            <div class="tool-desc">In-browser Python terminal powered by Pyodide. Run NumPy scripts, plot graphs and solve equations without any installation.</div>
+            <div class="tool-footer">
+                <div class="tool-libs">
+                    <span class="tool-lib">Pyodide</span>
+                    <span class="tool-lib">NumPy</span>
+                </div>
+                <div class="tool-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+    </div><!-- /tools-grid -->
+
+    <!-- Trust badges -->
+    <div class="reveal" style="display:flex; flex-wrap:wrap; gap:28px; padding:40px 0 56px; border-top:1px solid var(--border); margin-top:8px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;border-radius:12px;background:rgba(249,115,22,0.1);display:flex;align-items:center;justify-content:center;color:var(--cat-a);font-size:1rem;"><i class="fa-solid fa-gift"></i></div>
+            <div><div style="font-weight:600;font-size:0.9rem;color:var(--white)">100% Free</div><div style="font-size:0.78rem;color:var(--muted)">All tools are completely free for students</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;border-radius:12px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;color:var(--cat-d);font-size:1rem;"><i class="fa-solid fa-shield-halved"></i></div>
+            <div><div style="font-weight:600;font-size:0.9rem;color:var(--white)">Privacy First</div><div style="font-size:0.78rem;color:var(--muted)">Your data stays in your browser only</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;border-radius:12px;background:rgba(6,182,212,0.1);display:flex;align-items:center;justify-content:center;color:var(--cat-c);font-size:1rem;"><i class="fa-solid fa-mobile-screen"></i></div>
+            <div><div style="font-weight:600;font-size:0.9rem;color:var(--white)">Mobile Friendly</div><div style="font-size:0.78rem;color:var(--muted)">Optimized for all devices and screen sizes</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px;height:40px;border-radius:12px;background:rgba(139,92,246,0.1);display:flex;align-items:center;justify-content:center;color:var(--cat-b);font-size:1rem;"><i class="fa-solid fa-heart"></i></div>
+            <div><div style="font-weight:600;font-size:0.9rem;color:var(--white)">Student Focused</div><div style="font-size:0.78rem;color:var(--muted)">Built by a student for fellow learners</div></div>
+        </div>
+    </div>
+
+</div><!-- /container -->
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="footer-grid">
+        <div>
+            <div class="footer-logo">
+                <i class="fa-solid fa-satellite-dish" style="color:var(--accent-mid)"></i>
+                Atri's Physics <span class="dot">Orbit</span>
+            </div>
+            <p class="footer-desc">Bridging advanced physics, interactive tools, and digital learning. From the classrooms of Delhi University.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Contact</h4>
+            <a href="mailto:business.atrimishra@gmail.com">
+                <i class="fa-solid fa-envelope"></i> business.atrimishra@gmail.com
+            </a>
+        </div>
+        <div class="footer-col">
+            <h4>Network</h4>
+            <a href="https://youtube.com/@sageatrimishra" target="_blank">
+                <i class="fa-brands fa-youtube"></i> YouTube Channel
+            </a>
+            <a href="https://instagram.com/atrimishra18" target="_blank">
+                <i class="fa-brands fa-instagram"></i> @atrimishra18
+            </a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Atri Mishra. All rights reserved.</p>
+        <div class="divine-sig">हरिशरणम्</div>
+    </div>
+</footer>
+
+<script>
+/* ── SCROLL & PROGRESS ── */
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = ((scrollTop/docHeight)*100) + '%';
+    document.getElementById('back-top').classList.toggle('visible', scrollTop > 300);
+});
+
+/* ── REVEAL ON SCROLL ── */
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ── MOBILE MENU ── */
+function toggleMenu() {
+    const m = document.getElementById('mobile-menu');
+    const icon = document.getElementById('ham-icon');
+    m.classList.toggle('open');
+    icon.className = m.classList.contains('open') ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+}
+function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+    document.getElementById('ham-icon').className = 'fa-solid fa-bars';
+}
+
+/* ── FILTER TOOLS ── */
+function filterTools(cat) {
+    // Update buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cat === cat);
+    });
+    // Show/hide cards
+    document.querySelectorAll('.tool-card').forEach(card => {
+        if(cat === 'ALL' || card.dataset.cat === cat) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+    // Show/hide category headers inside grid
+    document.querySelectorAll('.cat-header[style*="grid-column"]').forEach(header => {
+        if(cat === 'ALL' || header.dataset.cat === cat) {
+            header.classList.remove('hidden');
+        } else {
+            header.classList.add('hidden');
+        }
+    });
+    // Show/hide top-level cat headers
+    ['A','B','C','D'].forEach(c => {
+        const h = document.getElementById('cat-header-'+c);
+        if(h) {
+            if(cat === 'ALL' || cat === c) h.classList.remove('hidden');
+            else h.classList.add('hidden');
+        }
+    });
+}
+</script>
+</body>
+</html>
