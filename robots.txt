@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://atrimishra.github.io/sitemap.xml
