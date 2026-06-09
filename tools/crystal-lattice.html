@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crystal Lattice 3D Viewer — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Interactive 3D Crystal Lattice Viewer by Atri Mishra. Visualize SC, BCC, FCC structures and Miller Indices planes. Free MSc Physics tool for Delhi University students.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/crystal-lattice.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Three.js r128 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+:root{
+  --bg:#f0f6ff; --bg2:#e8f2ff;
+  --ink:#0c1428; --ink2:#1e2d4a; --muted:#5a6a85;
+  --border:#dce8f5; --sky:#2563eb; --sky2:#3b82f6;
+  --sky3:#60a5fa; --sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);
+  --card:#ffffff; --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(240,246,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(16px,4vw,48px);height:56px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-icon{width:30px;height:30px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;}
+.logo .dot{color:var(--sky);}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:0.83rem;font-weight:500;text-decoration:none;padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+/* HEADER */
+.page-header{padding:36px clamp(16px,4vw,48px) 0;max-width:1200px;margin:0 auto;}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sky-bg);color:var(--sky);font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:30px;border:1px solid rgba(37,99,235,0.2);margin-bottom:12px;}
+.page-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);line-height:1.1;letter-spacing:-1px;margin-bottom:6px;}
+.page-title span{color:var(--sky);}
+.page-sub{color:var(--muted);font-size:0.92rem;margin-bottom:28px;}
+
+/* LAYOUT */
+.tool-wrapper{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 60px;display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 2px 16px var(--sky-glow);margin-bottom:16px;}
+.card:last-child{margin-bottom:0;}
+.card-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title i{color:var(--sky);font-size:0.85rem;}
+
+/* STRUCTURE BUTTONS */
+.struct-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px;}
+.struct-btn{padding:10px 4px;border:1px solid var(--border);border-radius:10px;background:var(--bg);font-family:'Fraunces',serif;font-size:0.82rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all 0.2s;text-align:center;}
+.struct-btn:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-bg);}
+.struct-btn.active{border-color:var(--sky);color:#fff;background:var(--sky);box-shadow:0 2px 10px rgba(37,99,235,0.3);}
+.struct-sub{font-size:0.62rem;opacity:0.75;display:block;margin-top:2px;}
+
+/* SLIDER */
+.slider-group{margin-bottom:14px;}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.slider-label span{font-size:0.78rem;font-weight:600;color:var(--ink2);}
+.slider-val{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--sky);background:var(--sky-bg);padding:2px 10px;border-radius:20px;border:1px solid rgba(37,99,235,0.2);}
+input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--bg2);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--sky);border:2px solid #fff;box-shadow:0 1px 6px rgba(37,99,235,0.4);cursor:pointer;transition:transform 0.15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+
+/* MILLER INPUT */
+.miller-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
+.miller-field label{display:block;font-size:0.72rem;font-weight:700;color:var(--muted);text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
+.miller-field input{width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink);font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;text-align:center;outline:none;transition:border-color 0.2s;}
+.miller-field input:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+
+/* BUTTONS */
+.btn-primary{width:100%;padding:10px;background:var(--sky);color:#fff;border:none;border-radius:10px;font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;cursor:pointer;box-shadow:0 3px 14px rgba(37,99,235,0.3);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:8px;}
+.btn-primary:hover{background:var(--sky2);transform:translateY(-1px);}
+.btn-ghost{width:100%;padding:9px;background:transparent;border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn-ghost:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-bg);}
+
+/* TOGGLE */
+.toggle-row{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.toggle-item{display:flex;align-items:center;gap:9px;cursor:pointer;}
+.toggle-item input[type=checkbox]{width:34px;height:18px;-webkit-appearance:none;background:var(--bg2);border-radius:20px;border:1px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle-item input[type=checkbox]:checked{background:var(--sky);border-color:var(--sky);}
+.toggle-item input[type=checkbox]::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.toggle-item input[type=checkbox]:checked::after{left:18px;}
+.toggle-label{font-size:0.81rem;font-weight:500;color:var(--ink2);}
+
+/* INFO CHIPS */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.info-chip{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;}
+.info-chip .ic-num{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:700;color:var(--sky);}
+.info-chip .ic-label{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+
+/* 3D CANVAS CARD */
+.canvas-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 2px 16px var(--sky-glow);overflow:hidden;}
+.canvas-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);}
+.canvas-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);}
+.canvas-actions{display:flex;gap:8px;}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.78rem;color:var(--muted);transition:all 0.2s;}
+.icon-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+#canvas-container{width:100%;height:480px;background:#0c1428;position:relative;cursor:grab;}
+#canvas-container:active{cursor:grabbing;}
+#canvas-container canvas{width:100%!important;height:100%!important;}
+
+/* HINT */
+.drag-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(12,20,40,0.7);color:rgba(255,255,255,0.5);font-size:0.7rem;padding:4px 12px;border-radius:20px;pointer-events:none;backdrop-filter:blur(6px);white-space:nowrap;}
+
+/* MILLER LEGEND */
+.miller-legend{padding:14px 20px;border-top:1px solid var(--border);background:var(--bg);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.ml-item{display:flex;align-items:center;gap:6px;font-size:0.78rem;color:var(--muted);}
+.ml-dot{width:10px;height:10px;border-radius:2px;}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:0.83rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+
+@media(max-width:860px){
+  .tool-wrapper{grid-template-columns:1fr;}
+  #canvas-container{height:360px;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <a class="back-btn" href="../index.html#tools">
+    <i class="fa-solid fa-arrow-left"></i> Back to Tools
+  </a>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="tool-badge"><i class="fa-solid fa-cube"></i> Tool 3 of 12</div>
+  <h1 class="page-title">Crystal <span>Lattice 3D</span> Viewer</h1>
+  <p class="page-sub">SC, BCC, FCC structures ko 3D mein ghuma ke dekho. Miller Indices (hkl) ka plane instantly draw karo.</p>
+</div>
+
+<!-- TOOL -->
+<div class="tool-wrapper">
+
+  <!-- LEFT -->
+  <div>
+    <!-- Structure -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-cube"></i> Crystal Structure</div>
+      <div class="struct-btns">
+        <button class="struct-btn active" id="btn-sc"  onclick="setStructure('sc')">SC<span class="struct-sub">Simple Cubic</span></button>
+        <button class="struct-btn"        id="btn-bcc" onclick="setStructure('bcc')">BCC<span class="struct-sub">Body Centred</span></button>
+        <button class="struct-btn"        id="btn-fcc" onclick="setStructure('fcc')">FCC<span class="struct-sub">Face Centred</span></button>
+      </div>
+    </div>
+
+    <!-- Lattice controls -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-sliders"></i> Lattice Controls</div>
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Atom Size</span>
+          <span class="slider-val" id="atom-val">0.18</span>
+        </div>
+        <input type="range" id="atom-slider" min="0.08" max="0.38" value="0.18" step="0.01" oninput="updateAtomSize()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Supercell (n × n × n)</span>
+          <span class="slider-val" id="cell-val">2</span>
+        </div>
+        <input type="range" id="cell-slider" min="1" max="3" value="2" step="1" oninput="rebuildLattice()">
+      </div>
+      <div class="toggle-row">
+        <label class="toggle-item">
+          <input type="checkbox" id="show-bonds" checked onchange="rebuildLattice()">
+          <span class="toggle-label"><i class="fa-solid fa-minus" style="color:var(--sky);"></i> Show Bonds</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-axes" checked onchange="rebuildLattice()">
+          <span class="toggle-label"><i class="fa-solid fa-arrows-up-down-left-right" style="color:#f4a261;"></i> Show Axes</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-unitcell" checked onchange="rebuildLattice()">
+          <span class="toggle-label"><i class="fa-regular fa-square" style="color:#2ec4b6;"></i> Show Unit Cell</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Miller Indices -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-layer-group"></i> Miller Indices (hkl)</div>
+      <div class="miller-row">
+        <div class="miller-field">
+          <label>h</label>
+          <input type="number" id="h-inp" value="1" min="-3" max="3">
+        </div>
+        <div class="miller-field">
+          <label>k</label>
+          <input type="number" id="k-inp" value="1" min="-3" max="3">
+        </div>
+        <div class="miller-field">
+          <label>l</label>
+          <input type="number" id="l-inp" value="0" min="-3" max="3">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="drawMillerPlane()">
+        <i class="fa-solid fa-layer-group"></i> Draw Miller Plane
+      </button>
+      <button class="btn-ghost" onclick="removeMiller()">
+        <i class="fa-solid fa-eye-slash"></i> Remove Plane
+      </button>
+    </div>
+
+    <!-- Info -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-circle-info"></i> Structure Info</div>
+      <div class="info-grid">
+        <div class="info-chip">
+          <div class="ic-num" id="info-atoms">1</div>
+          <div class="ic-label">Atoms / Unit Cell</div>
+        </div>
+        <div class="info-chip">
+          <div class="ic-num" id="info-cn">6</div>
+          <div class="ic-label">Coord. Number</div>
+        </div>
+        <div class="info-chip">
+          <div class="ic-num" id="info-pf">52%</div>
+          <div class="ic-label">Packing Fraction</div>
+        </div>
+        <div class="info-chip">
+          <div class="ic-num" id="info-ex">Po</div>
+          <div class="ic-label">Example</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: 3D Canvas -->
+  <div class="canvas-card">
+    <div class="canvas-topbar">
+      <div class="canvas-title">
+        <i class="fa-solid fa-cube" style="color:var(--sky);margin-right:6px;"></i>
+        <span id="canvas-heading">Simple Cubic (SC)</span>
+      </div>
+      <div class="canvas-actions">
+        <button class="icon-btn" onclick="resetCamera()" title="Reset View"><i class="fa-solid fa-rotate"></i></button>
+        <button class="icon-btn" onclick="toggleBg()" title="Toggle Background"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      </div>
+    </div>
+
+    <div id="canvas-container">
+      <div class="drag-hint"><i class="fa-solid fa-hand-pointer"></i> Drag to rotate • Scroll to zoom</div>
+    </div>
+
+    <div class="miller-legend">
+      <div class="ml-item"><div class="ml-dot" style="background:#60a5fa;"></div> Corner atom</div>
+      <div class="ml-item"><div class="ml-dot" style="background:#f4a261;"></div> Body-centre</div>
+      <div class="ml-item"><div class="ml-dot" style="background:#2ec4b6;"></div> Face-centre</div>
+      <div class="ml-item"><div class="ml-dot" style="background:rgba(230,57,70,0.7);border:1px solid #e63946;"></div> Miller Plane</div>
+      <div id="miller-label" style="margin-left:auto;font-size:0.78rem;color:var(--sky);font-weight:600;display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Three.js Setup ──
+const container = document.getElementById('canvas-container');
+const W = () => container.clientWidth;
+const H = () => container.clientHeight;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0c1428);
+
+const camera = new THREE.PerspectiveCamera(45, W()/H(), 0.1, 100);
+camera.position.set(5, 4, 6);
+camera.lookAt(0, 0, 0);
+
+// Lighting
+const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambient);
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+dirLight.position.set(5, 8, 5);
+scene.add(dirLight);
+const pointLight = new THREE.PointLight(0x60a5fa, 0.4, 20);
+pointLight.position.set(-3, 3, -3);
+scene.add(pointLight);
+
+// ── Orbit Controls (manual) ──
+let isDragging = false, prevMouse = {x:0,y:0};
+let rotX = 0.4, rotY = 0.6, zoom = 1.0;
+
+container.addEventListener('mousedown', e => { isDragging=true; prevMouse={x:e.clientX,y:e.clientY}; });
+window.addEventListener('mouseup', () => isDragging=false);
+window.addEventListener('mousemove', e => {
+  if(!isDragging) return;
+  const dx = (e.clientX - prevMouse.x) * 0.008;
+  const dy = (e.clientY - prevMouse.y) * 0.008;
+  rotY += dx; rotX += dy;
+  rotX = Math.max(-Math.PI/2, Math.min(Math.PI/2, rotX));
+  prevMouse = {x:e.clientX,y:e.clientY};
+});
+container.addEventListener('wheel', e => {
+  e.preventDefault();
+  zoom *= e.deltaY > 0 ? 1.1 : 0.9;
+  zoom = Math.max(0.3, Math.min(4, zoom));
+}, {passive:false});
+
+// Touch support
+let lastTouch = null;
+container.addEventListener('touchstart', e => { lastTouch = e.touches[0]; });
+container.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if(!lastTouch) return;
+  const dx = (e.touches[0].clientX - lastTouch.clientX) * 0.01;
+  const dy = (e.touches[0].clientY - lastTouch.clientY) * 0.01;
+  rotY += dx; rotX += dy;
+  lastTouch = e.touches[0];
+}, {passive:false});
+
+// ── State ──
+let currentStructure = 'sc';
+let latticeGroup = null;
+let millerMesh = null;
+let darkBg = true;
+
+// Structure data
+const STRUCT_INFO = {
+  sc:  { atomsPerCell:1, cn:6,  pf:'52%', example:'Po',  name:'Simple Cubic (SC)' },
+  bcc: { atomsPerCell:2, cn:8,  pf:'68%', example:'Fe, W', name:'Body-Centred Cubic (BCC)' },
+  fcc: { atomsPerCell:4, cn:12, pf:'74%', example:'Cu, Au', name:'Face-Centred Cubic (FCC)' },
+};
+
+// Atom colours
+const COL_CORNER = new THREE.Color(0x60a5fa);
+const COL_BODY   = new THREE.Color(0xf4a261);
+const COL_FACE   = new THREE.Color(0x2ec4b6);
+const COL_BOND   = new THREE.Color(0x334d6e);
+const COL_AXIS_X = new THREE.Color(0xe63946);
+const COL_AXIS_Y = new THREE.Color(0x16a34a);
+const COL_AXIS_Z = new THREE.Color(0x2563eb);
+
+function makeSphere(r, col, pos){
+  const geo = new THREE.SphereGeometry(r, 20, 20);
+  const mat = new THREE.MeshPhongMaterial({color:col, shininess:80, specular:new THREE.Color(0x444444)});
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(...pos);
+  return m;
+}
+
+function makeBond(p1, p2){
+  const dir = new THREE.Vector3().subVectors(p2, p1);
+  const len = dir.length();
+  const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+  const geo = new THREE.CylinderGeometry(0.025, 0.025, len, 8);
+  const mat = new THREE.MeshPhongMaterial({color:COL_BOND, transparent:true, opacity:0.55});
+  const m = new THREE.Mesh(geo, mat);
+  m.position.copy(mid);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.normalize());
+  return m;
+}
+
+function makeAxis(from, to, col){
+  const dir = new THREE.Vector3().subVectors(to, from);
+  const len = dir.length();
+  const mid = new THREE.Vector3().addVectors(from, to).multiplyScalar(0.5);
+  const geo = new THREE.CylinderGeometry(0.04, 0.04, len, 8);
+  const mat = new THREE.MeshPhongMaterial({color:col});
+  const m = new THREE.Mesh(geo, mat);
+  m.position.copy(mid);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.normalize());
+  return m;
+}
+
+function buildLattice(){
+  if(latticeGroup){ scene.remove(latticeGroup); latticeGroup.traverse(o=>{ if(o.geometry) o.geometry.dispose(); if(o.material) o.material.dispose(); }); }
+  latticeGroup = new THREE.Group();
+
+  const n = parseInt(document.getElementById('cell-slider').value);
+  const atomR = parseFloat(document.getElementById('atom-slider').value);
+  const showBonds = document.getElementById('show-bonds').checked;
+  const showAxes  = document.getElementById('show-axes').checked;
+  const showUC    = document.getElementById('show-unitcell').checked;
+  const struct = currentStructure;
+
+  const a = 1.5; // lattice constant in scene units
+  const offset = -(n * a) / 2;
+
+  // Collect atom positions
+  const atoms = []; // {pos, type}
+
+  for(let ix=0;ix<n;ix++) for(let iy=0;iy<n;iy++) for(let iz=0;iz<n;iz++){
+    const ox = offset + ix*a, oy = offset + iy*a, oz = offset + iz*a;
+    // Corner atoms (shared — draw all corners of unit cell)
+    for(let cx=0;cx<=1;cx++) for(let cy=0;cy<=1;cy++) for(let cz=0;cz<=1;cz++){
+      atoms.push({pos:[ox+cx*a, oy+cy*a, oz+cz*a], type:'corner'});
+    }
+    // BCC body centre
+    if(struct==='bcc') atoms.push({pos:[ox+a/2, oy+a/2, oz+a/2], type:'body'});
+    // FCC face centres
+    if(struct==='fcc'){
+      atoms.push({pos:[ox+a/2, oy+a/2, oz     ], type:'face'});
+      atoms.push({pos:[ox+a/2, oy+a/2, oz+a   ], type:'face'});
+      atoms.push({pos:[ox+a/2, oy,     oz+a/2 ], type:'face'});
+      atoms.push({pos:[ox+a/2, oy+a,   oz+a/2 ], type:'face'});
+      atoms.push({pos:[ox,     oy+a/2, oz+a/2 ], type:'face'});
+      atoms.push({pos:[ox+a,   oy+a/2, oz+a/2 ], type:'face'});
+    }
+  }
+
+  // Deduplicate by rounded position
+  const seen = new Set();
+  const unique = [];
+  atoms.forEach(a => {
+    const key = a.pos.map(v=>Math.round(v*100)).join(',');
+    if(!seen.has(key)){ seen.add(key); unique.push(a); }
+  });
+
+  // Draw atoms
+  unique.forEach(a => {
+    const col = a.type==='body' ? COL_BODY : a.type==='face' ? COL_FACE : COL_CORNER;
+    latticeGroup.add(makeSphere(atomR, col, a.pos));
+  });
+
+  // Draw bonds (SC only along cell edges for clarity)
+  if(showBonds){
+    for(let ix=0;ix<n;ix++) for(let iy=0;iy<n;iy++) for(let iz=0;iz<n;iz++){
+      const ox = offset+ix*a, oy=offset+iy*a, oz=offset+iz*a;
+      const p = (dx,dy,dz) => new THREE.Vector3(ox+dx,oy+dy,oz+dz);
+      // 12 edges of unit cell
+      const edges = [
+        [p(0,0,0),p(a,0,0)],[p(0,a,0),p(a,a,0)],[p(0,0,a),p(a,0,a)],[p(0,a,a),p(a,a,a)],
+        [p(0,0,0),p(0,a,0)],[p(a,0,0),p(a,a,0)],[p(0,0,a),p(0,a,a)],[p(a,0,a),p(a,a,a)],
+        [p(0,0,0),p(0,0,a)],[p(a,0,0),p(a,0,a)],[p(0,a,0),p(0,a,a)],[p(a,a,0),p(a,a,a)],
+      ];
+      edges.forEach(([p1,p2]) => latticeGroup.add(makeBond(p1,p2)));
+    }
+  }
+
+  // Unit cell highlight (first cell)
+  if(showUC){
+    const uc = new THREE.BoxGeometry(a,a,a);
+    const ucMat = new THREE.MeshBasicMaterial({color:0x2ec4b6, wireframe:true, transparent:true, opacity:0.3});
+    const ucMesh = new THREE.Mesh(uc, ucMat);
+    ucMesh.position.set(offset+a/2, offset+a/2, offset+a/2);
+    latticeGroup.add(ucMesh);
+  }
+
+  // Axes
+  if(showAxes){
+    const axLen = n*a*0.6 + 1;
+    const O = new THREE.Vector3(offset-0.3, offset-0.3, offset-0.3);
+    latticeGroup.add(makeAxis(O, new THREE.Vector3(O.x+axLen, O.y, O.z), COL_AXIS_X));
+    latticeGroup.add(makeAxis(O, new THREE.Vector3(O.x, O.y+axLen, O.z), COL_AXIS_Y));
+    latticeGroup.add(makeAxis(O, new THREE.Vector3(O.x, O.y, O.z+axLen), COL_AXIS_Z));
+  }
+
+  scene.add(latticeGroup);
+  updateInfoPanel();
+  removeMiller();
+}
+
+function updateAtomSize(){
+  document.getElementById('atom-val').textContent = document.getElementById('atom-slider').value;
+  buildLattice();
+}
+
+function rebuildLattice(){
+  document.getElementById('cell-val').textContent = document.getElementById('cell-slider').value;
+  buildLattice();
+}
+
+function setStructure(s){
+  currentStructure = s;
+  ['sc','bcc','fcc'].forEach(x => document.getElementById('btn-'+x).classList.toggle('active', x===s));
+  document.getElementById('canvas-heading').textContent = STRUCT_INFO[s].name;
+  buildLattice();
+}
+
+function updateInfoPanel(){
+  const info = STRUCT_INFO[currentStructure];
+  document.getElementById('info-atoms').textContent = info.atomsPerCell;
+  document.getElementById('info-cn').textContent    = info.cn;
+  document.getElementById('info-pf').textContent    = info.pf;
+  document.getElementById('info-ex').textContent    = info.example;
+}
+
+// ── Miller Plane ──
+function drawMillerPlane(){
+  removeMiller();
+  const h = parseInt(document.getElementById('h-inp').value) || 0;
+  const k = parseInt(document.getElementById('k-inp').value) || 0;
+  const l = parseInt(document.getElementById('l-inp').value) || 0;
+
+  if(h===0 && k===0 && l===0){ showToast('hkl sab zero nahi ho sakte!'); return; }
+
+  const n = parseInt(document.getElementById('cell-slider').value);
+  const a = 1.5;
+  const offset = -(n*a)/2;
+
+  // Plane equation: h*x + k*y + l*z = a (intercept)
+  // We'll find the intercept as center of the lattice
+  const cx = offset + n*a/2, cy = offset + n*a/2, cz = offset + n*a/2;
+  const d = h*cx + k*cy + l*cz;
+
+  const normal = new THREE.Vector3(h, k, l).normalize();
+  const size = n * a * 1.2;
+
+  const geo = new THREE.PlaneGeometry(size, size, 1, 1);
+  const mat = new THREE.MeshPhongMaterial({
+    color:0xe63946, transparent:true, opacity:0.35,
+    side:THREE.DoubleSide, shininess:20,
+  });
+  millerMesh = new THREE.Mesh(geo, mat);
+
+  // Position plane at centre
+  const point = normal.clone().multiplyScalar(d / normal.dot(normal.clone().multiply(new THREE.Vector3(h,k,l).normalize())));
+  millerMesh.position.set(cx, cy, cz);
+  millerMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), normal);
+
+  // Edge line
+  const edges = new THREE.EdgesGeometry(geo);
+  const lineMat = new THREE.LineBasicMaterial({color:0xe63946, linewidth:2});
+  const lines = new THREE.LineSegments(edges, lineMat);
+  millerMesh.add(lines);
+
+  scene.add(millerMesh);
+
+  const lbl = document.getElementById('miller-label');
+  lbl.style.display = '';
+  lbl.textContent = `(${h} ${k} ${l}) plane`;
+  showToast(`Miller plane (${h}${k}${l}) draw ho gayi!`);
+}
+
+function removeMiller(){
+  if(millerMesh){ scene.remove(millerMesh); millerMesh=null; }
+  document.getElementById('miller-label').style.display = 'none';
+}
+
+function resetCamera(){
+  rotX = 0.4; rotY = 0.6; zoom = 1.0;
+}
+
+function toggleBg(){
+  darkBg = !darkBg;
+  scene.background = new THREE.Color(darkBg ? 0x0c1428 : 0xf0f6ff);
+}
+
+// ── Resize ──
+function onResize(){
+  renderer.setSize(W(), H());
+  camera.aspect = W()/H();
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', onResize);
+onResize();
+
+// ── Animation Loop ──
+function animate(){
+  requestAnimationFrame(animate);
+
+  // Apply rotation
+  const dist = 9 * zoom;
+  camera.position.x = dist * Math.sin(rotY) * Math.cos(rotX);
+  camera.position.y = dist * Math.sin(rotX);
+  camera.position.z = dist * Math.cos(rotY) * Math.cos(rotX);
+  camera.lookAt(0, 0, 0);
+
+  renderer.render(scene, camera);
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className='show';
+  clearTimeout(t._t); t._t=setTimeout(()=>t.className='',2500);
+}
+
+// ── Init ──
+buildLattice();
+animate();
+</script>
+</body>
+</html>
