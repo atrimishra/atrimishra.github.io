@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graph Plotter — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Interactive graph plotter by Atri Mishra. Plot any mathematical function or custom X-Y data instantly. Free physics tool for BSc and MSc students.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/graph-plotter.html">
+
+<!-- Fonts (same as index) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Plotly -->
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<!-- Math.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.0/math.min.js"></script>
+
+<style>
+  /* ── Same CSS Variables as index.html ── */
+  :root{
+    --bg:#f0f6ff;
+    --bg2:#e8f2ff;
+    --ink:#0c1428;
+    --ink2:#1e2d4a;
+    --muted:#5a6a85;
+    --sky:#2563eb;
+    --sky2:#3b82f6;
+    --sky3:#60a5fa;
+    --sky-bg:#eff6ff;
+    --sky-glow:rgba(37,99,235,0.12);
+    --card:#ffffff;
+    --border:rgba(37,99,235,0.12);
+    --radius:16px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'DM Sans',sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar{width:5px;}
+  ::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+  /* ── Navbar ── */
+  nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(240,246,255,0.85);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+    padding:0 clamp(16px,4vw,48px);
+    height:56px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{
+    font-family:'Fraunces',serif;font-size:1rem;font-weight:700;
+    color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;
+  }
+  .logo-icon{
+    width:30px;height:30px;background:var(--sky);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;
+  }
+  .logo .dot{color:var(--sky);}
+  .back-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    color:var(--muted);font-size:0.83rem;font-weight:500;
+    text-decoration:none;padding:6px 14px;border-radius:30px;
+    border:1px solid var(--border);background:var(--card);
+    transition:all 0.2s;
+  }
+  .back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+  /* ── Page Header ── */
+  .page-header{
+    padding:40px clamp(16px,4vw,48px) 0;
+    max-width:1200px;margin:0 auto;
+  }
+  .tool-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--sky-bg);color:var(--sky);
+    font-size:0.72rem;font-weight:600;padding:4px 12px;
+    border-radius:30px;border:1px solid rgba(37,99,235,0.2);
+    margin-bottom:12px;letter-spacing:0.5px;
+  }
+  .page-title{
+    font-family:'Fraunces',serif;
+    font-size:clamp(1.8rem,4vw,2.8rem);
+    font-weight:900;color:var(--ink);
+    line-height:1.1;letter-spacing:-1px;
+    margin-bottom:6px;
+  }
+  .page-title span{color:var(--sky);}
+  .page-sub{
+    color:var(--muted);font-size:0.92rem;margin-bottom:32px;
+  }
+
+  /* ── Main Layout ── */
+  .tool-wrapper{
+    max-width:1200px;margin:0 auto;
+    padding:0 clamp(16px,4vw,48px) 60px;
+    display:grid;
+    grid-template-columns:340px 1fr;
+    gap:20px;
+    align-items:start;
+  }
+
+  /* ── Card ── */
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:0 2px 16px var(--sky-glow);
+  }
+  .card-title{
+    font-family:'Fraunces',serif;
+    font-size:0.95rem;font-weight:700;
+    color:var(--ink);margin-bottom:16px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .card-title i{color:var(--sky);font-size:0.85rem;}
+
+  /* ── Tabs ── */
+  .tabs{
+    display:flex;background:var(--bg2);
+    border-radius:10px;padding:3px;margin-bottom:18px;
+  }
+  .tab-btn{
+    flex:1;padding:7px;border:none;background:transparent;
+    font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;
+    color:var(--muted);cursor:pointer;border-radius:8px;
+    transition:all 0.2s;
+  }
+  .tab-btn.active{
+    background:var(--card);color:var(--sky);
+    box-shadow:0 1px 6px rgba(37,99,235,0.15);
+  }
+
+  /* ── Form Elements ── */
+  label{
+    display:block;font-size:0.78rem;font-weight:600;
+    color:var(--ink2);margin-bottom:5px;letter-spacing:0.2px;
+  }
+  label .hint{
+    font-weight:400;color:var(--muted);margin-left:4px;
+  }
+  input[type="text"], textarea, select{
+    width:100%;padding:9px 12px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#fff;
+    color:var(--ink);
+    font-family:'DM Sans',sans-serif;font-size:0.88rem;
+    outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+    resize:vertical;
+  }
+  input[type="text"]:focus,textarea:focus,select:focus{
+    border-color:var(--sky);
+    box-shadow:0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .field{margin-bottom:14px;}
+
+  /* ── Color Picker Row ── */
+  .color-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .color-dot{
+    width:22px;height:22px;border-radius:50%;cursor:pointer;
+    border:2px solid transparent;transition:all 0.2s;
+  }
+  .color-dot.selected,.color-dot:hover{
+    border-color:var(--ink);transform:scale(1.2);
+  }
+
+  /* ── Range ── */
+  .range-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+
+  /* ── Add Row button ── */
+  .add-row-btn{
+    display:inline-flex;align-items:center;gap:5px;
+    background:var(--sky-bg);color:var(--sky);
+    border:1px dashed rgba(37,99,235,0.35);
+    border-radius:8px;padding:7px 14px;
+    font-size:0.8rem;font-weight:600;cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    transition:all 0.2s;margin-bottom:14px;width:100%;
+    justify-content:center;
+  }
+  .add-row-btn:hover{background:rgba(37,99,235,0.1);}
+
+  /* ── Data Table ── */
+  .data-table-wrap{
+    max-height:220px;overflow-y:auto;
+    border:1px solid var(--border);border-radius:10px;
+    margin-bottom:14px;
+  }
+  table{width:100%;border-collapse:collapse;}
+  th{
+    font-size:0.72rem;font-weight:700;color:var(--muted);
+    text-transform:uppercase;letter-spacing:0.5px;
+    padding:8px 10px;background:var(--bg2);
+    border-bottom:1px solid var(--border);
+    text-align:left;
+  }
+  td{
+    padding:6px 10px;font-size:0.85rem;
+    border-bottom:1px solid rgba(37,99,235,0.06);
+  }
+  tr:last-child td{border-bottom:none;}
+  .td-input{
+    width:100%;border:none;background:transparent;
+    font-family:'DM Sans',sans-serif;font-size:0.85rem;
+    color:var(--ink);outline:none;padding:2px;
+  }
+  .td-input:focus{background:var(--sky-bg);border-radius:4px;}
+  .del-btn{
+    background:none;border:none;cursor:pointer;
+    color:#e05;font-size:0.8rem;padding:2px 6px;
+    border-radius:4px;transition:background 0.2s;
+  }
+  .del-btn:hover{background:rgba(220,0,80,0.08);}
+
+  /* ── Plot Button ── */
+  .plot-btn{
+    width:100%;padding:11px;
+    background:var(--sky);color:#fff;
+    border:none;border-radius:12px;
+    font-family:'Fraunces',serif;font-size:1rem;font-weight:700;
+    cursor:pointer;letter-spacing:-0.3px;
+    box-shadow:0 4px 18px rgba(37,99,235,0.35);
+    transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .plot-btn:hover{background:var(--sky2);transform:translateY(-1px);box-shadow:0 6px 22px rgba(37,99,235,0.4);}
+  .plot-btn:active{transform:translateY(0);}
+
+  /* ── Clear / Export buttons ── */
+  .btn-row{display:flex;gap:8px;margin-top:10px;}
+  .btn-sm{
+    flex:1;padding:8px;border-radius:10px;font-size:0.78rem;font-weight:600;
+    font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;
+    display:flex;align-items:center;justify-content:center;gap:5px;
+  }
+  .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+  .btn-ghost:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-bg);}
+  .btn-danger{background:transparent;border:1px solid rgba(220,0,80,0.2);color:#c00;}
+  .btn-danger:hover{background:rgba(220,0,80,0.07);}
+
+  /* ── Plot Card ── */
+  .plot-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:0 2px 16px var(--sky-glow);
+    overflow:hidden;
+    min-height:520px;
+    display:flex;flex-direction:column;
+  }
+  .plot-topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 20px;border-bottom:1px solid var(--border);
+    background:var(--card);
+  }
+  .plot-title-text{
+    font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);
+  }
+  .plot-actions{display:flex;gap:8px;}
+  .icon-btn{
+    width:32px;height:32px;border-radius:8px;
+    border:1px solid var(--border);background:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:0.78rem;color:var(--muted);
+    transition:all 0.2s;
+  }
+  .icon-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+  #plot-div{flex:1;min-height:460px;}
+
+  /* ── Empty State ── */
+  .empty-state{
+    flex:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    color:var(--muted);gap:10px;padding:40px;
+    min-height:460px;
+  }
+  .empty-icon{
+    width:64px;height:64px;border-radius:50%;
+    background:var(--sky-bg);
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.4rem;color:var(--sky);
+    margin-bottom:8px;
+  }
+  .empty-state h3{
+    font-family:'Fraunces',serif;font-size:1.1rem;
+    font-weight:700;color:var(--ink2);
+  }
+  .empty-state p{font-size:0.83rem;text-align:center;max-width:260px;line-height:1.6;}
+
+  /* ── Error Toast ── */
+  #toast{
+    position:fixed;bottom:24px;right:24px;
+    background:var(--ink);color:#fff;
+    padding:12px 18px;border-radius:12px;
+    font-size:0.83rem;font-weight:500;
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    transform:translateY(80px);opacity:0;
+    transition:all 0.3s;z-index:999;
+    display:flex;align-items:center;gap:8px;
+    max-width:320px;
+  }
+  #toast.show{transform:translateY(0);opacity:1;}
+  #toast.error{background:#c00;}
+  #toast.success{background:#16a34a;}
+
+  /* ── Panels (Function vs Data) ── */
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* ── Legend chips ── */
+  .legend-area{
+    padding:12px 20px;border-top:1px solid var(--border);
+    display:flex;flex-wrap:wrap;gap:8px;min-height:44px;
+  }
+  .legend-chip{
+    display:inline-flex;align-items:center;gap:5px;
+    background:var(--sky-bg);color:var(--ink2);
+    font-size:0.74rem;font-weight:600;
+    padding:4px 10px;border-radius:20px;
+    border:1px solid var(--border);
+  }
+  .legend-dot{width:8px;height:8px;border-radius:50%;}
+
+  /* ── Responsive ── */
+  @media(max-width:860px){
+    .tool-wrapper{grid-template-columns:1fr;gap:16px;}
+    .plot-card{min-height:380px;}
+    #plot-div{min-height:340px;}
+    .empty-state{min-height:340px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Navbar -->
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <a class="back-btn" href="../index.html#tools">
+    <i class="fa-solid fa-arrow-left"></i> Back to Tools
+  </a>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="tool-badge"><i class="fa-solid fa-chart-line"></i> Tool 1 of 12</div>
+  <h1 class="page-title">Dynamic <span>Graph Plotter</span></h1>
+  <p class="page-sub">Plot any function like sin(x), x^2 — ya apna X, Y data paste karo. Instant graph.</p>
+</div>
+
+<!-- Tool -->
+<div class="tool-wrapper">
+
+  <!-- LEFT: Controls -->
+  <div>
+    <!-- Mode Tabs -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('fn')"><i class="fa-solid fa-function"></i> Function</button>
+        <button class="tab-btn" onclick="switchTab('data')"><i class="fa-solid fa-table"></i> X-Y Data</button>
+      </div>
+
+      <!-- ── FUNCTION PANEL ── -->
+      <div class="panel active" id="panel-fn">
+        <div class="field">
+          <label>Function f(x) <span class="hint">— use x as variable</span></label>
+          <input type="text" id="fn-input" placeholder="e.g.  sin(x) * exp(-x/5)" value="sin(x)">
+        </div>
+        <div class="range-row">
+          <div>
+            <label>x from</label>
+            <input type="text" id="x-min" value="-10">
+          </div>
+          <div>
+            <label>x to</label>
+            <input type="text" id="x-max" value="10">
+          </div>
+        </div>
+        <div class="field">
+          <label>Points <span class="hint">— resolution</span></label>
+          <input type="text" id="fn-pts" value="500">
+        </div>
+        <div class="field">
+          <label>Label <span class="hint">— optional</span></label>
+          <input type="text" id="fn-label" placeholder="e.g. sin(x) damped">
+        </div>
+      </div>
+
+      <!-- ── DATA PANEL ── -->
+      <div class="panel" id="panel-data">
+        <div class="field">
+          <label>Paste X values <span class="hint">— comma or newline separated</span></label>
+          <textarea id="data-x" rows="3" placeholder="1, 2, 3, 4, 5&#10;or paste column data"></textarea>
+        </div>
+        <div class="field">
+          <label>Paste Y values <span class="hint">— same order as X</span></label>
+          <textarea id="data-y" rows="3" placeholder="2.1, 4.3, 9.1, 16.2, 25.0"></textarea>
+        </div>
+        <div class="field">
+          <label>Chart type</label>
+          <select id="data-type">
+            <option value="scatter">Scatter Points</option>
+            <option value="line">Line</option>
+            <option value="markers+lines">Line + Points</option>
+            <option value="bar">Bar Chart</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Label <span class="hint">— optional</span></label>
+          <input type="text" id="data-label" placeholder="e.g. Lab Reading 1">
+        </div>
+      </div>
+
+      <!-- ── Common: Color + Plot btn ── -->
+      <label style="margin-bottom:8px;">Line Color</label>
+      <div class="color-row" id="color-row">
+        <div class="color-dot selected" style="background:#2563eb" data-color="#2563eb" onclick="selectColor(this)"></div>
+        <div class="color-dot" style="background:#e63946" data-color="#e63946" onclick="selectColor(this)"></div>
+        <div class="color-dot" style="background:#f4a261" data-color="#f4a261" onclick="selectColor(this)"></div>
+        <div class="color-dot" style="background:#2ec4b6" data-color="#2ec4b6" onclick="selectColor(this)"></div>
+        <div class="color-dot" style="background:#8b5cf6" data-color="#8b5cf6" onclick="selectColor(this)"></div>
+        <div class="color-dot" style="background:#16a34a" data-color="#16a34a" onclick="selectColor(this)"></div>
+        <div class="color-dot" style="background:#f59e0b" data-color="#f59e0b" onclick="selectColor(this)"></div>
+        <div class="color-dot" style="background:#ec4899" data-color="#ec4899" onclick="selectColor(this)"></div>
+      </div>
+
+      <button class="plot-btn" onclick="addPlot()">
+        <i class="fa-solid fa-chart-line"></i> Plot Graph
+      </button>
+
+      <div class="btn-row">
+        <button class="btn-sm btn-ghost" onclick="clearAll()"><i class="fa-solid fa-eraser"></i> Clear All</button>
+        <button class="btn-sm btn-danger" onclick="removeLastPlot()"><i class="fa-solid fa-minus"></i> Remove Last</button>
+      </div>
+    </div>
+
+    <!-- Graph Settings Card -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-sliders"></i> Graph Settings</div>
+      <div class="field">
+        <label>Graph Title</label>
+        <input type="text" id="graph-title" placeholder="My Physics Graph">
+      </div>
+      <div class="field">
+        <label>X Axis Label</label>
+        <input type="text" id="x-label" placeholder="x →">
+      </div>
+      <div class="field">
+        <label>Y Axis Label</label>
+        <input type="text" id="y-label" placeholder="f(x) →">
+      </div>
+      <div class="field" style="display:flex;align-items:center;gap:10px;margin-bottom:0;">
+        <input type="checkbox" id="dark-mode" style="width:auto;" onchange="rerenderAll()">
+        <label style="margin:0;cursor:pointer;" for="dark-mode">Dark background</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Plot Area -->
+  <div class="plot-card" id="plot-card">
+    <div class="plot-topbar">
+      <div class="plot-title-text"><i class="fa-solid fa-chart-line" style="color:var(--sky);margin-right:6px;"></i>Graph Canvas</div>
+      <div class="plot-actions">
+        <button class="icon-btn" onclick="downloadPNG()" title="Download PNG"><i class="fa-solid fa-download"></i></button>
+        <button class="icon-btn" onclick="downloadCSV()" title="Download CSV"><i class="fa-solid fa-file-csv"></i></button>
+      </div>
+    </div>
+
+    <!-- Empty state (shown when no plot) -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <h3>Graph yahan dikhega</h3>
+      <p>Left mein function likho ya X-Y data paste karo, phir <strong>Plot Graph</strong> dabao.</p>
+    </div>
+
+    <div id="plot-div" style="display:none;"></div>
+    <div class="legend-area" id="legend-area"></div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let plots = [];   // {type:'fn'|'data', ...params, color, label}
+let selectedColor = '#2563eb';
+let currentTab = 'fn';
+
+// ── Tab Switch ──
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (tab==='fn'&&i===0)||(tab==='data'&&i===1)));
+  document.getElementById('panel-fn').classList.toggle('active', tab==='fn');
+  document.getElementById('panel-data').classList.toggle('active', tab==='data');
+}
+
+// ── Color ──
+function selectColor(el) {
+  document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedColor = el.dataset.color;
+}
+
+// ── Parse comma/newline separated numbers ──
+function parseNumbers(str) {
+  return str.split(/[\s,;\n]+/).map(s => s.trim()).filter(s => s !== '').map(Number).filter(n => !isNaN(n));
+}
+
+// ── Add Plot ──
+function addPlot() {
+  if (currentTab === 'fn') addFunctionPlot();
+  else addDataPlot();
+}
+
+function addFunctionPlot() {
+  const expr = document.getElementById('fn-input').value.trim();
+  const xMin = parseFloat(document.getElementById('x-min').value);
+  const xMax = parseFloat(document.getElementById('x-max').value);
+  const pts  = parseInt(document.getElementById('fn-pts').value) || 500;
+  const lbl  = document.getElementById('fn-label').value.trim() || expr;
+
+  if (!expr) { showToast('Koi function likho pehle!', 'error'); return; }
+  if (isNaN(xMin) || isNaN(xMax) || xMin >= xMax) { showToast('x range galat hai.', 'error'); return; }
+
+  // Test compile
+  try {
+    const compiled = math.compile(expr);
+    const xs = [], ys = [];
+    const step = (xMax - xMin) / pts;
+    for (let i = 0; i <= pts; i++) {
+      const x = xMin + i * step;
+      let y;
+      try { y = compiled.evaluate({x}); } catch(e) { y = NaN; }
+      xs.push(x);
+      ys.push((typeof y === 'number' && isFinite(y)) ? y : null);
+    }
+    plots.push({ type:'fn', xs, ys, color: selectedColor, label: lbl });
+    renderPlots();
+    showToast(`Plotted: ${lbl}`, 'success');
+  } catch(e) {
+    showToast('Function galat hai: ' + e.message, 'error');
+  }
+}
+
+function addDataPlot() {
+  const rawX = document.getElementById('data-x').value.trim();
+  const rawY = document.getElementById('data-y').value.trim();
+  const mode = document.getElementById('data-type').value;
+  const lbl  = document.getElementById('data-label').value.trim() || 'Dataset';
+
+  if (!rawX || !rawY) { showToast('X aur Y dono daalo.', 'error'); return; }
+
+  const xs = parseNumbers(rawX);
+  const ys = parseNumbers(rawY);
+  if (xs.length === 0 || ys.length === 0) { showToast('Numbers nahi mile. Comma ya newline se separate karo.', 'error'); return; }
+  if (xs.length !== ys.length) { showToast(`X mein ${xs.length} values, Y mein ${ys.length}. Equal honi chahiye!`, 'error'); return; }
+
+  plots.push({ type:'data', xs, ys, mode, color: selectedColor, label: lbl });
+  renderPlots();
+  showToast(`Plotted: ${lbl} (${xs.length} points)`, 'success');
+}
+
+// ── Render ──
+function renderPlots() {
+  if (plots.length === 0) {
+    document.getElementById('empty-state').style.display = 'flex';
+    document.getElementById('plot-div').style.display = 'none';
+    document.getElementById('legend-area').innerHTML = '';
+    return;
+  }
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('plot-div').style.display = 'block';
+
+  const dark = document.getElementById('dark-mode').checked;
+  const title = document.getElementById('graph-title').value || '';
+  const xLabel = document.getElementById('x-label').value || 'x';
+  const yLabel = document.getElementById('y-label').value || 'y';
+
+  const traces = plots.map(p => {
+    const base = {
+      x: p.xs, y: p.ys,
+      name: p.label,
+      line: { color: p.color, width: 2.2 },
+      marker: { color: p.color, size: 6 },
+    };
+    if (p.type === 'fn') {
+      return { ...base, type: 'scatter', mode: 'lines', connectgaps: false };
+    } else {
+      const isBar = p.mode === 'bar';
+      return {
+        ...base,
+        type: isBar ? 'bar' : 'scatter',
+        mode: isBar ? undefined : (p.mode === 'scatter' ? 'markers' : p.mode === 'line' ? 'lines' : 'lines+markers'),
+        marker: { ...base.marker, color: p.color }
+      };
+    }
+  });
+
+  const bgColor  = dark ? '#0c1428' : '#ffffff';
+  const gridColor= dark ? 'rgba(96,165,250,0.12)' : 'rgba(37,99,235,0.1)';
+  const textColor= dark ? '#a0b4cc' : '#5a6a85';
+  const titleColor=dark ? '#e8f2ff' : '#0c1428';
+
+  const layout = {
+    title: { text: title, font: { family: 'Fraunces, serif', size: 16, color: titleColor }, y: 0.97 },
+    paper_bgcolor: bgColor,
+    plot_bgcolor: bgColor,
+    font: { family: 'DM Sans, sans-serif', color: textColor },
+    margin: { t: 40, r: 20, b: 54, l: 60 },
+    xaxis: {
+      title: { text: xLabel, font: { size: 12 } },
+      gridcolor: gridColor, zerolinecolor: dark ? 'rgba(96,165,250,0.3)' : 'rgba(37,99,235,0.25)',
+      tickfont: { size: 11 }, showgrid: true, zeroline: true,
+    },
+    yaxis: {
+      title: { text: yLabel, font: { size: 12 } },
+      gridcolor: gridColor, zerolinecolor: dark ? 'rgba(96,165,250,0.3)' : 'rgba(37,99,235,0.25)',
+      tickfont: { size: 11 }, showgrid: true, zeroline: true,
+    },
+    showlegend: plots.length > 1,
+    legend: { font: { size: 11 }, bgcolor: 'transparent' },
+    hovermode: 'x unified',
+  };
+
+  Plotly.react('plot-div', traces, layout, { responsive: true, displaylogo: false,
+    modeBarButtonsToRemove: ['sendDataToCloud','lasso2d','select2d'],
+    toImageButtonOptions: { format: 'png', filename: 'atri-graph', scale: 2 }
+  });
+
+  // Legend chips
+  const la = document.getElementById('legend-area');
+  la.innerHTML = plots.map(p =>
+    `<span class="legend-chip"><span class="legend-dot" style="background:${p.color}"></span>${p.label}</span>`
+  ).join('');
+}
+
+function rerenderAll() { renderPlots(); }
+
+// ── Remove last ──
+function removeLastPlot() {
+  if (plots.length === 0) { showToast('Koi graph nahi hai.', 'error'); return; }
+  const removed = plots.pop();
+  renderPlots();
+  showToast(`Removed: ${removed.label}`);
+}
+
+// ── Clear all ──
+function clearAll() {
+  plots = [];
+  renderPlots();
+  showToast('Sab clear ho gaya.');
+}
+
+// ── Download PNG ──
+function downloadPNG() {
+  if (plots.length === 0) { showToast('Pehle kuch plot karo.', 'error'); return; }
+  Plotly.downloadImage('plot-div', { format:'png', filename:'atri-graph', width:1200, height:700, scale:2 });
+}
+
+// ── Download CSV ──
+function downloadCSV() {
+  if (plots.length === 0) { showToast('Pehle kuch plot karo.', 'error'); return; }
+  let csv = '';
+  plots.forEach(p => {
+    csv += `# ${p.label}\nx,y\n`;
+    p.xs.forEach((x,i) => { csv += `${x},${p.ys[i] ?? ''}\n`; });
+    csv += '\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'atri-graph-data.csv';
+  a.click();
+  showToast('CSV download ho rahi hai!', 'success');
+}
+
+// ── Toast ──
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.className = '', 2800);
+}
+
+// ── Enter key shortcut ──
+document.getElementById('fn-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addPlot();
+});
+
+// ── Plot on load (demo) ──
+window.addEventListener('load', () => {
+  addFunctionPlot();
+});
+</script>
+</body>
+</html>
