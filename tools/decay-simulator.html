@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radioactive Decay Simulator — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Interactive Radioactive Decay Chain Simulator by Atri Mishra. Visualize exponential decay, decay chains A→B→C, half-life calculations. Free MSc Physics tool.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/decay-simulator.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+<style>
+:root{
+  --bg:#f0f6ff; --bg2:#e8f2ff;
+  --ink:#0c1428; --ink2:#1e2d4a; --muted:#5a6a85;
+  --border:#dce8f5; --sky:#2563eb; --sky2:#3b82f6;
+  --sky3:#60a5fa; --sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);
+  --card:#ffffff; --radius:16px;
+  --green:#16a34a; --orange:#f4a261; --red:#e63946; --purple:#8b5cf6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(240,246,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(16px,4vw,48px);height:56px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-icon{width:30px;height:30px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;}
+.logo .dot{color:var(--sky);}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:0.83rem;font-weight:500;text-decoration:none;padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+.page-header{padding:36px clamp(16px,4vw,48px) 0;max-width:1200px;margin:0 auto;}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sky-bg);color:var(--sky);font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:30px;border:1px solid rgba(37,99,235,0.2);margin-bottom:12px;}
+.page-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);line-height:1.1;letter-spacing:-1px;margin-bottom:6px;}
+.page-title span{color:var(--sky);}
+.page-sub{color:var(--muted);font-size:0.92rem;margin-bottom:28px;}
+
+.tool-wrapper{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 60px;display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 2px 16px var(--sky-glow);margin-bottom:16px;}
+.card:last-child{margin-bottom:0;}
+.card-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title i{color:var(--sky);font-size:0.85rem;}
+
+/* MODE TABS */
+.mode-tabs{display:flex;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:18px;}
+.mode-btn{flex:1;padding:8px 4px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;color:var(--muted);cursor:pointer;border-radius:8px;transition:all 0.2s;text-align:center;}
+.mode-btn.active{background:var(--card);color:var(--sky);box-shadow:0 1px 6px rgba(37,99,235,0.15);}
+
+/* PRESET BUTTONS */
+.preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px;}
+.preset-btn{padding:8px 6px;border:1px solid var(--border);border-radius:9px;background:var(--bg);font-size:0.76rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;text-align:center;font-family:'DM Sans',sans-serif;}
+.preset-btn:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-bg);}
+.preset-btn.active{border-color:var(--sky);color:#fff;background:var(--sky);}
+
+/* NUCLEUS CHAIN DISPLAY */
+.chain-display{display:flex;align-items:center;justify-content:center;gap:6px;padding:14px;background:var(--bg2);border-radius:12px;margin-bottom:16px;flex-wrap:wrap;}
+.nucleus-box{text-align:center;padding:8px 12px;border-radius:10px;border:1px solid;min-width:56px;}
+.nucleus-name{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;}
+.nucleus-type{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;opacity:0.7;}
+.chain-arrow{color:var(--muted);font-size:1rem;display:flex;flex-direction:column;align-items:center;gap:2px;}
+.arrow-type{font-size:0.6rem;color:var(--muted);}
+
+/* FIELDS */
+label{display:block;font-size:0.78rem;font-weight:600;color:var(--ink2);margin-bottom:5px;}
+.hint{font-weight:400;color:var(--muted);margin-left:4px;font-size:0.74rem;}
+input[type="text"],input[type="number"],select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s;}
+input:focus,select:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+.field{margin-bottom:13px;}
+
+/* NUCLEI ROWS */
+.nuclei-section{margin-bottom:14px;}
+.nucleus-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;align-items:end;}
+.nucleus-row .nr-label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+
+/* SLIDER */
+.slider-group{margin-bottom:14px;}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.slider-label span{font-size:0.78rem;font-weight:600;color:var(--ink2);}
+.slider-val{font-family:'Fraunces',serif;font-size:0.9rem;font-weight:700;color:var(--sky);background:var(--sky-bg);padding:2px 9px;border-radius:20px;border:1px solid rgba(37,99,235,0.2);}
+input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--bg2);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--sky);border:2px solid #fff;box-shadow:0 1px 6px rgba(37,99,235,0.35);cursor:pointer;transition:transform 0.15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+
+/* PLOT BTN */
+.plot-btn{width:100%;padding:11px;background:var(--sky);color:#fff;border:none;border-radius:12px;font-family:'Fraunces',serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(37,99,235,0.35);transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;}
+.plot-btn:hover{background:var(--sky2);transform:translateY(-1px);}
+
+/* TOGGLE */
+.toggle-row{display:flex;flex-direction:column;gap:9px;margin-bottom:0;}
+.toggle-item{display:flex;align-items:center;gap:9px;cursor:pointer;}
+.toggle-item input[type=checkbox]{width:34px;height:18px;-webkit-appearance:none;background:var(--bg2);border-radius:20px;border:1px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle-item input[type=checkbox]:checked{background:var(--sky);border-color:var(--sky);}
+.toggle-item input[type=checkbox]::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left 0.2s;}
+.toggle-item input[type=checkbox]:checked::after{left:18px;}
+.toggle-label{font-size:0.81rem;font-weight:500;color:var(--ink2);}
+
+/* PLOT CARD */
+.plot-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 2px 16px var(--sky-glow);overflow:hidden;}
+.plot-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);}
+.plot-title-text{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.78rem;color:var(--muted);transition:all 0.2s;}
+.icon-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+#plot-div{width:100%;height:420px;}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px 20px;border-top:1px solid var(--border);}
+.stat-chip{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;}
+.stat-num{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;}
+.stat-label{font-size:0.67rem;color:var(--muted);margin-top:2px;}
+
+/* FORMULA CARD */
+.formula-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px;}
+.formula-box .f-title{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.formula-box .f-eq{font-size:0.87rem;color:var(--ink2);font-family:monospace;line-height:1.9;}
+.formula-box .f-eq b{color:var(--sky);}
+
+/* PANEL */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:0.83rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{background:var(--green);}
+
+@media(max-width:860px){
+  .tool-wrapper{grid-template-columns:1fr;}
+  #plot-div{height:320px;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <a class="back-btn" href="../index.html#tools">
+    <i class="fa-solid fa-arrow-left"></i> Back to Tools
+  </a>
+</nav>
+
+<div class="page-header">
+  <div class="tool-badge"><i class="fa-solid fa-radiation"></i> Tool 4 of 12</div>
+  <h1 class="page-title">Radioactive <span>Decay Simulator</span></h1>
+  <p class="page-sub">Single decay N = N₀e⁻λt aur chain decay A→B→C ka graph dekhो. Half-life aur decay constant live calculate hoga.</p>
+</div>
+
+<div class="tool-wrapper">
+
+  <!-- LEFT -->
+  <div>
+    <!-- Mode -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-radiation"></i> Decay Mode</div>
+      <div class="mode-tabs">
+        <button class="mode-btn active" onclick="setMode('single')">Single Decay</button>
+        <button class="mode-btn" onclick="setMode('chain')">Chain A→B→C</button>
+      </div>
+
+      <!-- SINGLE MODE -->
+      <div class="panel active" id="panel-single">
+        <div class="field">
+          <label>Isotope / Name <span class="hint">optional</span></label>
+          <input type="text" id="s-name" value="¹⁴C (Carbon-14)">
+        </div>
+        <div class="field">
+          <label>Initial Amount N₀ <span class="hint">atoms / grams</span></label>
+          <input type="number" id="s-n0" value="1000" min="1">
+        </div>
+        <div class="field">
+          <label>Half-life T½</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <input type="number" id="s-t12" value="5730" min="0.001" step="any">
+            <select id="s-unit">
+              <option value="1">Seconds</option>
+              <option value="60">Minutes</option>
+              <option value="3600">Hours</option>
+              <option value="86400" selected>Days → Years</option>
+              <option value="31557600">Years</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quick presets -->
+        <label style="margin-bottom:8px;">Quick Presets</label>
+        <div class="preset-grid">
+          <button class="preset-btn" onclick="loadPreset('c14')">¹⁴C Carbon-14</button>
+          <button class="preset-btn" onclick="loadPreset('u238')">²³⁸U Uranium</button>
+          <button class="preset-btn" onclick="loadPreset('ra226')">²²⁶Ra Radium</button>
+          <button class="preset-btn" onclick="loadPreset('i131')">¹³¹I Iodine</button>
+          <button class="preset-btn" onclick="loadPreset('po210')">²¹⁰Po Polonium</button>
+          <button class="preset-btn" onclick="loadPreset('k40')">⁴⁰K Potassium</button>
+        </div>
+      </div>
+
+      <!-- CHAIN MODE -->
+      <div class="panel" id="panel-chain">
+        <!-- Chain visual -->
+        <div class="chain-display" id="chain-display">
+          <div class="nucleus-box" style="border-color:#2563eb;background:rgba(37,99,235,0.08);">
+            <div class="nucleus-name" style="color:#2563eb;" id="cd-a">A</div>
+            <div class="nucleus-type" style="color:#2563eb;">Parent</div>
+          </div>
+          <div class="chain-arrow">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span class="arrow-type">λ₁</span>
+          </div>
+          <div class="nucleus-box" style="border-color:#e63946;background:rgba(230,57,70,0.08);">
+            <div class="nucleus-name" style="color:#e63946;" id="cd-b">B</div>
+            <div class="nucleus-type" style="color:#e63946;">Daughter</div>
+          </div>
+          <div class="chain-arrow">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span class="arrow-type">λ₂</span>
+          </div>
+          <div class="nucleus-box" style="border-color:#16a34a;background:rgba(22,163,74,0.08);">
+            <div class="nucleus-name" style="color:#16a34a;" id="cd-c">C</div>
+            <div class="nucleus-type" style="color:#16a34a;">Granddaughter</div>
+          </div>
+        </div>
+
+        <div class="nuclei-section">
+          <!-- Nucleus A -->
+          <div style="background:rgba(37,99,235,0.05);border:1px solid rgba(37,99,235,0.15);border-radius:10px;padding:12px;margin-bottom:10px;">
+            <div style="font-size:0.72rem;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Parent (A)</div>
+            <div class="nucleus-row">
+              <div>
+                <div class="nr-label">Name</div>
+                <input type="text" id="c-aname" value="²³⁸U" oninput="document.getElementById('cd-a').textContent=this.value">
+              </div>
+              <div>
+                <div class="nr-label">N₀</div>
+                <input type="number" id="c-n0" value="1000" min="1">
+              </div>
+              <div>
+                <div class="nr-label">T½ (yrs)</div>
+                <input type="number" id="c-t1" value="4470000000" step="any">
+              </div>
+            </div>
+          </div>
+          <!-- Nucleus B -->
+          <div style="background:rgba(230,57,70,0.05);border:1px solid rgba(230,57,70,0.15);border-radius:10px;padding:12px;margin-bottom:10px;">
+            <div style="font-size:0.72rem;font-weight:700;color:#e63946;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Daughter (B)</div>
+            <div class="nucleus-row">
+              <div>
+                <div class="nr-label">Name</div>
+                <input type="text" id="c-bname" value="²³⁴Th" oninput="document.getElementById('cd-b').textContent=this.value">
+              </div>
+              <div>
+                <div class="nr-label">N₀ = 0</div>
+                <input type="number" id="c-nb0" value="0" min="0">
+              </div>
+              <div>
+                <div class="nr-label">T½ (yrs)</div>
+                <input type="number" id="c-t2" value="0.066" step="any">
+              </div>
+            </div>
+          </div>
+          <!-- Nucleus C -->
+          <div style="background:rgba(22,163,74,0.05);border:1px solid rgba(22,163,74,0.15);border-radius:10px;padding:12px;">
+            <div style="font-size:0.72rem;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Granddaughter (C) — Stable</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div>
+                <div class="nr-label">Name</div>
+                <input type="text" id="c-cname" value="²³⁴Pa" oninput="document.getElementById('cd-c').textContent=this.value">
+              </div>
+              <div>
+                <div class="nr-label">N₀ = 0</div>
+                <input type="number" id="c-nc0" value="0" min="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chain Presets -->
+        <label style="margin-bottom:8px;">Chain Presets</label>
+        <div class="preset-grid">
+          <button class="preset-btn" onclick="loadChainPreset('u238')">²³⁸U Chain</button>
+          <button class="preset-btn" onclick="loadChainPreset('th232')">²³²Th Chain</button>
+          <button class="preset-btn" onclick="loadChainPreset('ra226')">²²⁶Ra Chain</button>
+          <button class="preset-btn" onclick="loadChainPreset('custom')">Custom</button>
+        </div>
+      </div>
+
+      <!-- Time Range -->
+      <div class="slider-group" style="margin-top:14px;">
+        <div class="slider-label">
+          <span>Time Range <span id="time-unit-label">(half-lives)</span></span>
+          <span class="slider-val" id="trange-val">10</span>
+        </div>
+        <input type="range" id="trange-slider" min="1" max="20" value="10" step="1" oninput="document.getElementById('trange-val').textContent=this.value;">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div class="toggle-row">
+          <label class="toggle-item">
+            <input type="checkbox" id="log-scale" onchange="simulate()">
+            <span class="toggle-label">Log scale (Y axis)</span>
+          </label>
+          <label class="toggle-item">
+            <input type="checkbox" id="show-halflives" checked onchange="simulate()">
+            <span class="toggle-label">Show half-life markers</span>
+          </label>
+          <label class="toggle-item">
+            <input type="checkbox" id="dark-bg" onchange="simulate()">
+            <span class="toggle-label">Dark background</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="plot-btn" onclick="simulate()">
+        <i class="fa-solid fa-chart-line"></i> Simulate Decay
+      </button>
+    </div>
+
+    <!-- Formula -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-square-root-variable"></i> Key Equations</div>
+      <div class="formula-box">
+        <div class="f-title">Single Decay</div>
+        <div class="f-eq"><b>N(t)</b> = N₀ · e<sup>−λt</sup><br><b>λ</b> = ln2 / T½ = 0.693 / T½</div>
+      </div>
+      <div class="formula-box" style="margin-bottom:0;">
+        <div class="f-title">Bateman Equation (Chain)</div>
+        <div class="f-eq"><b>N_B(t)</b> = N₀λ₁/(λ₂−λ₁) · (e<sup>−λ₁t</sup> − e<sup>−λ₂t</sup>)<br><b>N_C(t)</b> = N₀ − N_A(t) − N_B(t)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="plot-card">
+    <div class="plot-topbar">
+      <div class="plot-title-text">
+        <i class="fa-solid fa-radiation" style="color:var(--sky);margin-right:6px;"></i>
+        <span id="plot-heading">Decay Curve</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="icon-btn" onclick="downloadPNG()" title="Download PNG"><i class="fa-solid fa-download"></i></button>
+        <button class="icon-btn" onclick="downloadCSV()" title="Download CSV"><i class="fa-solid fa-file-csv"></i></button>
+      </div>
+    </div>
+
+    <div id="plot-div"></div>
+
+    <div class="stats-grid">
+      <div class="stat-chip">
+        <div class="stat-num" id="stat-lambda" style="color:var(--sky);">—</div>
+        <div class="stat-label">λ (decay const.)</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-num" id="stat-t12" style="color:var(--red);">—</div>
+        <div class="stat-label">T½ (half-life)</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-num" id="stat-tmean" style="color:var(--green);">—</div>
+        <div class="stat-label">τ (mean life)</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-num" id="stat-n10" style="color:var(--purple);">—</div>
+        <div class="stat-label">N at t = 2T½</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const LN2 = Math.LN2;
+let currentMode = 'single';
+let lastData = null;
+
+// ── Mode Switch ──
+function setMode(m){
+  currentMode = m;
+  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('active',(m==='single'&&i===0)||(m==='chain'&&i===1)));
+  document.getElementById('panel-single').classList.toggle('active', m==='single');
+  document.getElementById('panel-chain').classList.toggle('active',  m==='chain');
+}
+
+// ── Presets (Single) ──
+const PRESETS = {
+  c14:   {name:'¹⁴C Carbon-14',   n0:1000, t12:5730,        unit:31557600},
+  u238:  {name:'²³⁸U Uranium-238', n0:1000, t12:4.468e9,     unit:31557600},
+  ra226: {name:'²²⁶Ra Radium-226', n0:1000, t12:1600,        unit:31557600},
+  i131:  {name:'¹³¹I Iodine-131',  n0:1000, t12:8.02,        unit:86400},
+  po210: {name:'²¹⁰Po Polonium',   n0:1000, t12:138.4,       unit:86400},
+  k40:   {name:'⁴⁰K Potassium-40', n0:1000, t12:1.248e9,     unit:31557600},
+};
+function loadPreset(k){
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  const p = PRESETS[k];
+  document.getElementById('s-name').value = p.name;
+  document.getElementById('s-n0').value   = p.n0;
+  document.getElementById('s-t12').value  = p.t12;
+  document.getElementById('s-unit').value = p.unit;
+  simulate();
+}
+
+// ── Chain Presets ──
+const CHAIN_PRESETS = {
+  u238:  {an:'²³⁸U', bn:'²³⁴Th', cn:'²³⁴Pa', n0:1000, nb0:0, nc0:0, t1:4.468e9, t2:0.066},
+  th232: {an:'²³²Th', bn:'²²⁸Ra', cn:'²²⁸Ac', n0:1000, nb0:0, nc0:0, t1:1.405e10, t2:5.75},
+  ra226: {an:'²²⁶Ra', bn:'²²²Rn', cn:'²¹⁸Po', n0:1000, nb0:0, nc0:0, t1:1600, t2:0.0104},
+  custom:{an:'A',    bn:'B',    cn:'C',    n0:1000, nb0:0, nc0:0, t1:100, t2:20},
+};
+function loadChainPreset(k){
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  const p = CHAIN_PRESETS[k];
+  document.getElementById('c-aname').value=p.an; document.getElementById('cd-a').textContent=p.an;
+  document.getElementById('c-bname').value=p.bn; document.getElementById('cd-b').textContent=p.bn;
+  document.getElementById('c-cname').value=p.cn; document.getElementById('cd-c').textContent=p.cn;
+  document.getElementById('c-n0').value=p.n0;
+  document.getElementById('c-nb0').value=p.nb0;
+  document.getElementById('c-nc0').value=p.nc0;
+  document.getElementById('c-t1').value=p.t1;
+  document.getElementById('c-t2').value=p.t2;
+  simulate();
+}
+
+// ── Main Simulate ──
+function simulate(){
+  if(currentMode==='single') simulateSingle();
+  else simulateChain();
+}
+
+function simulateSingle(){
+  const N0     = parseFloat(document.getElementById('s-n0').value)  || 1000;
+  const t12raw = parseFloat(document.getElementById('s-t12').value) || 1;
+  const unit   = parseFloat(document.getElementById('s-unit').value);
+  const t12    = t12raw * unit; // in seconds
+  const lambda = LN2 / t12;
+  const name   = document.getElementById('s-name').value || 'Isotope';
+
+  const tRangeHL = parseInt(document.getElementById('trange-slider').value);
+  const tMax = tRangeHL * t12;
+  const POINTS = 500;
+  const ts = [], Ns = [], As = [];
+
+  for(let i=0;i<=POINTS;i++){
+    const t = i * tMax / POINTS;
+    ts.push(t / unit);  // back to original unit for display
+    Ns.push(N0 * Math.exp(-lambda * t));
+    As.push(lambda * N0 * Math.exp(-lambda * t));
+  }
+  lastData = {ts, Ns, name};
+
+  const dark = document.getElementById('dark-bg').checked;
+  const logY = document.getElementById('log-scale').checked;
+  const showHL = document.getElementById('show-halflives').checked;
+
+  const traces = [{
+    x: ts, y: Ns,
+    type:'scatter', mode:'lines',
+    name: name,
+    line:{color:'#2563eb', width:2.5},
+    fill:'tozeroy',
+    fillcolor: dark ? 'rgba(37,99,235,0.08)' : 'rgba(37,99,235,0.06)',
+  },{
+    x: ts, y: As,
+    type:'scatter', mode:'lines',
+    name:'Activity A(t)',
+    line:{color:'#e63946', width:1.8, dash:'dot'},
+  }];
+
+  // Half-life markers
+  const shapes = [];
+  if(showHL){
+    for(let i=1;i<=Math.min(tRangeHL,8);i++){
+      shapes.push({
+        type:'line', x0: i*t12raw, x1: i*t12raw,
+        y0:0, y1:1, yref:'paper',
+        line:{color:'rgba(244,162,97,0.4)', width:1.5, dash:'dot'}
+      });
+    }
+  }
+
+  const bg = dark ? '#0c1428' : '#fff';
+  const gc = dark ? 'rgba(96,165,250,0.1)' : 'rgba(37,99,235,0.08)';
+  const tc = dark ? '#a0b4cc' : '#5a6a85';
+
+  const unitLabel = {1:'s',60:'min',3600:'hr',86400:'days/yrs',31557600:'years'}[unit] || '';
+
+  Plotly.react('plot-div', traces, {
+    paper_bgcolor:bg, plot_bgcolor:bg,
+    font:{family:'DM Sans,sans-serif',color:tc},
+    margin:{t:20,r:20,b:54,l:64},
+    xaxis:{title:{text:`Time (${unitLabel})`},gridcolor:gc,tickfont:{size:11}},
+    yaxis:{title:{text:'N(t)'},gridcolor:gc,tickfont:{size:11},type:logY?'log':'linear'},
+    showlegend:true,
+    legend:{font:{size:11},bgcolor:'transparent'},
+    shapes,
+    hovermode:'x unified',
+  },{responsive:true,displaylogo:false,
+    modeBarButtonsToRemove:['sendDataToCloud','lasso2d'],
+    toImageButtonOptions:{format:'png',filename:'decay-curve',scale:2}
+  });
+
+  document.getElementById('plot-heading').textContent = `${name} — Decay Curve`;
+
+  // Stats
+  const fmt = v => v >= 1e9 ? (v/1e9).toFixed(2)+'G' : v >= 1e6 ? (v/1e6).toFixed(2)+'M' : v >= 1e3 ? (v/1e3).toFixed(2)+'k' : v.toFixed(4);
+  document.getElementById('stat-lambda').textContent = lambda.toExponential(3) + ' s⁻¹';
+  document.getElementById('stat-t12').textContent    = fmt(t12raw) + ' ' + unitLabel;
+  document.getElementById('stat-tmean').textContent  = fmt(t12raw / LN2) + ' ' + unitLabel;
+  document.getElementById('stat-n10').textContent    = (N0 * 0.25).toFixed(1);
+}
+
+function simulateChain(){
+  const N0  = parseFloat(document.getElementById('c-n0').value)  || 1000;
+  const NB0 = parseFloat(document.getElementById('c-nb0').value) || 0;
+  const NC0 = parseFloat(document.getElementById('c-nc0').value) || 0;
+  const t1yr = parseFloat(document.getElementById('c-t1').value) || 1;
+  const t2yr = parseFloat(document.getElementById('c-t2').value) || 0.1;
+
+  const YR   = 31557600; // seconds per year
+  const t1   = t1yr * YR;
+  const t2   = t2yr * YR;
+  const lam1 = LN2 / t1;
+  const lam2 = LN2 / t2;
+
+  const an = document.getElementById('c-aname').value || 'A';
+  const bn = document.getElementById('c-bname').value || 'B';
+  const cn = document.getElementById('c-cname').value || 'C';
+
+  const tRangeHL = parseInt(document.getElementById('trange-slider').value);
+  const tMax = tRangeHL * Math.max(t1, t2);
+  const POINTS = 600;
+
+  const ts=[], NAs=[], NBs=[], NCs=[];
+
+  for(let i=0;i<=POINTS;i++){
+    const t = i * tMax / POINTS;
+    const NA = N0 * Math.exp(-lam1 * t);
+    let NB;
+    if(Math.abs(lam2 - lam1) < 1e-20){
+      NB = NB0 * Math.exp(-lam2*t) + lam1*N0*t*Math.exp(-lam1*t);
+    } else {
+      NB = NB0*Math.exp(-lam2*t) + N0*lam1/(lam2-lam1)*(Math.exp(-lam1*t)-Math.exp(-lam2*t));
+    }
+    NB = Math.max(0, NB);
+    const NC = Math.max(0, NC0 + N0 - NA - NB + NB0 - NB);
+
+    ts.push(t / YR);
+    NAs.push(NA);
+    NBs.push(NB);
+    NCs.push(NC);
+  }
+  lastData = {ts, NAs, NBs, NCs, an, bn, cn};
+
+  const dark = document.getElementById('dark-bg').checked;
+  const logY = document.getElementById('log-scale').checked;
+  const bg = dark ? '#0c1428' : '#fff';
+  const gc = dark ? 'rgba(96,165,250,0.1)' : 'rgba(37,99,235,0.08)';
+  const tc = dark ? '#a0b4cc' : '#5a6a85';
+
+  const traces = [
+    {x:ts, y:NAs, type:'scatter', mode:'lines', name:an,
+     line:{color:'#2563eb',width:2.5}, fill:'tozeroy', fillcolor:dark?'rgba(37,99,235,0.07)':'rgba(37,99,235,0.05)'},
+    {x:ts, y:NBs, type:'scatter', mode:'lines', name:bn,
+     line:{color:'#e63946',width:2.5}, fill:'tozeroy', fillcolor:dark?'rgba(230,57,70,0.07)':'rgba(230,57,70,0.05)'},
+    {x:ts, y:NCs, type:'scatter', mode:'lines', name:cn+' (stable)',
+     line:{color:'#16a34a',width:2.5}, fill:'tozeroy', fillcolor:dark?'rgba(22,163,74,0.07)':'rgba(22,163,74,0.05)'},
+  ];
+
+  Plotly.react('plot-div', traces, {
+    paper_bgcolor:bg, plot_bgcolor:bg,
+    font:{family:'DM Sans,sans-serif',color:tc},
+    margin:{t:20,r:20,b:54,l:64},
+    xaxis:{title:{text:'Time (years)'},gridcolor:gc,tickfont:{size:11}},
+    yaxis:{title:{text:'Number of Nuclei'},gridcolor:gc,tickfont:{size:11},type:logY?'log':'linear'},
+    showlegend:true,
+    legend:{font:{size:11},bgcolor:'transparent'},
+    hovermode:'x unified',
+  },{responsive:true,displaylogo:false,
+    modeBarButtonsToRemove:['sendDataToCloud','lasso2d'],
+    toImageButtonOptions:{format:'png',filename:'decay-chain',scale:2}
+  });
+
+  document.getElementById('plot-heading').textContent = `${an} → ${bn} → ${cn} Decay Chain`;
+
+  // Stats
+  document.getElementById('stat-lambda').textContent = lam1.toExponential(2)+' s⁻¹';
+  document.getElementById('stat-t12').textContent    = t1yr >= 1e6 ? (t1yr/1e9).toFixed(2)+'Gy' : t1yr.toFixed(2)+' yr';
+  document.getElementById('stat-tmean').textContent  = (t1yr/LN2).toFixed(2)+' yr';
+  document.getElementById('stat-n10').textContent    = (N0 * 0.25).toFixed(1);
+}
+
+function downloadPNG(){
+  Plotly.downloadImage('plot-div',{format:'png',filename:'decay-simulation',width:1200,height:600,scale:2});
+}
+
+function downloadCSV(){
+  if(!lastData){ showToast('Pehle simulate karo!'); return; }
+  let csv = 'time,';
+  if(lastData.Ns) csv += 'N(t)\n' + lastData.ts.map((t,i)=>`${t},${lastData.Ns[i]}`).join('\n');
+  else csv += `${lastData.an},${lastData.bn},${lastData.cn}\n` + lastData.ts.map((t,i)=>`${t},${lastData.NAs[i]},${lastData.NBs[i]},${lastData.NCs[i]}`).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'decay-data.csv'; a.click();
+  showToast('CSV download ho rahi hai!','success');
+}
+
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent=msg; t.className='show '+(type||'');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.className='',2500);
+}
+
+// Init
+simulate();
+</script>
+</body>
+</html>
