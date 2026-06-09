@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Wavefunction Visualizer — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Interactive 1D Quantum Wavefunction Visualizer by Atri Mishra. Visualize ψ and |ψ|² for Infinite Square Well and Quantum Harmonic Oscillator. Free MSc Physics tool.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/quantum-wavefunction.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+<style>
+:root{
+  --bg:#f0f6ff; --bg2:#e8f2ff;
+  --ink:#0c1428; --ink2:#1e2d4a; --muted:#5a6a85;
+  --border:#dce8f5; --sky:#2563eb; --sky2:#3b82f6;
+  --sky3:#60a5fa; --sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);
+  --card:#ffffff; --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(240,246,255,0.88);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 clamp(16px,4vw,48px);height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-icon{width:30px;height:30px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;}
+.logo .dot{color:var(--sky);}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:0.83rem;font-weight:500;text-decoration:none;padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+/* HEADER */
+.page-header{padding:36px clamp(16px,4vw,48px) 0;max-width:1200px;margin:0 auto;}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sky-bg);color:var(--sky);font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:30px;border:1px solid rgba(37,99,235,0.2);margin-bottom:12px;letter-spacing:0.5px;}
+.page-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);line-height:1.1;letter-spacing:-1px;margin-bottom:6px;}
+.page-title span{color:var(--sky);}
+.page-sub{color:var(--muted);font-size:0.92rem;margin-bottom:28px;}
+
+/* LAYOUT */
+.tool-wrapper{
+  max-width:1200px;margin:0 auto;
+  padding:0 clamp(16px,4vw,48px) 60px;
+  display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;
+}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 2px 16px var(--sky-glow);}
+.card+.card{margin-top:16px;}
+.card-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title i{color:var(--sky);font-size:0.85rem;}
+
+/* SYSTEM TABS */
+.sys-tabs{display:flex;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:18px;}
+.sys-btn{flex:1;padding:8px 4px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;color:var(--muted);cursor:pointer;border-radius:8px;transition:all 0.2s;line-height:1.3;text-align:center;}
+.sys-btn.active{background:var(--card);color:var(--sky);box-shadow:0 1px 6px rgba(37,99,235,0.15);}
+
+/* SLIDER */
+.slider-group{margin-bottom:18px;}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.slider-label span{font-size:0.78rem;font-weight:600;color:var(--ink2);}
+.slider-val{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--sky);background:var(--sky-bg);padding:2px 10px;border-radius:20px;border:1px solid rgba(37,99,235,0.2);}
+input[type=range]{
+  width:100%;-webkit-appearance:none;height:5px;
+  border-radius:3px;background:var(--bg2);outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--sky);border:2px solid #fff;
+  box-shadow:0 1px 6px rgba(37,99,235,0.4);cursor:pointer;transition:transform 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+
+/* TOGGLE CHECKS */
+.toggle-row{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+.toggle-item{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.toggle-item input[type=checkbox]{
+  width:36px;height:20px;-webkit-appearance:none;
+  background:var(--bg2);border-radius:20px;border:1px solid var(--border);
+  cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;
+}
+.toggle-item input[type=checkbox]:checked{background:var(--sky);border-color:var(--sky);}
+.toggle-item input[type=checkbox]::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:14px;height:14px;border-radius:50%;background:#fff;
+  transition:left 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-item input[type=checkbox]:checked::after{left:18px;}
+.toggle-label{font-size:0.82rem;font-weight:500;color:var(--ink2);}
+.toggle-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* FORMULA BOX */
+.formula-box{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:14px 16px;margin-bottom:16px;
+}
+.formula-box .f-title{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.formula-box .f-eq{font-size:0.88rem;color:var(--ink2);font-family:monospace;line-height:1.8;}
+.formula-box .f-eq b{color:var(--sky);}
+
+/* ENERGY BADGE */
+.energy-panel{
+  background:linear-gradient(135deg,var(--sky-bg),#fff);
+  border:1px solid rgba(37,99,235,0.2);
+  border-radius:12px;padding:14px 16px;
+}
+.energy-panel .ep-title{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.energy-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.e-item .e-label{font-size:0.7rem;color:var(--muted);margin-bottom:2px;}
+.e-item .e-val{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:700;color:var(--ink);}
+.e-item .e-unit{font-size:0.7rem;color:var(--muted);margin-left:2px;}
+
+/* PLOT CARD */
+.plot-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 2px 16px var(--sky-glow);overflow:hidden;}
+.plot-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);}
+.plot-title-text{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);}
+.plot-actions{display:flex;gap:8px;}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.78rem;color:var(--muted);transition:all 0.2s;}
+.icon-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+#plot-div{width:100%;height:480px;}
+
+/* INFO CARDS ROW */
+.info-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:14px 20px;border-top:1px solid var(--border);}
+.info-chip{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;}
+.info-chip .ic-num{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;color:var(--sky);}
+.info-chip .ic-label{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:0.83rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  .tool-wrapper{grid-template-columns:1fr;}
+  #plot-div{height:360px;}
+  .info-row{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:500px){
+  .energy-grid{grid-template-columns:1fr 1fr;}
+  .info-row{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <a class="back-btn" href="../index.html#tools">
+    <i class="fa-solid fa-arrow-left"></i> Back to Tools
+  </a>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="tool-badge"><i class="fa-solid fa-wave-square"></i> Tool 2 of 12</div>
+  <h1 class="page-title">Quantum <span>Wavefunction</span> Visualizer</h1>
+  <p class="page-sub">ψ(x) aur |ψ(x)|² ko live dekhो — Infinite Square Well & Harmonic Oscillator. Quantum number badlo, graph instantly update hoga.</p>
+</div>
+
+<!-- TOOL -->
+<div class="tool-wrapper">
+
+  <!-- LEFT CONTROLS -->
+  <div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-flask"></i> System</div>
+
+      <!-- System selector -->
+      <div class="sys-tabs">
+        <button class="sys-btn active" id="btn-isw" onclick="setSystem('isw')">
+          Infinite<br>Square Well
+        </button>
+        <button class="sys-btn" id="btn-qho" onclick="setSystem('qho')">
+          Harmonic<br>Oscillator
+        </button>
+      </div>
+
+      <!-- Quantum Number -->
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Quantum Number <i>n</i></span>
+          <span class="slider-val" id="n-val">1</span>
+        </div>
+        <input type="range" id="n-slider" min="1" max="10" value="1" step="1" oninput="onSlider()">
+      </div>
+
+      <!-- ISW: Well Width -->
+      <div class="slider-group" id="grp-L">
+        <div class="slider-label">
+          <span>Well Width <i>L</i> (nm)</span>
+          <span class="slider-val" id="L-val">1.0</span>
+        </div>
+        <input type="range" id="L-slider" min="0.5" max="3" value="1" step="0.1" oninput="onSlider()">
+      </div>
+
+      <!-- QHO: omega -->
+      <div class="slider-group" id="grp-w" style="display:none;">
+        <div class="slider-label">
+          <span>Angular Frequency ω (×10¹⁴ rad/s)</span>
+          <span class="slider-val" id="w-val">1.0</span>
+        </div>
+        <input type="range" id="w-slider" min="0.5" max="5" value="1" step="0.1" oninput="onSlider()">
+      </div>
+    </div>
+
+    <!-- What to show -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-eye"></i> Display Options</div>
+      <div class="toggle-row">
+        <label class="toggle-item">
+          <input type="checkbox" id="show-psi" checked onchange="draw()">
+          <span class="toggle-dot" style="background:#2563eb;"></span>
+          <span class="toggle-label">ψ(x) — Wavefunction</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-prob" checked onchange="draw()">
+          <span class="toggle-dot" style="background:#e63946;"></span>
+          <span class="toggle-label">|ψ(x)|² — Probability Density</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-energy" onchange="draw()">
+          <span class="toggle-dot" style="background:#f4a261;"></span>
+          <span class="toggle-label">Eₙ — Energy Level Line</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-potential" onchange="draw()">
+          <span class="toggle-dot" style="background:#8b5cf6;"></span>
+          <span class="toggle-label">V(x) — Potential Well</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="dark-bg" onchange="draw()">
+          <span class="toggle-dot" style="background:#0c1428;border:1px solid #ccc;"></span>
+          <span class="toggle-label">Dark Background</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Formula -->
+    <div class="card" id="formula-card">
+      <div class="card-title"><i class="fa-solid fa-square-root-variable"></i> Formula</div>
+      <div class="formula-box" id="formula-box">
+        <div class="f-title">Wavefunction ψₙ(x)</div>
+        <div class="f-eq" id="formula-psi"></div>
+      </div>
+      <div class="formula-box">
+        <div class="f-title">Energy Eₙ</div>
+        <div class="f-eq" id="formula-en"></div>
+      </div>
+    </div>
+
+    <!-- Energy Info -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-bolt"></i> Live Energy Values</div>
+      <div class="energy-panel">
+        <div class="ep-title">Calculated Values</div>
+        <div class="energy-grid">
+          <div class="e-item">
+            <div class="e-label">Energy Eₙ</div>
+            <div class="e-val" id="ev-en">—<span class="e-unit">eV</span></div>
+          </div>
+          <div class="e-item">
+            <div class="e-label">Ground State E₁</div>
+            <div class="e-val" id="ev-e1">—<span class="e-unit">eV</span></div>
+          </div>
+          <div class="e-item">
+            <div class="e-label">Ratio Eₙ/E₁</div>
+            <div class="e-val" id="ev-ratio">—</div>
+          </div>
+          <div class="e-item">
+            <div class="e-label">Nodes in ψ</div>
+            <div class="e-val" id="ev-nodes">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Plot -->
+  <div class="plot-card">
+    <div class="plot-topbar">
+      <div class="plot-title-text">
+        <i class="fa-solid fa-wave-square" style="color:var(--sky);margin-right:6px;"></i>
+        <span id="plot-heading">ψ(x) — Infinite Square Well</span>
+      </div>
+      <div class="plot-actions">
+        <button class="icon-btn" onclick="downloadPNG()" title="Download PNG"><i class="fa-solid fa-download"></i></button>
+      </div>
+    </div>
+
+    <div id="plot-div"></div>
+
+    <div class="info-row">
+      <div class="info-chip">
+        <div class="ic-num" id="chip-n">n = 1</div>
+        <div class="ic-label">Quantum Number</div>
+      </div>
+      <div class="info-chip">
+        <div class="ic-num" id="chip-nodes">0 nodes</div>
+        <div class="ic-label">Interior Nodes in ψ</div>
+      </div>
+      <div class="info-chip">
+        <div class="ic-num" id="chip-peaks">1 peak</div>
+        <div class="ic-label">Probability Peaks</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Constants ──
+const hbar = 1.0546e-34;  // J·s
+const me   = 9.109e-31;   // kg electron mass
+const eV   = 1.602e-19;   // J per eV
+
+let system = 'isw'; // 'isw' or 'qho'
+const POINTS = 600;
+
+// ── System selector ──
+function setSystem(s){
+  system = s;
+  document.getElementById('btn-isw').classList.toggle('active', s==='isw');
+  document.getElementById('btn-qho').classList.toggle('active', s==='qho');
+  document.getElementById('grp-L').style.display  = s==='isw' ? '' : 'none';
+  document.getElementById('grp-w').style.display  = s==='qho' ? '' : 'none';
+  // reset n max
+  document.getElementById('n-slider').max = s==='isw' ? 10 : 8;
+  if(parseInt(document.getElementById('n-slider').value) > (s==='isw'?10:8))
+    document.getElementById('n-slider').value = 1;
+  draw();
+}
+
+function onSlider(){
+  document.getElementById('n-val').textContent = document.getElementById('n-slider').value;
+  document.getElementById('L-val').textContent = parseFloat(document.getElementById('L-slider').value).toFixed(1);
+  document.getElementById('w-val').textContent = parseFloat(document.getElementById('w-slider').value).toFixed(1);
+  draw();
+}
+
+// ── ISW Wavefunction ──
+function isw_psi(x, n, L){
+  // x in [0,L], normalised
+  return Math.sqrt(2/L) * Math.sin(n * Math.PI * x / L);
+}
+
+// ── QHO Wavefunction (using Hermite polynomials) ──
+function hermite(n, z){
+  if(n===0) return 1;
+  if(n===1) return 2*z;
+  let h0=1, h1=2*z, h2;
+  for(let k=2;k<=n;k++){
+    h2 = 2*z*h1 - 2*(k-1)*h0;
+    h0=h1; h1=h2;
+  }
+  return h1;
+}
+
+function factorial(n){ let f=1; for(let i=2;i<=n;i++) f*=i; return f; }
+
+function qho_psi(x, n, x0){
+  // x0 = characteristic length = sqrt(hbar/(m*omega))
+  const z = x / x0;
+  const Hn = hermite(n, z);
+  const norm = 1 / (Math.sqrt(Math.pow(2,n) * factorial(n)) * Math.pow(Math.PI * x0 * x0, 0.25));
+  return norm * Hn * Math.exp(-z*z/2);
+}
+
+// ── Main draw ──
+function draw(){
+  const n = parseInt(document.getElementById('n-slider').value);
+  const L = parseFloat(document.getElementById('L-slider').value) * 1e-9; // nm → m
+  const w = parseFloat(document.getElementById('w-slider').value) * 1e14; // ×10^14 rad/s
+
+  const showPsi   = document.getElementById('show-psi').checked;
+  const showProb  = document.getElementById('show-prob').checked;
+  const showELine = document.getElementById('show-energy').checked;
+  const showPot   = document.getElementById('show-potential').checked;
+  const dark      = document.getElementById('dark-bg').checked;
+
+  const traces = [];
+  let xs = [], psi_vals = [], prob_vals = [];
+  let xMin, xMax, En_J, E1_J;
+
+  if(system === 'isw'){
+    xMin = 0; xMax = L;
+    for(let i=0;i<=POINTS;i++){
+      const x = xMin + i*(xMax-xMin)/POINTS;
+      xs.push(x*1e9); // convert to nm for display
+      const p = isw_psi(x, n, L);
+      psi_vals.push(p);
+      prob_vals.push(p*p);
+    }
+    En_J = (n*n * Math.PI*Math.PI * hbar*hbar) / (2 * me * L*L);
+    E1_J = (Math.PI*Math.PI * hbar*hbar) / (2 * me * L*L);
+
+    // Formula update
+    document.getElementById('formula-psi').innerHTML =
+      `<b>ψₙ(x)</b> = √(2/L) · sin(nπx/L)<br>n = ${n},  L = ${(L*1e9).toFixed(1)} nm`;
+    document.getElementById('formula-en').innerHTML =
+      `<b>Eₙ</b> = n²π²ℏ² / (2mL²)<br>= <b>${(En_J/eV).toFixed(4)} eV</b>`;
+    document.getElementById('plot-heading').textContent = `n=${n} — Infinite Square Well`;
+
+    // Potential (infinite walls shown as tall lines at 0 and L)
+    if(showPot){
+      const wallH = Math.max(...prob_vals) * 2.5;
+      traces.push({
+        x:[0,0], y:[-wallH, wallH],
+        type:'scatter',mode:'lines',
+        line:{color:'#8b5cf6',width:3,dash:'dot'},
+        name:'V(x) wall',showlegend:false
+      });
+      traces.push({
+        x:[L*1e9,L*1e9], y:[-wallH, wallH],
+        type:'scatter',mode:'lines',
+        line:{color:'#8b5cf6',width:3,dash:'dot'},
+        name:'V(x) wall',showlegend:false
+      });
+    }
+
+  } else {
+    // QHO
+    const x0 = Math.sqrt(hbar / (me * w)); // characteristic length
+    xMin = -5*x0; xMax = 5*x0;
+    for(let i=0;i<=POINTS;i++){
+      const x = xMin + i*(xMax-xMin)/POINTS;
+      xs.push(x*1e9);
+      const p = qho_psi(x, n, x0);
+      psi_vals.push(p);
+      prob_vals.push(p*p);
+    }
+    En_J = (n + 0.5) * hbar * w;
+    E1_J = 0.5 * hbar * w; // ground state (n=0)
+
+    document.getElementById('formula-psi').innerHTML =
+      `<b>ψₙ(x)</b> = Nₙ · Hₙ(x/x₀) · e^(−x²/2x₀²)<br>n = ${n},  ω = ${(w/1e14).toFixed(1)}×10¹⁴ rad/s`;
+    document.getElementById('formula-en').innerHTML =
+      `<b>Eₙ</b> = (n+½)ℏω<br>= <b>${(En_J/eV).toFixed(6)} eV</b>`;
+    document.getElementById('plot-heading').textContent = `n=${n} — Harmonic Oscillator`;
+
+    // Parabolic potential
+    if(showPot){
+      const potX = [], potY = [];
+      const scaleFactor = Math.max(...prob_vals) * 1.5 / (Math.pow(5*x0,2));
+      for(let i=0;i<=200;i++){
+        const x = xMin + i*(xMax-xMin)/200;
+        potX.push(x*1e9);
+        potY.push(0.5 * me * w*w * x*x * scaleFactor);
+      }
+      traces.push({
+        x:potX, y:potY,
+        type:'scatter',mode:'lines',
+        line:{color:'#8b5cf6',width:2,dash:'dash'},
+        name:'V(x) ∝ x²',
+      });
+    }
+  }
+
+  // ψ(x) trace
+  if(showPsi){
+    traces.push({
+      x: xs, y: psi_vals,
+      type:'scatter', mode:'lines',
+      name:'ψ(x)',
+      line:{color:'#2563eb', width:2.5},
+      fill:'tozeroy',
+      fillcolor: dark ? 'rgba(37,99,235,0.08)' : 'rgba(37,99,235,0.06)',
+    });
+  }
+
+  // |ψ|² trace
+  if(showProb){
+    traces.push({
+      x: xs, y: prob_vals,
+      type:'scatter', mode:'lines',
+      name:'|ψ(x)|²',
+      line:{color:'#e63946', width:2.5},
+      fill:'tozeroy',
+      fillcolor: dark ? 'rgba(230,57,70,0.1)' : 'rgba(230,57,70,0.07)',
+    });
+  }
+
+  // Energy level line
+  if(showELine && showProb){
+    const maxP = Math.max(...prob_vals);
+    traces.push({
+      x:[xs[0], xs[xs.length-1]],
+      y:[maxP*0.5, maxP*0.5],
+      type:'scatter',mode:'lines',
+      line:{color:'#f4a261',width:1.5,dash:'dot'},
+      name:`E${n} level`,
+    });
+  }
+
+  // Layout
+  const bgColor   = dark ? '#0c1428' : '#ffffff';
+  const gridColor = dark ? 'rgba(96,165,250,0.1)' : 'rgba(37,99,235,0.08)';
+  const textColor = dark ? '#a0b4cc' : '#5a6a85';
+  const titleColor= dark ? '#e8f2ff' : '#0c1428';
+
+  const layout = {
+    paper_bgcolor: bgColor,
+    plot_bgcolor:  bgColor,
+    font:{family:'DM Sans,sans-serif', color:textColor},
+    margin:{t:20,r:20,b:54,l:64},
+    xaxis:{
+      title:{text:'x (nm)', font:{size:12}},
+      gridcolor:gridColor, zerolinecolor: dark?'rgba(96,165,250,0.25)':'rgba(37,99,235,0.2)',
+      tickfont:{size:11},
+    },
+    yaxis:{
+      title:{text:'Amplitude', font:{size:12}},
+      gridcolor:gridColor, zerolinecolor: dark?'rgba(96,165,250,0.25)':'rgba(37,99,235,0.2)',
+      tickfont:{size:11},
+    },
+    showlegend: true,
+    legend:{font:{size:11}, bgcolor:'transparent', x:0.01, y:0.99, xanchor:'left', yanchor:'top'},
+    hovermode:'x unified',
+  };
+
+  Plotly.react('plot-div', traces, layout, {responsive:true, displaylogo:false,
+    modeBarButtonsToRemove:['sendDataToCloud','lasso2d','select2d'],
+    toImageButtonOptions:{format:'png',filename:`quantum-n${n}`,scale:2}
+  });
+
+  // Update info panel
+  const En_eV = (En_J/eV);
+  const E1_eV = (E1_J/eV);
+  document.getElementById('ev-en').innerHTML    = `${En_eV.toFixed(4)}<span class="e-unit"> eV</span>`;
+  document.getElementById('ev-e1').innerHTML    = `${E1_eV.toFixed(4)}<span class="e-unit"> eV</span>`;
+  document.getElementById('ev-ratio').textContent = `n² = ${n*n}`;
+  document.getElementById('ev-nodes').textContent = `${n-1}`;
+
+  document.getElementById('n-val').textContent  = n;
+  document.getElementById('chip-n').textContent  = `n = ${n}`;
+  document.getElementById('chip-nodes').textContent = `${n-1} node${n-1===1?'':'s'}`;
+  document.getElementById('chip-peaks').textContent  = `${n} peak${n===1?'':'s'}`;
+}
+
+function downloadPNG(){
+  Plotly.downloadImage('plot-div',{format:'png',filename:'quantum-wavefunction',width:1200,height:600,scale:2});
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className='show';
+  clearTimeout(t._t); t._t = setTimeout(()=>t.className='',2500);
+}
+
+// ── Init ──
+onSlider();
+</script>
+</body>
+</html>
