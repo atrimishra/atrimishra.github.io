@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Error & Curve Fitting — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Lab data error analysis and least-squares curve fitting tool by Atri Mishra. Linear, polynomial, exponential fitting with error bars. Free BSc MSc Physics tool.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/error-analysis.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.0/math.min.js"></script>
+<style>
+:root{
+  --bg:#f0f6ff;--bg2:#e8f2ff;--ink:#0c1428;--ink2:#1e2d4a;--muted:#5a6a85;
+  --border:#dce8f5;--sky:#2563eb;--sky2:#3b82f6;--sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);--card:#ffffff;--radius:16px;
+  --green:#16a34a;--red:#e63946;--orange:#f4a261;--purple:#8b5cf6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(240,246,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(16px,4vw,48px);height:56px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-icon{width:30px;height:30px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;}
+.logo .dot{color:var(--sky);}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:0.83rem;font-weight:500;text-decoration:none;padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+.page-header{padding:36px clamp(16px,4vw,48px) 0;max-width:1300px;margin:0 auto;}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sky-bg);color:var(--sky);font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:30px;border:1px solid rgba(37,99,235,0.2);margin-bottom:12px;}
+.page-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);line-height:1.1;letter-spacing:-1px;margin-bottom:6px;}
+.page-title span{color:var(--sky);}
+.page-sub{color:var(--muted);font-size:0.92rem;margin-bottom:28px;}
+
+.tool-wrapper{max-width:1300px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 60px;display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 2px 16px var(--sky-glow);margin-bottom:16px;}
+.card:last-child{margin-bottom:0;}
+.card-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title i{color:var(--sky);font-size:0.85rem;}
+
+/* Fit type tabs */
+.fit-tabs{display:flex;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:16px;}
+.fit-btn{flex:1;padding:7px 4px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.78rem;font-weight:600;color:var(--muted);cursor:pointer;border-radius:8px;transition:all 0.2s;text-align:center;}
+.fit-btn.active{background:var(--card);color:var(--sky);box-shadow:0 1px 6px rgba(37,99,235,0.15);}
+
+/* Data table */
+.data-table-wrap{max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;}
+table{width:100%;border-collapse:collapse;}
+thead th{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;padding:8px 10px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;}
+tbody td{padding:5px 6px;border-bottom:1px solid rgba(37,99,235,0.05);}
+tbody tr:last-child td{border-bottom:none;}
+.td-inp{width:100%;border:none;background:transparent;font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:var(--ink);outline:none;padding:2px 4px;text-align:center;}
+.td-inp:focus{background:var(--sky-bg);border-radius:4px;}
+.del-btn{background:none;border:none;cursor:pointer;color:#c00;font-size:0.75rem;padding:2px 6px;border-radius:4px;transition:background 0.2s;}
+.del-btn:hover{background:rgba(220,0,0,0.08);}
+
+/* Buttons */
+.btn-row{display:flex;gap:8px;margin-bottom:10px;}
+.btn-sm{flex:1;padding:7px;border-radius:9px;font-size:0.77rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.btn-primary{background:var(--sky);color:#fff;border:none;box-shadow:0 2px 10px rgba(37,99,235,0.25);}
+.btn-primary:hover{background:var(--sky2);}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-ghost:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-bg);}
+.btn-add{width:100%;padding:8px;background:var(--sky-bg);border:1px dashed rgba(37,99,235,0.35);border-radius:9px;font-size:0.78rem;font-weight:600;color:var(--sky);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:12px;}
+.btn-add:hover{background:rgba(37,99,235,0.1);}
+
+/* Field */
+label{display:block;font-size:0.78rem;font-weight:600;color:var(--ink2);margin-bottom:5px;}
+.hint{font-weight:400;color:var(--muted);font-size:0.72rem;margin-left:4px;}
+input[type=number],select,input[type=text]{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none;transition:border-color 0.2s;}
+input:focus,select:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+.field{margin-bottom:12px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+
+/* Toggle */
+.toggle-row{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.toggle-item{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.toggle-item input[type=checkbox]{width:32px;height:17px;-webkit-appearance:none;background:var(--bg2);border-radius:20px;border:1px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle-item input[type=checkbox]:checked{background:var(--sky);border-color:var(--sky);}
+.toggle-item input[type=checkbox]::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff;transition:left 0.2s;}
+.toggle-item input[type=checkbox]:checked::after{left:17px;}
+.toggle-label{font-size:0.8rem;font-weight:500;color:var(--ink2);}
+
+/* Plot card */
+.plot-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 2px 16px var(--sky-glow);overflow:hidden;}
+.plot-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);}
+.plot-title-text{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.78rem;color:var(--muted);transition:all 0.2s;}
+.icon-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+#plot-div{width:100%;height:380px;}
+
+/* Results panel */
+.results-panel{padding:16px 20px;border-top:1px solid var(--border);background:var(--bg);}
+.results-title{font-family:'Fraunces',serif;font-size:0.85rem;font-weight:700;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.results-title i{color:var(--sky);}
+.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.res-chip{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;text-align:center;}
+.res-num{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;word-break:break-all;}
+.res-label{font-size:0.65rem;color:var(--muted);margin-top:2px;}
+.equation-box{background:var(--card);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--sky);word-break:break-all;}
+.equation-label{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+
+/* Stats table */
+.stats-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:0.8rem;}
+.stats-table td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--ink2);}
+.stats-table td:first-child{font-weight:600;color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.4px;}
+.stats-table tr:last-child td{border-bottom:none;}
+
+/* Preset chips */
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.preset-chip{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--bg);font-size:0.72rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.18s;}
+.preset-chip:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-bg);}
+
+/* Panel */
+.panel{display:none;}
+.panel.active{display:block;}
+
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:0.83rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{background:var(--green);}
+#toast.error{background:var(--red);}
+
+@media(max-width:900px){
+  .tool-wrapper{grid-template-columns:1fr;}
+  #plot-div{height:300px;}
+  .results-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <a class="back-btn" href="../index.html#tools">
+    <i class="fa-solid fa-arrow-left"></i> Back to Tools
+  </a>
+</nav>
+
+<div class="page-header">
+  <div class="tool-badge"><i class="fa-solid fa-square-root-variable"></i> Tool 8 of 12</div>
+  <h1 class="page-title">Lab Error & <span>Curve Fitting</span></h1>
+  <p class="page-sub">Apna lab data paste karo — linear, polynomial ya exponential fit lagao, slope/intercept/R² instantly milega. Error bars bhi support hain.</p>
+</div>
+
+<div class="tool-wrapper">
+  <!-- LEFT -->
+  <div>
+    <!-- Data Input -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-table"></i> Data Input</div>
+
+      <!-- Presets -->
+      <label style="margin-bottom:6px;">Load Example Data</label>
+      <div class="preset-row">
+        <span class="preset-chip" onclick="loadPreset('ohm')">Ohm's Law</span>
+        <span class="preset-chip" onclick="loadPreset('pendulum')">Pendulum</span>
+        <span class="preset-chip" onclick="loadPreset('decay')">Decay</span>
+        <span class="preset-chip" onclick="loadPreset('spring')">Spring</span>
+        <span class="preset-chip" onclick="loadPreset('diffraction')">Diffraction</span>
+      </div>
+
+      <!-- Data table -->
+      <div class="data-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>σ_Y <span style="font-weight:400;opacity:0.6;">(err)</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="data-tbody"></tbody>
+        </table>
+      </div>
+      <button class="btn-add" onclick="addRow()"><i class="fa-solid fa-plus"></i> Add Row</button>
+
+      <!-- Axis labels -->
+      <div class="field-row">
+        <div>
+          <label>X Label</label>
+          <input type="text" id="x-label" value="x" oninput="fit()">
+        </div>
+        <div>
+          <label>Y Label</label>
+          <input type="text" id="y-label" value="y" oninput="fit()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Fit Settings -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-chart-line"></i> Fit Settings</div>
+
+      <div class="fit-tabs">
+        <button class="fit-btn active" onclick="setFit('linear')">Linear</button>
+        <button class="fit-btn" onclick="setFit('poly2')">Poly 2°</button>
+        <button class="fit-btn" onclick="setFit('poly3')">Poly 3°</button>
+        <button class="fit-btn" onclick="setFit('exp')">Exp</button>
+        <button class="fit-btn" onclick="setFit('power')">Power</button>
+      </div>
+
+      <div class="toggle-row">
+        <label class="toggle-item">
+          <input type="checkbox" id="show-errorbars" checked onchange="fit()">
+          <span class="toggle-label">Show error bars (σ_Y)</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-residuals" onchange="fit()">
+          <span class="toggle-label">Show residuals</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-ci" checked onchange="fit()">
+          <span class="toggle-label">Show 95% confidence band</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="dark-bg" onchange="fit()">
+          <span class="toggle-label">Dark background</span>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-sm btn-primary" onclick="fit()"><i class="fa-solid fa-chart-line"></i> Fit Data</button>
+        <button class="btn-sm btn-ghost" onclick="clearData()"><i class="fa-solid fa-eraser"></i> Clear</button>
+      </div>
+      <button class="btn-sm btn-ghost" style="width:100%;margin-top:0;" onclick="downloadCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+    </div>
+
+    <!-- Error Propagation -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-triangle-exclamation"></i> Error Propagation</div>
+      <div class="field">
+        <label>Expression f(a,b,...) <span class="hint">use a,b,c for values</span></label>
+        <input type="text" id="err-expr" value="a*b" placeholder="e.g. a*b, sqrt(a^2+b^2)">
+      </div>
+      <div class="field-row">
+        <div>
+          <label>a ± σ_a</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+            <input type="number" id="err-a" value="5.0" step="any">
+            <input type="number" id="err-da" value="0.1" step="any">
+          </div>
+        </div>
+        <div>
+          <label>b ± σ_b</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+            <input type="number" id="err-b" value="3.0" step="any">
+            <input type="number" id="err-db" value="0.05" step="any">
+          </div>
+        </div>
+      </div>
+      <button class="btn-sm btn-primary" style="width:100%;margin-bottom:10px;" onclick="calcErrProp()">
+        <i class="fa-solid fa-calculator"></i> Calculate σ_f
+      </button>
+      <div id="err-result" style="display:none;background:var(--sky-bg);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:12px;font-size:0.85rem;color:var(--ink2);font-family:'JetBrains Mono',monospace;"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+    <div class="plot-card">
+      <div class="plot-topbar">
+        <div class="plot-title-text">
+          <i class="fa-solid fa-square-root-variable" style="color:var(--sky);margin-right:6px;"></i>
+          <span id="plot-heading">Curve Fitting</span>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="icon-btn" onclick="downloadPNG()" title="PNG"><i class="fa-solid fa-download"></i></button>
+        </div>
+      </div>
+
+      <div id="plot-div"></div>
+
+      <!-- Results -->
+      <div class="results-panel">
+        <div class="results-title"><i class="fa-solid fa-calculator"></i> Fit Results</div>
+        <div id="results-empty" style="color:var(--muted);font-size:0.85rem;padding:8px 0;">Data enter karo aur Fit dabao.</div>
+        <div id="results-content" style="display:none;">
+          <div class="equation-label">Best Fit Equation</div>
+          <div class="equation-box" id="eq-box">—</div>
+          <div class="results-grid" style="margin-top:12px;" id="res-grid"></div>
+          <table class="stats-table" id="stats-table">
+            <tbody id="stats-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let fitType = 'linear';
+let rows = [];
+let rowId = 0;
+
+// ── Row Management ──
+function addRow(x='',y='',err=''){
+  rowId++;
+  rows.push({id:rowId, x, y, err});
+  renderTable();
+}
+
+function deleteRow(id){
+  rows = rows.filter(r=>r.id!==id);
+  renderTable();
+}
+
+function renderTable(){
+  const tbody = document.getElementById('data-tbody');
+  tbody.innerHTML = rows.map((r,i)=>`
+    <tr>
+      <td style="text-align:center;color:var(--muted);font-size:0.75rem;padding:6px 4px;">${i+1}</td>
+      <td><input class="td-inp" value="${r.x}" oninput="rows[${i}].x=this.value" placeholder="0"></td>
+      <td><input class="td-inp" value="${r.y}" oninput="rows[${i}].y=this.value" placeholder="0"></td>
+      <td><input class="td-inp" value="${r.err}" oninput="rows[${i}].err=this.value" placeholder="—"></td>
+      <td><button class="del-btn" onclick="deleteRow(${r.id})"><i class="fa-solid fa-xmark"></i></button></td>
+    </tr>`).join('');
+}
+
+function getData(){
+  const xs=[], ys=[], errs=[];
+  rows.forEach(r=>{
+    const x=parseFloat(r.x), y=parseFloat(r.y);
+    if(!isNaN(x)&&!isNaN(y)){ xs.push(x); ys.push(y); errs.push(parseFloat(r.err)||0); }
+  });
+  return {xs,ys,errs};
+}
+
+// ── Fit Type ──
+function setFit(t){
+  fitType=t;
+  document.querySelectorAll('.fit-btn').forEach((b,i)=>b.classList.toggle('active',['linear','poly2','poly3','exp','power'][i]===t));
+  fit();
+}
+
+// ── Polynomial Least Squares ──
+function polyFit(xs, ys, degree){
+  const n=xs.length, d=degree+1;
+  // Build Vandermonde matrix
+  const A=[], b=[];
+  for(let i=0;i<n;i++){
+    const row=[];
+    for(let j=0;j<d;j++) row.push(Math.pow(xs[i],j));
+    A.push(row); b.push(ys[i]);
+  }
+  // Normal equations: (A^T A) c = A^T b
+  const AT=A[0].map((_,j)=>A.map(r=>r[j]));
+  const ATA=AT.map(r1=>AT[0].map((_,j)=>r1.reduce((s,_,k)=>s+r1[k]*A[k][j],0)));
+  // Recompute properly
+  const ATA2=[];
+  for(let i=0;i<d;i++){
+    ATA2.push([]);
+    for(let j=0;j<d;j++){
+      let s=0; for(let k=0;k<n;k++) s+=Math.pow(xs[k],i)*Math.pow(xs[k],j);
+      ATA2[i].push(s);
+    }
+  }
+  const ATb=[];
+  for(let i=0;i<d;i++){ let s=0; for(let k=0;k<n;k++) s+=Math.pow(xs[k],i)*ys[k]; ATb.push(s); }
+  // Gaussian elimination
+  const M=ATA2.map((r,i)=>[...r,ATb[i]]);
+  for(let col=0;col<d;col++){
+    let mx=col; for(let r=col+1;r<d;r++) if(Math.abs(M[r][col])>Math.abs(M[mx][col])) mx=r;
+    [M[col],M[mx]]=[M[mx],M[col]];
+    for(let r=0;r<d;r++) if(r!==col){
+      const f=M[r][col]/M[col][col];
+      for(let c=col;c<=d;c++) M[r][c]-=f*M[col][c];
+    }
+  }
+  return M.map((r,i)=>r[d]/r[i]);
+}
+
+function r2(ys, yfit){
+  const mean=ys.reduce((a,b)=>a+b,0)/ys.length;
+  const SStot=ys.reduce((s,y)=>s+(y-mean)**2,0);
+  const SSres=ys.reduce((s,y,i)=>s+(y-yfit[i])**2,0);
+  return 1-SSres/SStot;
+}
+
+function rmse(ys, yfit){
+  return Math.sqrt(ys.reduce((s,y,i)=>s+(y-yfit[i])**2,0)/ys.length);
+}
+
+// ── Main Fit ──
+function fit(){
+  const {xs,ys,errs} = getData();
+  if(xs.length<2){ showToast('Kam se kam 2 data points chahiye!','error'); return; }
+
+  const dark = document.getElementById('dark-bg').checked;
+  const showEB = document.getElementById('show-errorbars').checked;
+  const showCI = document.getElementById('show-ci').checked;
+  const showRes= document.getElementById('show-residuals').checked;
+  const xLbl  = document.getElementById('x-label').value||'x';
+  const yLbl  = document.getElementById('y-label').value||'y';
+
+  let coeffs=[], yfit=[], eqStr='', paramStr='';
+
+  // Fit
+  if(fitType==='linear'){
+    coeffs = polyFit(xs,ys,1);
+    yfit = xs.map(x=>coeffs[0]+coeffs[1]*x);
+    eqStr = `y = ${coeffs[1].toFixed(5)}·x + ${coeffs[0].toFixed(5)}`;
+    paramStr = `slope = ${coeffs[1].toFixed(6)},  intercept = ${coeffs[0].toFixed(6)}`;
+  } else if(fitType==='poly2'){
+    coeffs = polyFit(xs,ys,2);
+    yfit = xs.map(x=>coeffs[0]+coeffs[1]*x+coeffs[2]*x*x);
+    eqStr = `y = ${coeffs[2].toFixed(4)}·x² + ${coeffs[1].toFixed(4)}·x + ${coeffs[0].toFixed(4)}`;
+  } else if(fitType==='poly3'){
+    coeffs = polyFit(xs,ys,3);
+    yfit = xs.map(x=>coeffs[0]+coeffs[1]*x+coeffs[2]*x*x+coeffs[3]*x*x*x);
+    eqStr = `y = ${coeffs[3].toFixed(4)}·x³ + ${coeffs[2].toFixed(4)}·x² + ${coeffs[1].toFixed(4)}·x + ${coeffs[0].toFixed(4)}`;
+  } else if(fitType==='exp'){
+    // y = A*exp(B*x) → log(y)=log(A)+B*x
+    const lnys = ys.map(y=>Math.log(Math.abs(y)));
+    const lc = polyFit(xs,lnys,1);
+    const A=Math.exp(lc[0]), B=lc[1];
+    yfit = xs.map(x=>A*Math.exp(B*x));
+    eqStr = `y = ${A.toFixed(4)}·e^(${B.toFixed(4)}·x)`;
+    coeffs=[A,B];
+  } else if(fitType==='power'){
+    // y = A*x^B → log(y)=log(A)+B*log(x)
+    const lnxs=xs.map(x=>Math.log(Math.abs(x))), lnys=ys.map(y=>Math.log(Math.abs(y)));
+    const lc=polyFit(lnxs,lnys,1);
+    const A=Math.exp(lc[0]), B=lc[1];
+    yfit=xs.map(x=>A*Math.pow(Math.abs(x),B));
+    eqStr=`y = ${A.toFixed(4)}·x^${B.toFixed(4)}`;
+    coeffs=[A,B];
+  }
+
+  const R2=r2(ys,yfit);
+  const RMSE=rmse(ys,yfit);
+  const residuals=ys.map((y,i)=>y-yfit[i]);
+  const n=xs.length, chi2=errs.some(e=>e>0)?errs.reduce((s,e,i)=>s+(e>0?residuals[i]**2/e**2:0),0):null;
+
+  // Smooth fit line
+  const xMin=Math.min(...xs), xMax=Math.max(...xs);
+  const xFit=Array.from({length:300},(_,i)=>xMin+i*(xMax-xMin)/299);
+  let yFitLine;
+  if(fitType==='linear') yFitLine=xFit.map(x=>coeffs[0]+coeffs[1]*x);
+  else if(fitType==='poly2') yFitLine=xFit.map(x=>coeffs[0]+coeffs[1]*x+coeffs[2]*x*x);
+  else if(fitType==='poly3') yFitLine=xFit.map(x=>coeffs[0]+coeffs[1]*x+coeffs[2]*x*x+coeffs[3]*x*x*x);
+  else if(fitType==='exp') yFitLine=xFit.map(x=>coeffs[0]*Math.exp(coeffs[1]*x));
+  else yFitLine=xFit.map(x=>coeffs[0]*Math.pow(Math.abs(x),coeffs[1]));
+
+  const bg=dark?'#0c1428':'#fff';
+  const gc=dark?'rgba(96,165,250,0.1)':'rgba(37,99,235,0.08)';
+  const tc=dark?'#a0b4cc':'#5a6a85';
+
+  const traces=[];
+
+  // CI band (±1 RMSE)
+  if(showCI){
+    traces.push({
+      x:[...xFit,...xFit.slice().reverse()],
+      y:[...yFitLine.map(y=>y+RMSE),...yFitLine.map(y=>y-RMSE).reverse()],
+      fill:'toself',fillcolor:dark?'rgba(37,99,235,0.08)':'rgba(37,99,235,0.06)',
+      line:{color:'transparent'},showlegend:false,hoverinfo:'skip',type:'scatter',mode:'lines'
+    });
+  }
+
+  // Data points with error bars
+  const dataTrace={
+    x:xs, y:ys, type:'scatter', mode:'markers', name:'Data',
+    marker:{color:'#2563eb',size:7,line:{color:'#fff',width:1.5}},
+  };
+  if(showEB && errs.some(e=>e>0)){
+    dataTrace.error_y={type:'data',array:errs,visible:true,color:'rgba(37,99,235,0.5)',thickness:1.5,width:4};
+  }
+  traces.push(dataTrace);
+
+  // Fit line
+  traces.push({x:xFit,y:yFitLine,type:'scatter',mode:'lines',name:'Fit',
+    line:{color:'#e63946',width:2.5}});
+
+  // Residuals
+  if(showRes){
+    traces.push({x:xs,y:residuals,type:'scatter',mode:'markers',name:'Residuals',
+      marker:{color:'#f4a261',size:6,symbol:'diamond'},
+      yaxis:'y2'});
+  }
+
+  const layout={
+    paper_bgcolor:bg,plot_bgcolor:bg,
+    font:{family:'DM Sans,sans-serif',color:tc},
+    margin:{t:20,r:20,b:54,l:64},
+    xaxis:{title:{text:xLbl},gridcolor:gc,tickfont:{size:11}},
+    yaxis:{title:{text:yLbl},gridcolor:gc,tickfont:{size:11}},
+    showlegend:true,legend:{font:{size:11},bgcolor:'transparent'},
+    hovermode:'closest',
+  };
+  if(showRes){
+    layout.yaxis2={title:{text:'Residual'},overlaying:'y',side:'right',showgrid:false,tickfont:{size:10},zeroline:true,zerolinecolor:'rgba(244,162,97,0.4)'};
+  }
+
+  Plotly.react('plot-div',traces,layout,{responsive:true,displaylogo:false,
+    modeBarButtonsToRemove:['sendDataToCloud','lasso2d'],
+    toImageButtonOptions:{format:'png',filename:'curve-fit',scale:2}});
+
+  document.getElementById('plot-heading').textContent=`${fitType.charAt(0).toUpperCase()+fitType.slice(1)} Fit — ${xs.length} points`;
+
+  // Results
+  document.getElementById('results-empty').style.display='none';
+  document.getElementById('results-content').style.display='block';
+  document.getElementById('eq-box').textContent=eqStr;
+
+  const resItems=[
+    {num:R2.toFixed(5),label:'R² (Goodness)',col:'var(--green)'},
+    {num:RMSE.toFixed(5),label:'RMSE',col:'var(--sky)'},
+    {num:xs.length,label:'Data Points',col:'var(--ink)'},
+    {num:chi2!==null?chi2.toFixed(3):'—',label:'χ² (if σ given)',col:'var(--orange)'},
+  ];
+  document.getElementById('res-grid').innerHTML=resItems.map(r=>
+    `<div class="res-chip"><div class="res-num" style="color:${r.col};">${r.num}</div><div class="res-label">${r.label}</div></div>`
+  ).join('');
+
+  // Stats table
+  const mean_x=xs.reduce((a,b)=>a+b,0)/xs.length;
+  const mean_y=ys.reduce((a,b)=>a+b,0)/ys.length;
+  const std_x=Math.sqrt(xs.reduce((s,x)=>s+(x-mean_x)**2,0)/(xs.length-1));
+  const std_y=Math.sqrt(ys.reduce((s,y)=>s+(y-mean_y)**2,0)/(ys.length-1));
+  document.getElementById('stats-tbody').innerHTML=[
+    ['Mean X', mean_x.toFixed(5)],['Std Dev X', std_x.toFixed(5)],
+    ['Mean Y', mean_y.toFixed(5)],['Std Dev Y', std_y.toFixed(5)],
+    fitType==='linear'?['Slope', coeffs[1].toFixed(6)]:null,
+    fitType==='linear'?['Intercept', coeffs[0].toFixed(6)]:null,
+  ].filter(Boolean).map(([l,v])=>`<tr><td>${l}</td><td style="font-family:'JetBrains Mono',monospace;color:var(--sky);">${v}</td></tr>`).join('');
+}
+
+// ── Error Propagation ──
+function calcErrProp(){
+  const expr=document.getElementById('err-expr').value.trim();
+  const a=parseFloat(document.getElementById('err-a').value)||0;
+  const da=parseFloat(document.getElementById('err-da').value)||0;
+  const b=parseFloat(document.getElementById('err-b').value)||0;
+  const db=parseFloat(document.getElementById('err-db').value)||0;
+  try{
+    const f=math.evaluate(expr,{a,b});
+    // Partial derivatives numerically
+    const h=1e-7;
+    const df_da=(math.evaluate(expr,{a:a+h,b})-math.evaluate(expr,{a:a-h,b}))/(2*h);
+    const df_db=(math.evaluate(expr,{a,b:b+h})-math.evaluate(expr,{a,b:b-h}))/(2*h);
+    const sigma_f=Math.sqrt((df_da*da)**2+(df_db*db)**2);
+    const box=document.getElementById('err-result');
+    box.style.display='block';
+    box.innerHTML=`f(${a},${b}) = ${f.toFixed(6)}\n∂f/∂a = ${df_da.toFixed(6)}\n∂f/∂b = ${df_db.toFixed(6)}\nσ_f = ${sigma_f.toFixed(6)}\n\nResult: ${f.toFixed(4)} ± ${sigma_f.toFixed(4)}`;
+    showToast('Error propagation done!','success');
+  }catch(e){showToast('Expression galat hai: '+e.message,'error');}
+}
+
+// ── Presets ──
+const PRESETS={
+  ohm:{xl:"Voltage V (V)",yl:"Current I (mA)",data:[[0,0,0.5],[1,9.8,0.8],[2,20.1,0.7],[3,29.9,1.0],[4,40.2,0.9],[5,50.1,0.8],[6,59.8,1.1],[7,70.3,0.9],[8,79.7,1.2]]},
+  pendulum:{xl:"Length L (m)",yl:"Period T (s)",data:[[0.1,0.632,0.02],[0.2,0.897,0.02],[0.3,1.099,0.02],[0.4,1.268,0.03],[0.5,1.420,0.02],[0.6,1.554,0.03],[0.7,1.676,0.02],[0.8,1.789,0.03],[0.9,1.899,0.02],[1.0,2.003,0.03]]},
+  decay:{xl:"Time t (hr)",yl:"Count N",data:[[0,1000,30],[1,748,28],[2,561,25],[3,420,20],[4,315,18],[5,236,15],[6,177,12],[7,132,11],[8,99,9]]},
+  spring:{xl:"Extension x (cm)",yl:"Force F (N)",data:[[0,0,0.1],[2,1.98,0.1],[4,4.02,0.1],[6,5.97,0.1],[8,8.01,0.1],[10,9.98,0.15],[12,12.03,0.15],[14,13.95,0.15],[16,16.02,0.2]]},
+  diffraction:{xl:"Order n",yl:"sin θ",data:[[1,0.313,0.005],[2,0.625,0.005],[3,0.938,0.006],[4,1.251,0.007]]},
+};
+
+function loadPreset(k){
+  const p=PRESETS[k];
+  document.getElementById('x-label').value=p.xl;
+  document.getElementById('y-label').value=p.yl;
+  rows=[];rowId=0;
+  p.data.forEach(([x,y,e])=>{ rowId++; rows.push({id:rowId,x,y,err:e}); });
+  renderTable();
+  setTimeout(fit,50);
+  showToast('Data loaded!','success');
+}
+
+function clearData(){rows=[];rowId=0;renderTable();document.getElementById('results-empty').style.display='block';document.getElementById('results-content').style.display='none';Plotly.purge('plot-div');}
+
+function downloadCSV(){
+  const {xs,ys,errs}=getData();
+  if(!xs.length){showToast('Koi data nahi!','error');return;}
+  let csv=`${document.getElementById('x-label').value},${document.getElementById('y-label').value},sigma_y\n`;
+  xs.forEach((x,i)=>csv+=`${x},${ys[i]},${errs[i]}\n`);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='lab-data.csv';a.click();
+  showToast('CSV exported!','success');
+}
+
+function downloadPNG(){Plotly.downloadImage('plot-div',{format:'png',filename:'curve-fit',width:1200,height:600,scale:2});}
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+(type||'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2500);
+}
+
+// Init
+loadPreset('ohm');
+</script>
+</body>
+</html>
