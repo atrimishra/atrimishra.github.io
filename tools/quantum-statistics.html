@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Statistics Comparer — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Compare Maxwell-Boltzmann, Bose-Einstein and Fermi-Dirac distribution functions interactively. Live temperature slider. Free MSc Physics tool by Atri Mishra.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/quantum-statistics.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+:root{
+  --bg:#f0f6ff;--bg2:#e8f2ff;--ink:#0c1428;--ink2:#1e2d4a;--muted:#5a6a85;
+  --border:#dce8f5;--sky:#2563eb;--sky2:#3b82f6;--sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);--card:#ffffff;--radius:16px;
+  --mb:#f4a261;--be:#2ec4b6;--fd:#e63946;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(240,246,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(16px,4vw,48px);height:56px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-icon{width:30px;height:30px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;}
+.logo .dot{color:var(--sky);}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:0.83rem;font-weight:500;text-decoration:none;padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+.page-header{padding:36px clamp(16px,4vw,48px) 0;max-width:1200px;margin:0 auto;}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sky-bg);color:var(--sky);font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:30px;border:1px solid rgba(37,99,235,0.2);margin-bottom:12px;}
+.page-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);line-height:1.1;letter-spacing:-1px;margin-bottom:6px;}
+.page-title span{color:var(--sky);}
+.page-sub{color:var(--muted);font-size:0.92rem;margin-bottom:28px;}
+
+.tool-wrapper{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 60px;display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 2px 16px var(--sky-glow);margin-bottom:16px;}
+.card:last-child{margin-bottom:0;}
+.card-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title i{color:var(--sky);font-size:0.85rem;}
+
+/* Distribution toggle cards */
+.dist-card{border-radius:12px;padding:14px;margin-bottom:10px;border:2px solid transparent;cursor:pointer;transition:all 0.2s;}
+.dist-card:last-child{margin-bottom:0;}
+.dist-card.mb{background:rgba(244,162,97,0.08);border-color:rgba(244,162,97,0.3);}
+.dist-card.mb.active{border-color:#f4a261;background:rgba(244,162,97,0.12);}
+.dist-card.be{background:rgba(46,196,182,0.08);border-color:rgba(46,196,182,0.3);}
+.dist-card.be.active{border-color:#2ec4b6;background:rgba(46,196,182,0.12);}
+.dist-card.fd{background:rgba(230,57,70,0.08);border-color:rgba(230,57,70,0.3);}
+.dist-card.fd.active{border-color:#e63946;background:rgba(230,57,70,0.12);}
+.dist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.dist-name{font-family:'Fraunces',serif;font-size:0.92rem;font-weight:700;}
+.dist-name.mb{color:#f4a261;}.dist-name.be{color:#2ec4b6;}.dist-name.fd{color:#e63946;}
+.dist-toggle{width:34px;height:18px;border-radius:20px;border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+.dist-toggle::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.dist-toggle.on::after{left:18px;}
+.dist-toggle.mb-t{background:#f4a261;}.dist-toggle.be-t{background:#2ec4b6;}.dist-toggle.fd-t{background:#e63946;}
+.dist-toggle.off{background:#cbd5e1;}
+.dist-formula{font-family:monospace;font-size:0.75rem;color:var(--muted);line-height:1.6;}
+.dist-particle{font-size:0.7rem;color:var(--muted);margin-top:4px;}
+
+/* Slider */
+.slider-group{margin-bottom:16px;}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.slider-label span{font-size:0.78rem;font-weight:600;color:var(--ink2);}
+.slider-val{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--sky);background:var(--sky-bg);padding:2px 10px;border-radius:20px;border:1px solid rgba(37,99,235,0.2);}
+input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--bg2);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--sky);border:2px solid #fff;box-shadow:0 1px 6px rgba(37,99,235,0.4);cursor:pointer;transition:transform 0.15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+
+/* Field */
+label{display:block;font-size:0.78rem;font-weight:600;color:var(--ink2);margin-bottom:5px;}
+input[type=number]{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s;}
+input[type=number]:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+.field{margin-bottom:13px;}
+
+/* Toggle */
+.toggle-row{display:flex;flex-direction:column;gap:9px;}
+.toggle-item{display:flex;align-items:center;gap:9px;cursor:pointer;}
+.toggle-item input[type=checkbox]{width:34px;height:18px;-webkit-appearance:none;background:var(--bg2);border-radius:20px;border:1px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle-item input[type=checkbox]:checked{background:var(--sky);border-color:var(--sky);}
+.toggle-item input[type=checkbox]::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left 0.2s;}
+.toggle-item input[type=checkbox]:checked::after{left:18px;}
+.toggle-label{font-size:0.81rem;font-weight:500;color:var(--ink2);}
+
+/* Plot card */
+.plot-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 2px 16px var(--sky-glow);overflow:hidden;}
+.plot-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);}
+.plot-title-text{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);}
+.icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.78rem;color:var(--muted);transition:all 0.2s;}
+.icon-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+#plot-div{width:100%;height:420px;}
+
+/* Info row */
+.info-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border);}
+.info-cell{padding:14px 16px;border-right:1px solid var(--border);text-align:center;}
+.info-cell:last-child{border-right:none;}
+.ic-color{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;}
+.ic-name{font-size:0.75rem;font-weight:700;color:var(--ink2);margin-bottom:6px;}
+.ic-val{font-family:'Fraunces',serif;font-size:0.88rem;font-weight:700;color:var(--sky);}
+.ic-label{font-size:0.65rem;color:var(--muted);margin-top:2px;}
+
+/* Comparison table */
+.comp-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+.comp-table th{background:var(--bg2);color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.comp-table td{padding:9px 12px;border-bottom:1px solid rgba(37,99,235,0.06);color:var(--ink2);}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table tr:hover td{background:var(--bg2);}
+
+/* Physics scenario tabs */
+.scenario-tabs{display:flex;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:16px;}
+.sc-btn{flex:1;padding:7px 4px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:600;color:var(--muted);cursor:pointer;border-radius:8px;transition:all 0.2s;text-align:center;line-height:1.3;}
+.sc-btn.active{background:var(--card);color:var(--sky);box-shadow:0 1px 6px rgba(37,99,235,0.15);}
+
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:0.83rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+
+@media(max-width:860px){
+  .tool-wrapper{grid-template-columns:1fr;}
+  #plot-div{height:340px;}
+  .info-row{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <a class="back-btn" href="../index.html#tools">
+    <i class="fa-solid fa-arrow-left"></i> Back to Tools
+  </a>
+</nav>
+
+<div class="page-header">
+  <div class="tool-badge"><i class="fa-solid fa-chart-area"></i> Tool 7 of 12</div>
+  <h1 class="page-title">Quantum <span>Statistics</span> Comparer</h1>
+  <p class="page-sub">Maxwell-Boltzmann, Bose-Einstein aur Fermi-Dirac distributions ka ek hi graph par live comparison. Temperature badlo, instantly dekhо.</p>
+</div>
+
+<div class="tool-wrapper">
+
+  <!-- LEFT -->
+  <div>
+    <!-- Distributions -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-chart-area"></i> Distributions</div>
+
+      <div class="dist-card mb active" id="dc-mb">
+        <div class="dist-header">
+          <div class="dist-name mb">Maxwell-Boltzmann</div>
+          <button class="dist-toggle mb-t on" id="tog-mb" onclick="toggleDist('mb',event)"></button>
+        </div>
+        <div class="dist-formula">f(E) = A·e^(−E/k_BT)</div>
+        <div class="dist-particle">Classical particles — distinguishable</div>
+      </div>
+
+      <div class="dist-card be active" id="dc-be">
+        <div class="dist-header">
+          <div class="dist-name be">Bose-Einstein</div>
+          <button class="dist-toggle be-t on" id="tog-be" onclick="toggleDist('be',event)"></button>
+        </div>
+        <div class="dist-formula">f(E) = 1 / (e^((E−μ)/k_BT) − 1)</div>
+        <div class="dist-particle">Bosons — integer spin (photons, phonons)</div>
+      </div>
+
+      <div class="dist-card fd active" id="dc-fd">
+        <div class="dist-header">
+          <div class="dist-name fd">Fermi-Dirac</div>
+          <button class="dist-toggle fd-t on" id="tog-fd" onclick="toggleDist('fd',event)"></button>
+        </div>
+        <div class="dist-formula">f(E) = 1 / (e^((E−μ)/k_BT) + 1)</div>
+        <div class="dist-particle">Fermions — half-integer spin (electrons)</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-sliders"></i> Parameters</div>
+
+      <!-- Physics Scenario -->
+      <label style="margin-bottom:8px;">Physics Scenario</label>
+      <div class="scenario-tabs">
+        <button class="sc-btn active" onclick="setScenario('general')">General</button>
+        <button class="sc-btn" onclick="setScenario('electron')">Electrons</button>
+        <button class="sc-btn" onclick="setScenario('photon')">Photons</button>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Temperature T (K)</span>
+          <span class="slider-val" id="T-val">300 K</span>
+        </div>
+        <input type="range" id="T-slider" min="10" max="10000" value="300" step="10" oninput="onSlider()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Chemical Potential μ (k_BT units)</span>
+          <span class="slider-val" id="mu-val">−2.0</span>
+        </div>
+        <input type="range" id="mu-slider" min="-5" max="5" value="-2" step="0.1" oninput="onSlider()">
+      </div>
+
+      <div class="field">
+        <label>Fermi Energy E_F (eV) <span style="font-weight:400;color:var(--muted);">— for FD only</span></label>
+        <input type="number" id="ef-input" value="5.0" step="0.1" min="0.1" oninput="draw()">
+      </div>
+
+      <div class="toggle-row">
+        <label class="toggle-item">
+          <input type="checkbox" id="show-ef" checked onchange="draw()">
+          <span class="toggle-label">Show E_F line (Fermi-Dirac)</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-kbt" checked onchange="draw()">
+          <span class="toggle-label">Show k_BT thermal energy</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="dark-bg" onchange="draw()">
+          <span class="toggle-label">Dark background</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="show-area" checked onchange="draw()">
+          <span class="toggle-label">Fill area under curves</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-table"></i> Quick Comparison</div>
+      <table class="comp-table">
+        <thead>
+          <tr><th>Property</th><th style="color:#f4a261;">MB</th><th style="color:#2ec4b6;">BE</th><th style="color:#e63946;">FD</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Particles</td><td>Classical</td><td>Bosons</td><td>Fermions</td></tr>
+          <tr><td>Spin</td><td>Any</td><td>Integer</td><td>Half-int</td></tr>
+          <tr><td>Pauli Excl.</td><td>No</td><td>No</td><td>Yes</td></tr>
+          <tr><td>f(E) at E=μ</td><td>—</td><td>∞</td><td>½</td></tr>
+          <tr><td>Example</td><td>Gas atoms</td><td>Photons</td><td>Electrons</td></tr>
+          <tr><td>f(E=E_F)</td><td id="ct-mb">—</td><td id="ct-be">—</td><td id="ct-fd">0.500</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="plot-card">
+    <div class="plot-topbar">
+      <div class="plot-title-text">
+        <i class="fa-solid fa-chart-area" style="color:var(--sky);margin-right:6px;"></i>
+        <span id="plot-heading">Distribution Functions — T = 300 K</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="icon-btn" onclick="downloadPNG()" title="Download PNG"><i class="fa-solid fa-download"></i></button>
+      </div>
+    </div>
+
+    <div id="plot-div"></div>
+
+    <div class="info-row">
+      <div class="info-cell">
+        <div class="ic-name"><span class="ic-color" style="background:#f4a261;"></span>Maxwell-Boltzmann</div>
+        <div class="ic-val" id="ic-mb-val">—</div>
+        <div class="ic-label">f at E = k_BT</div>
+      </div>
+      <div class="info-cell">
+        <div class="ic-name"><span class="ic-color" style="background:#2ec4b6;"></span>Bose-Einstein</div>
+        <div class="ic-val" id="ic-be-val">—</div>
+        <div class="ic-label">f at E = k_BT</div>
+      </div>
+      <div class="info-cell">
+        <div class="ic-name"><span class="ic-color" style="background:#e63946;"></span>Fermi-Dirac</div>
+        <div class="ic-val" id="ic-fd-val">—</div>
+        <div class="ic-label">f at E = E_F</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const k_B = 8.617e-5; // eV/K
+let showMB=true, showBE=true, showFD=true;
+
+function toggleDist(d, e){
+  e.stopPropagation();
+  if(d==='mb'){ showMB=!showMB; document.getElementById('tog-mb').classList.toggle('on',showMB); document.getElementById('tog-mb').classList.toggle('off',!showMB); document.getElementById('dc-mb').classList.toggle('active',showMB); }
+  if(d==='be'){ showBE=!showBE; document.getElementById('tog-be').classList.toggle('on',showBE); document.getElementById('tog-be').classList.toggle('off',!showBE); document.getElementById('dc-be').classList.toggle('active',showBE); }
+  if(d==='fd'){ showFD=!showFD; document.getElementById('tog-fd').classList.toggle('on',showFD); document.getElementById('tog-fd').classList.toggle('off',!showFD); document.getElementById('dc-fd').classList.toggle('active',showFD); }
+  draw();
+}
+
+function setScenario(s){
+  document.querySelectorAll('.sc-btn').forEach((b,i)=>b.classList.toggle('active',['general','electron','photon'][i]===s));
+  if(s==='electron'){
+    document.getElementById('T-slider').value=300;
+    document.getElementById('mu-slider').value=0;
+    document.getElementById('ef-input').value=7.0;
+  } else if(s==='photon'){
+    document.getElementById('T-slider').value=5778; // sun surface
+    document.getElementById('mu-slider').value=-5;
+    document.getElementById('ef-input').value=1.0;
+  } else {
+    document.getElementById('T-slider').value=300;
+    document.getElementById('mu-slider').value=-2;
+    document.getElementById('ef-input').value=5.0;
+  }
+  onSlider();
+}
+
+function onSlider(){
+  const T  = parseInt(document.getElementById('T-slider').value);
+  const mu = parseFloat(document.getElementById('mu-slider').value);
+  document.getElementById('T-val').textContent  = T+' K';
+  document.getElementById('mu-val').textContent = mu.toFixed(1);
+  draw();
+}
+
+function draw(){
+  const T   = parseInt(document.getElementById('T-slider').value);
+  const muU = parseFloat(document.getElementById('mu-slider').value); // in k_BT units
+  const E_F = parseFloat(document.getElementById('ef-input').value);  // eV
+  const kT  = k_B * T; // eV
+  const mu  = muU * kT; // chemical potential in eV
+
+  const dark   = document.getElementById('dark-bg').checked;
+  const showEF = document.getElementById('show-ef').checked;
+  const showKBT= document.getElementById('show-kbt').checked;
+  const fillArea= document.getElementById('show-area').checked;
+
+  // Energy axis: 0 to 3*E_F or 10*kT
+  const Emax = Math.max(3*E_F, 12*kT, 1);
+  const POINTS = 600;
+  const Es = Array.from({length:POINTS},(_,i)=> i * Emax / (POINTS-1));
+
+  const traces = [];
+
+  // Maxwell-Boltzmann: f = exp(-(E-mu)/kT), normalised to ~1 at E=0
+  if(showMB){
+    const f_mb = Es.map(E => Math.exp(-(E-mu)/kT));
+    // normalise to max=1 for visual comparison
+    const maxMB = Math.max(...f_mb.filter(v=>isFinite(v)&&v<1e10));
+    const f_mb_n = f_mb.map(v => Math.min(v/maxMB, 10));
+    traces.push({
+      x:Es, y:f_mb_n, type:'scatter', mode:'lines', name:'Maxwell-Boltzmann',
+      line:{color:'#f4a261',width:2.8},
+      fill: fillArea ? 'tozeroy' : 'none',
+      fillcolor: dark?'rgba(244,162,97,0.1)':'rgba(244,162,97,0.08)',
+    });
+  }
+
+  // Bose-Einstein: f = 1/(exp((E-mu)/kT) - 1)
+  if(showBE){
+    const f_be = Es.map(E => {
+      const x = (E - mu)/kT;
+      if(x <= 0.001) return null; // diverges
+      const val = 1/(Math.exp(x)-1);
+      return (isFinite(val)&&val>=0&&val<20) ? val : null;
+    });
+    traces.push({
+      x:Es, y:f_be, type:'scatter', mode:'lines', name:'Bose-Einstein',
+      line:{color:'#2ec4b6',width:2.8}, connectgaps:false,
+      fill: fillArea ? 'tozeroy' : 'none',
+      fillcolor: dark?'rgba(46,196,182,0.1)':'rgba(46,196,182,0.08)',
+    });
+  }
+
+  // Fermi-Dirac: f = 1/(exp((E-E_F)/kT) + 1)
+  if(showFD){
+    const f_fd = Es.map(E => 1/(Math.exp((E-E_F)/kT)+1));
+    traces.push({
+      x:Es, y:f_fd, type:'scatter', mode:'lines', name:'Fermi-Dirac',
+      line:{color:'#e63946',width:2.8},
+      fill: fillArea ? 'tozeroy' : 'none',
+      fillcolor: dark?'rgba(230,57,70,0.1)':'rgba(230,57,70,0.08)',
+    });
+  }
+
+  // Shapes
+  const shapes=[];
+  if(showEF && showFD){
+    shapes.push({type:'line',x0:E_F,x1:E_F,y0:0,y1:1,yref:'paper',
+      line:{color:'rgba(230,57,70,0.5)',width:1.5,dash:'dot'}});
+  }
+  if(showKBT){
+    shapes.push({type:'line',x0:kT,x1:kT,y0:0,y1:1,yref:'paper',
+      line:{color:'rgba(37,99,235,0.4)',width:1.5,dash:'dash'}});
+  }
+
+  const bg=dark?'#0c1428':'#fff';
+  const gc=dark?'rgba(96,165,250,0.1)':'rgba(37,99,235,0.08)';
+  const tc=dark?'#a0b4cc':'#5a6a85';
+
+  const annotations=[];
+  if(showEF&&showFD) annotations.push({x:E_F,y:1.02,yref:'paper',text:'E_F',showarrow:false,font:{color:'#e63946',size:11},xanchor:'center'});
+  if(showKBT) annotations.push({x:kT,y:1.02,yref:'paper',text:'k_BT',showarrow:false,font:{color:'#2563eb',size:11},xanchor:'center'});
+
+  Plotly.react('plot-div', traces, {
+    paper_bgcolor:bg, plot_bgcolor:bg,
+    font:{family:'DM Sans,sans-serif',color:tc},
+    margin:{t:20,r:20,b:54,l:60},
+    xaxis:{title:{text:'Energy E (eV)'},gridcolor:gc,tickfont:{size:11},range:[0,Emax]},
+    yaxis:{title:{text:'f(E) — Occupation Probability'},gridcolor:gc,tickfont:{size:11},range:[0,1.1]},
+    showlegend:true,
+    legend:{font:{size:11},bgcolor:'transparent',x:0.65,y:0.99},
+    shapes, annotations,
+    hovermode:'x unified',
+  },{responsive:true,displaylogo:false,
+    modeBarButtonsToRemove:['sendDataToCloud','lasso2d','select2d'],
+    toImageButtonOptions:{format:'png',filename:'quantum-stats',scale:2}
+  });
+
+  // Update heading
+  document.getElementById('plot-heading').textContent = `Distribution Functions — T = ${T} K`;
+
+  // Info row values
+  const kT_eV = k_B*T;
+  const mb_at_kbt = 1/Math.E;
+  const be_at_kbt = mu<kT_eV ? 1/(Math.exp((kT_eV-mu)/kT_eV)-1) : null;
+  const fd_at_ef  = 0.5;
+
+  document.getElementById('ic-mb-val').textContent = mb_at_kbt.toFixed(4);
+  document.getElementById('ic-be-val').textContent = be_at_kbt && isFinite(be_at_kbt) && be_at_kbt>0 ? be_at_kbt.toFixed(4) : '—';
+  document.getElementById('ic-fd-val').textContent = fd_at_ef.toFixed(3);
+
+  // Comparison table update
+  document.getElementById('ct-mb').textContent = Math.exp(-(E_F-mu)/kT_eV).toExponential(2);
+  document.getElementById('ct-fd').textContent = '0.500';
+}
+
+function downloadPNG(){
+  Plotly.downloadImage('plot-div',{format:'png',filename:'quantum-statistics',width:1200,height:600,scale:2});
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2500);
+}
+
+onSlider();
+</script>
+</body>
+</html>
