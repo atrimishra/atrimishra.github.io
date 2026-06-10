@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaTeX Notes Editor — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Live LaTeX Physics Notes Editor by Atri Mishra. Write equations in LaTeX, preview instantly with KaTeX. Export as HTML or print as PDF. Free tool for BSc MSc Physics students.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/latex-editor.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>
+:root{
+  --bg:#f0f6ff;--bg2:#e8f2ff;--ink:#0c1428;--ink2:#1e2d4a;--muted:#5a6a85;
+  --border:#dce8f5;--sky:#2563eb;--sky2:#3b82f6;--sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);--card:#ffffff;--radius:16px;
+  --green:#16a34a;--red:#e63946;--editor-bg:#0f172a;--editor-text:#e2e8f0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow:hidden;height:100vh;display:flex;flex-direction:column;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+nav{flex-shrink:0;background:rgba(240,246,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(12px,3vw,32px);height:52px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:100;}
+.logo{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.logo-icon{width:28px;height:28px;background:var(--sky);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.72rem;}
+.logo .dot{color:var(--sky);}
+.nav-center{display:flex;align-items:center;gap:6px;flex:1;justify-content:center;flex-wrap:wrap;}
+.nav-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:0.77rem;font-weight:600;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;}
+.nav-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+.nav-btn.primary{background:var(--sky);color:#fff;border-color:var(--sky);}
+.nav-btn.primary:hover{background:var(--sky2);}
+.back-btn{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:0.78rem;font-weight:500;text-decoration:none;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;flex-shrink:0;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+.toolbar{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);padding:6px clamp(12px,3vw,32px);display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.tb-group{display:flex;gap:3px;padding-right:7px;border-right:1px solid var(--border);}
+.tb-group:last-child{border-right:none;padding-right:0;}
+.tb-btn{padding:5px 9px;border-radius:7px;border:1px solid var(--border);background:var(--bg);font-size:0.74rem;font-weight:600;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;white-space:nowrap;}
+.tb-btn:hover{background:var(--sky-bg);color:var(--sky);border-color:var(--sky);}
+.tb-btn.math{font-family:'JetBrains Mono',monospace;font-size:0.7rem;}
+.toolbar-label{font-size:0.66rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;padding:0 4px;}
+
+.editor-area{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:0;overflow:hidden;}
+.pane{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.pane-header{flex-shrink:0;padding:7px 16px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.pane-title{font-size:0.73rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;}
+.pane-title i{color:var(--sky);}
+.pane-badge{font-size:0.65rem;background:var(--sky-bg);color:var(--sky);padding:2px 7px;border-radius:10px;border:1px solid rgba(37,99,235,0.2);}
+
+#editor{flex:1;min-height:0;padding:20px;background:var(--editor-bg);color:var(--editor-text);font-family:'JetBrains Mono',monospace;font-size:0.87rem;line-height:1.78;border:none;outline:none;resize:none;tab-size:2;overflow-y:auto;}
+#editor::placeholder{color:#475569;}
+#editor::-webkit-scrollbar{width:4px;}
+#editor::-webkit-scrollbar-thumb{background:#1e40af;border-radius:2px;}
+
+#preview{flex:1;min-height:0;padding:22px 26px;background:#fff;overflow-y:auto;font-family:'DM Sans',sans-serif;line-height:1.78;color:var(--ink);}
+#preview::-webkit-scrollbar{width:4px;}
+#preview::-webkit-scrollbar-thumb{background:var(--sky);border-radius:2px;}
+#preview h1{font-family:'Fraunces',serif;font-size:1.55rem;font-weight:900;color:var(--ink);border-bottom:2px solid var(--sky);padding-bottom:6px;margin:20px 0 14px;}
+#preview h2{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:700;color:var(--ink2);margin:18px 0 8px;}
+#preview h3{font-family:'Fraunces',serif;font-size:0.98rem;font-weight:700;color:var(--sky);margin:14px 0 6px;}
+#preview p{margin-bottom:10px;color:var(--ink2);}
+#preview ul,#preview ol{padding-left:20px;margin-bottom:10px;color:var(--ink2);}
+#preview li{margin-bottom:3px;}
+#preview strong{color:var(--ink);font-weight:700;}
+#preview em{font-style:italic;}
+#preview code{background:var(--bg2);padding:2px 5px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.81rem;color:var(--sky);}
+#preview blockquote{border-left:3px solid var(--sky);padding:8px 14px;background:var(--sky-bg);border-radius:0 8px 8px 0;margin:10px 0;color:var(--muted);font-style:italic;}
+#preview hr{border:none;border-top:1px solid var(--border);margin:18px 0;}
+#preview .katex-display{margin:14px 0;overflow-x:auto;}
+#preview table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.88rem;}
+#preview th{background:var(--sky);color:#fff;padding:7px 11px;text-align:left;}
+#preview td{padding:6px 11px;border-bottom:1px solid var(--border);}
+#preview tr:nth-child(even) td{background:var(--bg2);}
+
+.pane-divider{width:1px;background:var(--border);flex-shrink:0;}
+
+.statusbar{flex-shrink:0;background:var(--ink);color:rgba(255,255,255,0.45);font-size:0.68rem;padding:3px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.sb-item{display:flex;align-items:center;gap:4px;}
+.sb-item span{color:rgba(255,255,255,0.8);}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(12,20,40,0.5);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--card);border-radius:var(--radius);padding:22px;width:min(540px,94vw);box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+.modal-title{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.snippet-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:58vh;overflow-y:auto;}
+.snip-btn{padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:var(--bg);text-align:left;cursor:pointer;transition:all 0.2s;}
+.snip-btn:hover{border-color:var(--sky);background:var(--sky-bg);}
+.snip-name{font-size:0.78rem;font-weight:600;color:var(--ink2);}
+.snip-preview{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted);margin-top:2px;word-break:break-all;}
+.modal-close-btn{margin-top:12px;width:100%;padding:8px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.modal-close-btn:hover{color:var(--sky);}
+
+#toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;font-size:0.81rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(60px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{background:var(--green);}
+
+@media print{nav,.toolbar,.statusbar,.pane:first-child,.pane-divider,.modal-overlay,#toast{display:none!important;}.editor-area{grid-template-columns:1fr!important;}#preview{padding:0!important;}body{overflow:visible!important;height:auto!important;}}
+@media(max-width:720px){.editor-area{grid-template-columns:1fr;grid-template-rows:1fr 1fr;}.pane-divider{width:100%;height:1px;}.nav-center{display:none;}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<div class="modal-overlay" id="snip-modal" onclick="closeSnipModal(event)">
+  <div class="modal-box">
+    <div class="modal-title"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--sky);"></i> Physics Equation Snippets</div>
+    <div class="snippet-grid" id="snip-grid"></div>
+    <button class="modal-close-btn" onclick="document.getElementById('snip-modal').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <div class="nav-center">
+    <button class="nav-btn" onclick="newDoc()"><i class="fa-solid fa-file"></i> New</button>
+    <button class="nav-btn" onclick="loadExample()"><i class="fa-solid fa-flask"></i> Load Example</button>
+    <button class="nav-btn" onclick="exportHTML()"><i class="fa-solid fa-file-code"></i> Export HTML</button>
+    <button class="nav-btn primary" onclick="printPDF()"><i class="fa-solid fa-print"></i> Print / PDF</button>
+  </div>
+  <a class="back-btn" href="../index.html#tools"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</nav>
+
+<div class="toolbar">
+  <span class="toolbar-label">Format</span>
+  <div class="tb-group">
+    <button class="tb-btn" onclick="ins('# ','')">H1</button>
+    <button class="tb-btn" onclick="ins('## ','')">H2</button>
+    <button class="tb-btn" onclick="ins('### ','')">H3</button>
+  </div>
+  <div class="tb-group">
+    <button class="tb-btn" onclick="wrap('**','**')"><b>B</b></button>
+    <button class="tb-btn" onclick="wrap('*','*')"><i>I</i></button>
+    <button class="tb-btn" onclick="wrap('`','`')">Code</button>
+    <button class="tb-btn" onclick="ins('> ','')">Quote</button>
+    <button class="tb-btn" onclick="ins('---\n','')">HR</button>
+    <button class="tb-btn" onclick="ins('- ','')">List</button>
+  </div>
+  <span class="toolbar-label">Math</span>
+  <div class="tb-group">
+    <button class="tb-btn math" onclick="wrap('$','$')">$ inline $</button>
+    <button class="tb-btn math" onclick="wrap('\n$$\n','\n$$\n')">$$ block $$</button>
+  </div>
+  <div class="tb-group">
+    <button class="tb-btn math" onclick="insAt('\\frac{a}{b}')">frac</button>
+    <button class="tb-btn math" onclick="insAt('\\sqrt{x}')">√</button>
+    <button class="tb-btn math" onclick="insAt('\\int_{a}^{b}')">∫</button>
+    <button class="tb-btn math" onclick="insAt('\\sum_{i=1}^{n}')">Σ</button>
+    <button class="tb-btn math" onclick="insAt('\\partial')">∂</button>
+    <button class="tb-btn math" onclick="insAt('\\nabla')">∇</button>
+    <button class="tb-btn math" onclick="insAt('\\hbar')">ℏ</button>
+    <button class="tb-btn math" onclick="insAt('\\psi')">ψ</button>
+    <button class="tb-btn math" onclick="insAt('\\vec{F}')">vec</button>
+    <button class="tb-btn math" onclick="insAt('\\hat{H}')">hat</button>
+    <button class="tb-btn math" onclick="insAt('\\alpha')">α</button>
+    <button class="tb-btn math" onclick="insAt('\\lambda')">λ</button>
+  </div>
+  <div class="tb-group">
+    <button class="tb-btn" onclick="openSnipModal()"><i class="fa-solid fa-star"></i> Snippets</button>
+  </div>
+</div>
+
+<div class="editor-area">
+  <div class="pane">
+    <div class="pane-header">
+      <div class="pane-title"><i class="fa-solid fa-code"></i> LaTeX + Markdown Editor</div>
+      <div class="pane-badge">Write here</div>
+    </div>
+    <textarea id="editor" spellcheck="false" oninput="onEdit()" placeholder="# My Physics Notes&#10;&#10;Write **Markdown** with $\LaTeX$ equations.&#10;&#10;$$&#10;i\hbar \frac{\partial \psi}{\partial t} = \hat{H}\psi&#10;$$"></textarea>
+  </div>
+  <div class="pane-divider"></div>
+  <div class="pane">
+    <div class="pane-header">
+      <div class="pane-title"><i class="fa-solid fa-eye"></i> Live Preview</div>
+      <span id="render-badge" class="pane-badge">Ready</span>
+    </div>
+    <div id="preview"></div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <div style="display:flex;gap:16px;">
+    <div class="sb-item"><i class="fa-solid fa-font"></i> <span id="sb-chars">0</span> chars</div>
+    <div class="sb-item"><i class="fa-solid fa-list"></i> <span id="sb-lines">0</span> lines</div>
+    <div class="sb-item"><i class="fa-solid fa-square-root-variable"></i> <span id="sb-eqs">0</span> equations</div>
+  </div>
+  <div style="display:flex;gap:14px;">
+    <div class="sb-item">Tool 5 of 12</div>
+    <div class="sb-item"><i class="fa-solid fa-atom" style="color:#3b82f6;"></i> Atri's Physics Orbit</div>
+  </div>
+</div>
+
+<script>
+const SNIPPETS=[
+  {name:"Schrödinger (time-dep)",    code:"$$\ni\\hbar \\frac{\\partial \\psi}{\\partial t} = \\hat{H}\\psi\n$$"},
+  {name:"Schrödinger (time-indep)",  code:"$$\n\\hat{H}\\psi = E\\psi\n$$"},
+  {name:"Wavefunction norm",         code:"$$\n\\int_{-\\infty}^{\\infty}|\\psi(x)|^2\\,dx = 1\n$$"},
+  {name:"ISW Energy Levels",         code:"$$\nE_n = \\frac{n^2\\pi^2\\hbar^2}{2mL^2}\n$$"},
+  {name:"Commutator [x,p]",          code:"$$\n[\\hat{x},\\hat{p}] = i\\hbar\n$$"},
+  {name:"Heisenberg Uncertainty",    code:"$$\n\\Delta x\\,\\Delta p \\geq \\frac{\\hbar}{2}\n$$"},
+  {name:"QHO Energy",                code:"$$\nE_n = \\left(n+\\frac{1}{2}\\right)\\hbar\\omega\n$$"},
+  {name:"Newton 2nd Law",            code:"$$\n\\vec{F} = m\\vec{a} = \\frac{d\\vec{p}}{dt}\n$$"},
+  {name:"Lagrangian EOM",            code:"$$\n\\frac{d}{dt}\\left(\\frac{\\partial L}{\\partial \\dot{q}}\\right) - \\frac{\\partial L}{\\partial q} = 0\n$$"},
+  {name:"Hamiltonian",               code:"$$\nH = \\sum_i p_i\\dot{q}_i - L = T + V\n$$"},
+  {name:"Gauss Law (E)",             code:"$$\n\\nabla \\cdot \\vec{E} = \\frac{\\rho}{\\varepsilon_0}\n$$"},
+  {name:"Faraday Law",               code:"$$\n\\nabla \\times \\vec{E} = -\\frac{\\partial \\vec{B}}{\\partial t}\n$$"},
+  {name:"Lorentz Force",             code:"$$\n\\vec{F} = q(\\vec{E} + \\vec{v}\\times\\vec{B})\n$$"},
+  {name:"Maxwell-Boltzmann",         code:"$$\nf(v) = 4\\pi n\\left(\\frac{m}{2\\pi k_BT}\\right)^{3/2}v^2 e^{-mv^2/2k_BT}\n$$"},
+  {name:"Entropy (Boltzmann)",       code:"$$\nS = k_B \\ln\\Omega\n$$"},
+  {name:"1st Law Thermo",            code:"$$\ndU = \\delta Q - \\delta W\n$$"},
+  {name:"Mass-Energy (Einstein)",    code:"$$\nE = mc^2\n$$"},
+  {name:"Lorentz Factor",            code:"$$\n\\gamma = \\frac{1}{\\sqrt{1-v^2/c^2}}\n$$"},
+  {name:"Radioactive Decay",         code:"$$\nN(t) = N_0\\,e^{-\\lambda t},\\quad \\lambda = \\frac{\\ln 2}{T_{1/2}}\n$$"},
+  {name:"Rydberg Formula",           code:"$$\n\\frac{1}{\\lambda} = R_H\\left(\\frac{1}{n_1^2} - \\frac{1}{n_2^2}\\right)\n$$"},
+  {name:"de Broglie",                code:"$$\n\\lambda = \\frac{h}{p} = \\frac{h}{mv}\n$$"},
+  {name:"Snell's Law",               code:"$$\nn_1\\sin\\theta_1 = n_2\\sin\\theta_2\n$$"},
+  {name:"Binding Energy",            code:"$$\nE_B = \\left[Zm_p + Nm_n - M\\right]c^2\n$$"},
+  {name:"Table (3 col)",             code:"\n| Quantity | Symbol | Unit |\n|---------|--------|------|\n| Mass | $m$ | kg |\n| Energy | $E$ | J |\n| Momentum | $p$ | kg·m/s |\n"},
+];
+
+let renderTimer=null;
+
+function onEdit(){
+  clearTimeout(renderTimer);
+  const badge=document.getElementById('render-badge');
+  badge.textContent='Rendering…';badge.style.color='var(--muted)';
+  renderTimer=setTimeout(render,100);
+  updateStats();
+}
+
+function render(){
+  const text=document.getElementById('editor').value;
+  if(typeof katex==='undefined'){setTimeout(render,400);return;}
+  document.getElementById('preview').innerHTML=parseMarkdown(text);
+  const badge=document.getElementById('render-badge');
+  badge.textContent='Live ✓';badge.style.color='#16a34a';
+}
+
+function parseMarkdown(text){
+  const mathBlocks=[];
+  let html=text;
+  // protect math
+  html=html.replace(/\$\$([\s\S]*?)\$\$/g,(_,m)=>{mathBlocks.push({t:'block',s:m});return`@@M${mathBlocks.length-1}@@`;});
+  html=html.replace(/\$([^\n$]+?)\$/g,(_,m)=>{mathBlocks.push({t:'inline',s:m});return`@@M${mathBlocks.length-1}@@`;});
+  // escape
+  html=html.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // headings
+  html=html.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+  html=html.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+  html=html.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  // inline
+  html=html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  html=html.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  html=html.replace(/`([^`]+)`/g,'<code>$1</code>');
+  html=html.replace(/^&gt; (.+)$/gm,'<blockquote>$1</blockquote>');
+  html=html.replace(/^---$/gm,'<hr>');
+  // lists
+  html=html.replace(/(^- .+(\n|$))+/gm,m=>'<ul>'+m.trim().split('\n').map(l=>'<li>'+l.replace(/^- /,'')+'</li>').join('')+'</ul>');
+  html=html.replace(/(^\d+\. .+(\n|$))+/gm,m=>'<ol>'+m.trim().split('\n').map(l=>'<li>'+l.replace(/^\d+\. /,'')+'</li>').join('')+'</ol>');
+  // table
+  html=html.replace(/(\|.+\|\n\|[-| :]+\|\n(\|.+\|\n?)+)/gm,m=>{
+    const rows=m.trim().split('\n');
+    const hdr=rows[0].split('|').filter(c=>c.trim()).map(c=>`<th>${c.trim()}</th>`).join('');
+    const bdy=rows.slice(2).map(r=>'<tr>'+r.split('|').filter(c=>c.trim()).map(c=>`<td>${c.trim()}</td>`).join('')+'</tr>').join('');
+    return`<table><thead><tr>${hdr}</tr></thead><tbody>${bdy}</tbody></table>`;
+  });
+  // paragraphs
+  const lines=html.split('\n');let out='',inP=false;
+  for(const line of lines){
+    const isBlock=/^<(h[1-6]|ul|ol|li|blockquote|hr|table|thead|tbody|tr|th|td)/.test(line.trim())||line.trim()==='';
+    if(!isBlock){if(!inP){out+='<p>';inP=true;}out+=line+' ';}
+    else{if(inP){out+='</p>\n';inP=false;}out+=line+'\n';}
+  }
+  if(inP)out+='</p>';
+  // restore math
+  out=out.replace(/@@M(\d+)@@/g,(_,i)=>{
+    const m=mathBlocks[parseInt(i)];
+    try{return katex.renderToString(m.s,{displayMode:m.t==='block',throwOnError:false});}
+    catch(e){return`<span style="color:#e63946;font-family:monospace;font-size:0.78rem;">[Error: ${e.message}]</span>`;}
+  });
+  return out;
+}
+
+function updateStats(){
+  const v=document.getElementById('editor').value;
+  document.getElementById('sb-chars').textContent=v.length.toLocaleString();
+  document.getElementById('sb-lines').textContent=v.split('\n').length;
+  document.getElementById('sb-eqs').textContent=(v.match(/\$\$[\s\S]*?\$\$|\$[^\n$]+?\$/g)||[]).length;
+}
+
+function ins(b,a){
+  const ta=document.getElementById('editor');
+  const s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;
+  ta.value=v.slice(0,s)+b+v.slice(s,e)+a+v.slice(e);
+  ta.selectionStart=ta.selectionEnd=s+b.length;
+  ta.focus();onEdit();
+}
+function wrap(b,a){
+  const ta=document.getElementById('editor');
+  const s=ta.selectionStart,e=ta.selectionEnd,v=ta.value;
+  const sel=v.slice(s,e)||'text';
+  ta.value=v.slice(0,s)+b+sel+a+v.slice(e);
+  ta.selectionStart=s+b.length;ta.selectionEnd=s+b.length+sel.length;
+  ta.focus();onEdit();
+}
+function insAt(code){
+  const ta=document.getElementById('editor');
+  const s=ta.selectionStart,v=ta.value;
+  ta.value=v.slice(0,s)+code+v.slice(s);
+  ta.selectionStart=ta.selectionEnd=s+code.length;
+  ta.focus();onEdit();
+}
+
+document.getElementById('editor').addEventListener('keydown',e=>{
+  if(e.key==='Tab'){e.preventDefault();insAt('  ');}
+  if(e.key==='s'&&(e.ctrlKey||e.metaKey)){e.preventDefault();exportHTML();}
+});
+
+function openSnipModal(){
+  document.getElementById('snip-grid').innerHTML=SNIPPETS.map((s,i)=>
+    `<button class="snip-btn" onclick="insertSnippet(${i})">
+      <div class="snip-name">${s.name}</div>
+      <div class="snip-preview">${s.code.trim().slice(0,52)}…</div>
+    </button>`).join('');
+  document.getElementById('snip-modal').classList.add('open');
+}
+function insertSnippet(i){
+  const ta=document.getElementById('editor');
+  const s=ta.selectionStart,code=SNIPPETS[i].code;
+  ta.value=ta.value.slice(0,s)+'\n'+code+'\n'+ta.value.slice(s);
+  ta.selectionStart=ta.selectionEnd=s+code.length+2;
+  ta.focus();onEdit();
+  document.getElementById('snip-modal').classList.remove('open');
+  showToast('Snippet inserted!','success');
+}
+function closeSnipModal(e){if(e.target===document.getElementById('snip-modal'))document.getElementById('snip-modal').classList.remove('open');}
+
+function newDoc(){
+  if(document.getElementById('editor').value.trim()&&!confirm('Sab clear ho jayega?'))return;
+  document.getElementById('editor').value='';document.getElementById('preview').innerHTML='';updateStats();
+}
+
+function loadExample(){
+  document.getElementById('editor').value=`# Quantum Mechanics Notes
+**by Atri Mishra** | BSc Physics, Delhi University
+
+---
+
+## 1. Time-Dependent Schrödinger Equation
+
+$$
+i\\hbar \\frac{\\partial \\psi}{\\partial t} = \\hat{H}\\psi = \\left[-\\frac{\\hbar^2}{2m}\\nabla^2 + V(\\vec{r},t)\\right]\\psi
+$$
+
+## 2. Infinite Square Well
+
+Energy levels for a particle of mass $m$ in a box of width $L$:
+
+$$
+E_n = \\frac{n^2\\pi^2\\hbar^2}{2mL^2}, \\quad n = 1, 2, 3, \\ldots
+$$
+
+Normalised wavefunction:
+
+$$
+\\psi_n(x) = \\sqrt{\\frac{2}{L}}\\sin\\left(\\frac{n\\pi x}{L}\\right)
+$$
+
+> Interior nodes in $\\psi_n$ = $n - 1$
+
+## 3. Heisenberg Uncertainty Principle
+
+$$
+\\Delta x \\cdot \\Delta p \\geq \\frac{\\hbar}{2}
+$$
+
+## 4. Key Constants
+
+| Constant | Symbol | Value |
+|---------|--------|-------|
+| Planck (reduced) | $\\hbar$ | $1.055 \\times 10^{-34}$ J·s |
+| Electron mass | $m_e$ | $9.109 \\times 10^{-31}$ kg |
+| Speed of light | $c$ | $3 \\times 10^8$ m/s |
+
+---
+*Notes by Atri's Physics Orbit — Tool 5: LaTeX Editor*`;
+  onEdit();showToast('Example loaded!','success');
+}
+
+function exportHTML(){
+  const html=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Physics Notes — Atri Mishra</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>body{font-family:Georgia,serif;max-width:740px;margin:40px auto;padding:0 20px;color:#1e2d4a;line-height:1.8;}h1{font-size:1.75rem;border-bottom:2px solid #2563eb;padding-bottom:6px;color:#0c1428;}h2{font-size:1.2rem;color:#1e2d4a;margin-top:22px;}h3{color:#2563eb;}code{background:#eff6ff;padding:2px 5px;border-radius:4px;font-size:0.85em;}blockquote{border-left:3px solid #2563eb;padding:8px 14px;background:#eff6ff;border-radius:0 8px 8px 0;font-style:italic;}table{width:100%;border-collapse:collapse;}th{background:#2563eb;color:#fff;padding:7px 11px;text-align:left;}td{padding:6px 11px;border-bottom:1px solid #dce8f5;}.katex-display{overflow-x:auto;}</style>
+</head><body>${document.getElementById('preview').innerHTML}
+<hr><p style="font-size:0.78rem;color:#888;">Generated by <a href="https://atrimishra.github.io">Atri's Physics Orbit</a></p></body></html>`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+  a.download='physics-notes.html';a.click();
+  showToast('HTML exported!','success');
+}
+
+function printPDF(){showToast('Print dialog opening...','success');setTimeout(()=>window.print(),300);}
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+(type||'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2500);
+}
+
+window.addEventListener('load',()=>setTimeout(loadExample,350));
+</script>
+</body>
+</html>
