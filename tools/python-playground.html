@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Playground — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Browser-based Python Playground by Atri Mishra powered by Pyodide. Run NumPy, math, and physics scripts directly in browser. Free tool for BSc MSc Physics students.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/python-playground.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --bg:#f0f6ff;--bg2:#e8f2ff;--ink:#0c1428;--ink2:#1e2d4a;--muted:#5a6a85;
+  --border:#dce8f5;--sky:#2563eb;--sky2:#3b82f6;--sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);--card:#ffffff;--radius:16px;
+  --green:#16a34a;--red:#e63946;--orange:#f4a261;
+  --editor-bg:#0f172a;--editor-text:#e2e8f0;
+  --console-bg:#0a0f1e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow:hidden;height:100vh;display:flex;flex-direction:column;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+/* NAV */
+nav{flex-shrink:0;background:rgba(240,246,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(12px,3vw,32px);height:52px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:100;}
+.logo{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.logo-icon{width:28px;height:28px;background:var(--sky);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.72rem;}
+.logo .dot{color:var(--sky);}
+.nav-center{display:flex;align-items:center;gap:6px;flex:1;justify-content:center;flex-wrap:wrap;}
+.nav-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:0.77rem;font-weight:600;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;}
+.nav-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+.nav-btn.run-btn{background:var(--green);color:#fff;border-color:var(--green);font-size:0.85rem;padding:6px 18px;}
+.nav-btn.run-btn:hover{background:#15803d;}
+.nav-btn.run-btn:disabled{background:#6b7280;border-color:#6b7280;cursor:not-allowed;}
+.back-btn{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:0.78rem;font-weight:500;text-decoration:none;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;flex-shrink:0;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+/* TOOLBAR */
+.toolbar{flex-shrink:0;background:var(--card);border-bottom:1px solid var(--border);padding:5px clamp(12px,3vw,32px);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.toolbar-label{font-size:0.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;padding:0 2px;}
+.example-btn{padding:4px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);font-size:0.73rem;font-weight:600;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s;white-space:nowrap;}
+.example-btn:hover{background:var(--sky-bg);color:var(--sky);border-color:var(--sky);}
+.sep{width:1px;height:20px;background:var(--border);margin:0 4px;}
+
+/* MAIN SPLIT */
+.main-area{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr;min-height:0;overflow:hidden;}
+
+/* EDITOR SIDE */
+.editor-side{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--border);}
+.pane-header{flex-shrink:0;padding:7px 14px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.pane-title{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;}
+.pane-title i{color:var(--sky);}
+
+/* Line numbers + editor wrapper */
+.editor-wrap{flex:1;min-height:0;display:flex;overflow:hidden;position:relative;}
+.line-nums{background:#0c1428;color:#334d6e;font-family:'JetBrains Mono',monospace;font-size:0.84rem;line-height:1.75;padding:16px 10px;text-align:right;user-select:none;min-width:36px;overflow:hidden;flex-shrink:0;border-right:1px solid #1e2d4a;}
+#editor{flex:1;min-height:0;padding:16px 14px;background:var(--editor-bg);color:var(--editor-text);font-family:'JetBrains Mono',monospace;font-size:0.84rem;line-height:1.75;border:none;outline:none;resize:none;tab-size:4;overflow-y:auto;white-space:pre;}
+#editor::selection{background:rgba(37,99,235,0.3);}
+#editor::-webkit-scrollbar{width:4px;}
+#editor::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:2px;}
+
+/* OUTPUT SIDE */
+.output-side{display:flex;flex-direction:column;min-height:0;}
+.output-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.out-tab{padding:7px 16px;font-size:0.72rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:5px;}
+.out-tab.active{color:var(--sky);border-bottom-color:var(--sky);}
+.out-tab:hover{color:var(--sky);}
+.out-panel{flex:1;min-height:0;display:none;flex-direction:column;}
+.out-panel.active{display:flex;}
+
+/* Console */
+#console{flex:1;min-height:0;background:var(--console-bg);color:#a0b4cc;font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.7;padding:16px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;}
+#console::-webkit-scrollbar{width:4px;}
+#console::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:2px;}
+.console-line{margin-bottom:2px;}
+.console-line.out{color:#e2e8f0;}
+.console-line.err{color:#f87171;}
+.console-line.info{color:#60a5fa;}
+.console-line.success{color:#4ade80;}
+.console-line.warn{color:#fbbf24;}
+.console-prompt{color:#4ade80;margin-right:6px;user-select:none;}
+
+/* Plot panel */
+#plot-panel{flex:1;min-height:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+#plot-panel canvas{max-width:100%;max-height:100%;}
+.plot-empty{color:var(--muted);text-align:center;padding:24px;}
+.plot-empty i{font-size:2rem;color:var(--border);display:block;margin-bottom:10px;}
+
+/* STATUS BAR */
+.statusbar{flex-shrink:0;background:var(--ink);color:rgba(255,255,255,0.45);font-size:0.68rem;padding:3px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.sb-item{display:flex;align-items:center;gap:4px;}
+.sb-item span{color:rgba(255,255,255,0.8);}
+.sb-status{display:flex;align-items:center;gap:5px;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#6b7280;}
+.status-dot.ready{background:#4ade80;}
+.status-dot.loading{background:#fbbf24;animation:pulse 1s infinite;}
+.status-dot.running{background:#60a5fa;animation:pulse 0.5s infinite;}
+.status-dot.error{background:#f87171;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:#fff;padding:9px 16px;border-radius:10px;font-size:0.81rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(60px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{background:var(--green);}
+#toast.error{background:var(--red);}
+
+@media(max-width:720px){
+  .main-area{grid-template-columns:1fr;grid-template-rows:1fr 1fr;}
+  .editor-side{border-right:none;border-bottom:1px solid var(--border);}
+  .nav-center .example-row{display:none;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-brands fa-python"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <div class="nav-center">
+    <button class="nav-btn run-btn" id="run-btn" onclick="runCode()" disabled>
+      <i class="fa-solid fa-play"></i> Run
+    </button>
+    <button class="nav-btn" onclick="clearConsole()"><i class="fa-solid fa-eraser"></i> Clear</button>
+    <button class="nav-btn" onclick="newCode()"><i class="fa-solid fa-file"></i> New</button>
+    <button class="nav-btn" onclick="downloadCode()"><i class="fa-solid fa-download"></i> Save .py</button>
+  </div>
+  <a class="back-btn" href="../index.html#tools"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</nav>
+
+<!-- TOOLBAR: Examples -->
+<div class="toolbar">
+  <span class="toolbar-label">Examples</span>
+  <button class="example-btn" onclick="loadExample('hello')">Hello Physics</button>
+  <button class="example-btn" onclick="loadExample('numpy')">NumPy Arrays</button>
+  <button class="example-btn" onclick="loadExample('matrix')">Matrix Ops</button>
+  <button class="example-btn" onclick="loadExample('decay')">Decay Calc</button>
+  <button class="example-btn" onclick="loadExample('wave')">Wavefunction</button>
+  <button class="example-btn" onclick="loadExample('stats')">Statistics</button>
+  <div class="sep"></div>
+  <span class="toolbar-label">Shortcuts</span>
+  <button class="example-btn" onclick="runCode()"><kbd>Ctrl+Enter</kbd> = Run</button>
+</div>
+
+<!-- MAIN -->
+<div class="main-area">
+
+  <!-- LEFT: Editor -->
+  <div class="editor-side">
+    <div class="pane-header">
+      <div class="pane-title"><i class="fa-brands fa-python"></i> Python Editor</div>
+      <span style="font-size:0.68rem;color:var(--muted);" id="line-col">Ln 1, Col 1</span>
+    </div>
+    <div class="editor-wrap">
+      <div class="line-nums" id="line-nums">1</div>
+      <textarea id="editor" spellcheck="false" oninput="onEditorChange()" onkeydown="onEditorKey(event)" onscroll="syncScroll()" onclick="updateCursor()" onkeyup="updateCursor()"></textarea>
+    </div>
+  </div>
+
+  <!-- RIGHT: Output -->
+  <div class="output-side">
+    <div class="output-tabs">
+      <div class="out-tab active" id="tab-console" onclick="switchTab('console')">
+        <i class="fa-solid fa-terminal"></i> Console
+      </div>
+      <div class="out-tab" id="tab-plot" onclick="switchTab('plot')">
+        <i class="fa-solid fa-chart-line"></i> Plot Output
+      </div>
+    </div>
+
+    <!-- Console Panel -->
+    <div class="out-panel active" id="panel-console">
+      <div id="console">
+        <span class="console-line info">⚡ Pyodide loading... please wait (first load ~5s)</span>
+      </div>
+    </div>
+
+    <!-- Plot Panel -->
+    <div class="out-panel" id="panel-plot">
+      <div id="plot-panel">
+        <div class="plot-empty">
+          <i class="fa-solid fa-chart-line"></i>
+          <div>matplotlib plots yahan dikhenge</div>
+          <div style="font-size:0.75rem;margin-top:6px;color:#aaa;">Use <code style="background:#f0f6ff;padding:1px 5px;border-radius:3px;color:#2563eb;">plt.show()</code> in your code</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div style="display:flex;gap:14px;">
+    <div class="sb-status">
+      <div class="status-dot loading" id="status-dot"></div>
+      <span id="status-text">Loading Pyodide...</span>
+    </div>
+    <div class="sb-item">Python 3.11 (Pyodide)</div>
+  </div>
+  <div style="display:flex;gap:14px;">
+    <div class="sb-item">Tool 6 of 12</div>
+    <div class="sb-item"><i class="fa-solid fa-atom" style="color:#3b82f6;"></i> Atri's Physics Orbit</div>
+  </div>
+</div>
+
+<!-- Pyodide -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+<script>
+let pyodide = null;
+let pyReady = false;
+let isRunning = false;
+
+// ── Load Pyodide ──
+async function initPyodide(){
+  try {
+    setStatus('loading','Loading Pyodide...');
+    pyodide = await loadPyodide();
+    setStatus('loading','Loading NumPy...');
+    await pyodide.loadPackage(['numpy']);
+    
+    // Setup stdout/stderr capture
+    pyodide.runPython(`
+import sys, io
+class _Capture(io.StringIO):
+    def __init__(self, cb):
+        super().__init__()
+        self._cb = cb
+    def write(self, s):
+        if s.strip():
+            self._cb(s)
+        return len(s)
+    def flush(self):
+        pass
+`);
+
+    pyReady = true;
+    setStatus('ready','Ready — Python 3.11 + NumPy');
+    document.getElementById('run-btn').disabled = false;
+    printLine('✅ Python ready! NumPy available. Type code and press Run.','success');
+    printLine('💡 Tip: matplotlib plots auto-display in Plot tab.','info');
+    printLine('','out');
+  } catch(e) {
+    setStatus('error','Load failed: '+e.message);
+    printLine('❌ Failed to load Pyodide: '+e.message,'err');
+  }
+}
+
+// ── Run Code ──
+async function runCode(){
+  if(!pyReady){ showToast('Pyodide abhi load ho raha hai...',''); return; }
+  if(isRunning){ showToast('Already running...',''); return; }
+  const code = document.getElementById('editor').value.trim();
+  if(!code){ showToast('Koi code likho pehle!',''); return; }
+
+  isRunning = true;
+  document.getElementById('run-btn').disabled = true;
+  setStatus('running','Running...');
+  printLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━','info');
+
+  // Clear old plot
+  document.getElementById('plot-panel').innerHTML = '<div class="plot-empty"><i class="fa-solid fa-spinner fa-spin" style="font-size:1.5rem;color:var(--sky);display:block;margin-bottom:8px;"></i><div>Running...</div></div>';
+
+  try {
+    // Patch print to our console
+    pyodide.globals.set('_js_print', (s) => printLine(String(s),'out'));
+
+    // Handle matplotlib if used
+    const hasPlot = code.includes('plt.') || code.includes('matplotlib');
+    
+    let runCode = `
+import sys
+_orig_stdout = sys.stdout
+_orig_stderr = sys.stderr
+
+class _JSWriter:
+    def write(self, s):
+        if s and s != '\\n':
+            _js_print(s)
+    def flush(self): pass
+
+sys.stdout = _JSWriter()
+sys.stderr = _JSWriter()
+
+try:
+${code.split('\n').map(l => '    '+l).join('\n')}
+except Exception as _e:
+    import traceback
+    _js_print('ERROR: ' + str(_e))
+finally:
+    sys.stdout = _orig_stdout
+    sys.stderr = _orig_stderr
+`;
+
+    if(hasPlot){
+      // Try matplotlib with canvas backend
+      try {
+        await pyodide.loadPackage(['matplotlib']);
+        pyodide.runPython(`import matplotlib; matplotlib.use('agg'); import matplotlib.pyplot as plt`);
+        
+        await pyodide.runPythonAsync(runCode);
+        
+        // Get plot as base64
+        const imgData = pyodide.runPython(`
+import io, base64
+_buf = io.BytesIO()
+plt.savefig(_buf, format='png', dpi=120, bbox_inches='tight', facecolor='white')
+_buf.seek(0)
+base64.b64encode(_buf.read()).decode()
+`);
+        if(imgData){
+          document.getElementById('plot-panel').innerHTML = `<img src="data:image/png;base64,${imgData}" style="max-width:100%;max-height:100%;object-fit:contain;padding:10px;">`;
+          switchTab('plot');
+          printLine('📊 Plot generated — check Plot tab','success');
+        }
+        pyodide.runPython('plt.clf(); plt.close()');
+      } catch(plotErr){
+        printLine('⚠️ matplotlib error: '+plotErr.message,'warn');
+        document.getElementById('plot-panel').innerHTML = '<div class="plot-empty"><i class="fa-solid fa-chart-line"></i><div>Plot generate nahi hua</div></div>';
+      }
+    } else {
+      await pyodide.runPythonAsync(runCode);
+      document.getElementById('plot-panel').innerHTML = '<div class="plot-empty"><i class="fa-solid fa-chart-line"></i><div>Koi plot nahi — matplotlib use karo</div></div>';
+    }
+
+    setStatus('ready','Done ✓');
+    printLine('✅ Execution complete','success');
+  } catch(e){
+    printLine('❌ '+e.message,'err');
+    setStatus('error','Error');
+  }
+
+  isRunning = false;
+  document.getElementById('run-btn').disabled = false;
+}
+
+// ── Console ──
+function printLine(text, cls='out'){
+  const c = document.getElementById('console');
+  const line = document.createElement('div');
+  line.className = 'console-line '+(cls||'out');
+  line.textContent = text;
+  c.appendChild(line);
+  c.scrollTop = c.scrollHeight;
+}
+
+function clearConsole(){
+  document.getElementById('console').innerHTML = '';
+  printLine('Console cleared.','info');
+}
+
+function switchTab(tab){
+  document.getElementById('tab-console').classList.toggle('active', tab==='console');
+  document.getElementById('tab-plot').classList.toggle('active', tab==='plot');
+  document.getElementById('panel-console').classList.toggle('active', tab==='console');
+  document.getElementById('panel-plot').classList.toggle('active', tab==='plot');
+}
+
+// ── Editor ──
+function onEditorChange(){
+  updateLineNums();
+  updateCursor();
+}
+
+function updateLineNums(){
+  const lines = document.getElementById('editor').value.split('\n').length;
+  document.getElementById('line-nums').textContent = Array.from({length:lines},(_,i)=>i+1).join('\n');
+}
+
+function syncScroll(){
+  document.getElementById('line-nums').scrollTop = document.getElementById('editor').scrollTop;
+}
+
+function updateCursor(){
+  const ta = document.getElementById('editor');
+  const val = ta.value.slice(0, ta.selectionStart);
+  const ln = val.split('\n').length;
+  const col = val.split('\n').pop().length + 1;
+  document.getElementById('line-col').textContent = `Ln ${ln}, Col ${col}`;
+}
+
+function onEditorKey(e){
+  const ta = document.getElementById('editor');
+  if(e.key === 'Tab'){
+    e.preventDefault();
+    const s = ta.selectionStart, v = ta.value;
+    ta.value = v.slice(0,s)+'    '+v.slice(s);
+    ta.selectionStart = ta.selectionEnd = s+4;
+    onEditorChange();
+  }
+  if(e.key === 'Enter' && (e.ctrlKey||e.metaKey)){
+    e.preventDefault();
+    runCode();
+  }
+  // Auto-indent
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    const s = ta.selectionStart, v = ta.value;
+    const lineStart = v.lastIndexOf('\n', s-1)+1;
+    const curLine = v.slice(lineStart, s);
+    const indent = curLine.match(/^(\s*)/)[1];
+    const extraIndent = curLine.trimEnd().endsWith(':') ? '    ' : '';
+    const ins = '\n' + indent + extraIndent;
+    ta.value = v.slice(0,s)+ins+v.slice(ta.selectionEnd);
+    ta.selectionStart = ta.selectionEnd = s+ins.length;
+    onEditorChange();
+  }
+}
+
+function newCode(){
+  if(document.getElementById('editor').value.trim() && !confirm('Code clear ho jayega?')) return;
+  document.getElementById('editor').value = '';
+  clearConsole();
+  updateLineNums();
+}
+
+function downloadCode(){
+  const code = document.getElementById('editor').value;
+  if(!code.trim()){ showToast('Koi code nahi hai!','error'); return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([code],{type:'text/plain'}));
+  a.download = 'physics_script.py'; a.click();
+  showToast('Code downloaded!','success');
+}
+
+// ── Examples ──
+const EXAMPLES = {
+  hello: `# Basic Physics — Hello World
+import math
+
+print("=== Basic Physics Calculations ===")
+print()
+
+# Constants
+c = 3e8          # speed of light (m/s)
+h = 6.626e-34    # Planck's constant (J·s)
+hbar = h / (2 * math.pi)
+k_B = 1.38e-23   # Boltzmann constant
+
+print(f"Speed of light:    c = {c:.2e} m/s")
+print(f"Planck constant:   h = {h:.3e} J·s")
+print(f"Reduced Planck:    ℏ = {hbar:.3e} J·s")
+print(f"Boltzmann const:   k = {k_B:.3e} J/K")
+print()
+
+# de Broglie wavelength of electron at 100 eV
+m_e = 9.109e-31
+KE = 100 * 1.602e-19   # 100 eV in Joules
+p = math.sqrt(2 * m_e * KE)
+lam = h / p
+print(f"de Broglie λ of electron at 100 eV:")
+print(f"  λ = {lam*1e10:.4f} Å")
+`,
+
+  numpy: `# NumPy — Arrays & Linear Algebra
+import numpy as np
+
+print("=== NumPy Physics Arrays ===")
+print()
+
+# Create arrays
+x = np.linspace(0, 2*np.pi, 8)
+print("x values (0 to 2π):")
+print(np.round(x, 3))
+print()
+
+# sin and cos
+print("sin(x):", np.round(np.sin(x), 3))
+print("cos(x):", np.round(np.cos(x), 3))
+print()
+
+# Matrix operations
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[5, 6], [7, 8]])
+print("Matrix A:")
+print(A)
+print("Matrix B:")
+print(B)
+print("A × B =")
+print(np.dot(A, B))
+print()
+print(f"det(A) = {np.linalg.det(A):.1f}")
+
+eigenvals, eigenvecs = np.linalg.eig(A)
+print(f"Eigenvalues of A: {np.round(eigenvals, 4)}")
+`,
+
+  matrix: `# Matrix Operations — Quantum Mechanics
+import numpy as np
+
+print("=== Quantum Mechanics Matrices ===")
+print()
+
+# Pauli Matrices
+sx = np.array([[0, 1], [1, 0]])
+sy = np.array([[0, -1j], [1j, 0]])
+sz = np.array([[1, 0], [0, -1]])
+I  = np.eye(2)
+
+print("Pauli-X (σx):")
+print(sx)
+print()
+print("Pauli-Z (σz):")
+print(sz)
+print()
+
+# Commutator [sx, sy] = 2i*sz
+comm = sx @ sy - sy @ sx
+print("[σx, σy] = 2i·σz ?")
+print("Result:", np.allclose(comm, 2j * sz))
+print()
+
+# Spin-1/2 state |+z>
+psi = np.array([1, 0])  # spin up
+print(f"<σz> for |↑⟩ = {(psi.conj() @ sz @ psi).real:.1f}")
+print(f"<σx> for |↑⟩ = {(psi.conj() @ sx @ psi).real:.1f}")
+
+# Hadamard — equal superposition
+H = (1/np.sqrt(2)) * np.array([[1,1],[1,-1]])
+psi_plus = H @ psi
+print()
+print("After Hadamard gate:")
+print(f"|ψ⟩ = {np.round(psi_plus, 4)}")
+print(f"Prob |↑⟩ = {abs(psi_plus[0])**2:.2f}")
+print(f"Prob |↓⟩ = {abs(psi_plus[1])**2:.2f}")
+`,
+
+  decay: `# Radioactive Decay Calculations
+import numpy as np
+
+print("=== Radioactive Decay Calculator ===")
+print()
+
+def decay(N0, t_half, t):
+    lam = np.log(2) / t_half
+    return N0 * np.exp(-lam * t)
+
+def activity(N0, t_half, t):
+    lam = np.log(2) / t_half
+    return lam * decay(N0, t_half, t)
+
+# Carbon-14: T½ = 5730 years
+T_half = 5730
+N0 = 1e12  # initial atoms
+
+print("Carbon-14 Decay (T½ = 5730 years)")
+print(f"{'Time (yr)':<12} {'N(t)':<14} {'% remaining':<14} {'Activity'}")
+print("-" * 55)
+
+times = [0, 1000, 5730, 10000, 17190, 28650, 57300]
+for t in times:
+    N = decay(N0, T_half, t)
+    A = activity(N0, T_half, t)
+    pct = (N/N0)*100
+    print(f"{t:<12} {N:.3e}   {pct:<14.2f}  {A:.3e} decays/yr")
+
+print()
+lam = np.log(2)/T_half
+tau = 1/lam
+print(f"λ (decay constant) = {lam:.6f} yr⁻¹")
+print(f"τ (mean lifetime)  = {tau:.1f} yr")
+`,
+
+  wave: `# Quantum Wavefunction — Infinite Square Well
+import numpy as np
+
+print("=== Infinite Square Well Wavefunctions ===")
+print()
+
+hbar = 1.055e-34  # J·s
+m = 9.109e-31     # electron mass (kg)
+L = 1e-9          # 1 nm well
+eV = 1.602e-19
+
+def psi(x, n, L):
+    return np.sqrt(2/L) * np.sin(n * np.pi * x / L)
+
+def energy(n, m, L):
+    return (n**2 * np.pi**2 * hbar**2) / (2 * m * L**2)
+
+print(f"Well width L = {L*1e9} nm")
+print(f"{'n':<5} {'Energy (eV)':<16} {'Ratio En/E1'}")
+print("-"*35)
+for n in range(1, 7):
+    En = energy(n, m, L) / eV
+    E1 = energy(1, m, L) / eV
+    print(f"{n:<5} {En:<16.4f} {En/E1:.1f} (= n²={n**2})")
+
+print()
+# Normalisation check
+x = np.linspace(0, L, 1000)
+for n in [1, 2, 3]:
+    psi_vals = psi(x, n, L)
+    norm = np.trapz(psi_vals**2, x)
+    print(f"∫|ψ_{n}|² dx = {norm:.6f} (should be 1.0)")
+`,
+
+  stats: `# Statistical Mechanics — Distributions
+import numpy as np
+
+print("=== Statistical Mechanics ===")
+print()
+
+k_B = 1.38e-23   # Boltzmann constant
+m_H2 = 2 * 1.67e-27  # H2 mass (kg)
+T = 300          # Temperature (K)
+
+# Most probable speed (Maxwell-Boltzmann)
+v_p = np.sqrt(2 * k_B * T / m_H2)
+# Mean speed
+v_mean = np.sqrt(8 * k_B * T / (np.pi * m_H2))
+# RMS speed
+v_rms = np.sqrt(3 * k_B * T / m_H2)
+
+print(f"H₂ gas at T = {T} K")
+print(f"Most probable speed  vₚ   = {v_p:.1f} m/s")
+print(f"Mean speed           v̄    = {v_mean:.1f} m/s")
+print(f"RMS speed            vᵣₘₛ = {v_rms:.1f} m/s")
+print()
+print(f"Ratio vₚ : v̄ : vᵣₘₛ = 1 : {v_mean/v_p:.3f} : {v_rms/v_p:.3f}")
+print(f"(Theory: 1 : 1.128 : 1.225)")
+print()
+
+# Partition function for harmonic oscillator
+print("=== QHO Partition Function ===")
+hbar = 1.055e-34
+omega = 1e13  # rad/s
+beta = 1 / (k_B * T)
+
+Z = 1 / (2 * np.sinh(beta * hbar * omega / 2))
+E_avg = -np.log(Z) / (-beta)   # approx
+print(f"ω = {omega:.0e} rad/s, T = {T} K")
+print(f"β·ℏω = {beta*hbar*omega:.4f}")
+print(f"Z = {Z:.4f}")
+`
+};
+
+function loadExample(key){
+  document.getElementById('editor').value = EXAMPLES[key] || '';
+  updateLineNums();
+  updateCursor();
+  clearConsole();
+  showToast('Example loaded!','success');
+}
+
+// ── Helpers ──
+function setStatus(state, text){
+  const dot = document.getElementById('status-dot');
+  dot.className = 'status-dot '+state;
+  document.getElementById('status-text').textContent = text;
+}
+
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show '+(type||'');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.className='',2500);
+}
+
+// ── Init ──
+window.addEventListener('load', () => {
+  loadExample('hello');
+  updateLineNums();
+  initPyodide();
+});
+</script>
+</body>
+</html>
