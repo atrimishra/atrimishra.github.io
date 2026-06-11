@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Focus Timer — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Quantum Focus Timer by Atri Mishra. Pomodoro-style study timer for physics students with break alerts, session tracking and motivational physics quotes.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/focus-timer.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --bg:#f0f6ff;--bg2:#e8f2ff;--ink:#0c1428;--ink2:#1e2d4a;--muted:#5a6a85;
+  --border:#dce8f5;--sky:#2563eb;--sky2:#3b82f6;--sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);--card:#ffffff;--radius:16px;
+  --green:#16a34a;--red:#e63946;--orange:#f4a261;--purple:#8b5cf6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden;min-height:100vh;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(240,246,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(16px,4vw,48px);height:56px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-icon{width:30px;height:30px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;}
+.logo .dot{color:var(--sky);}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:0.83rem;font-weight:500;text-decoration:none;padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+.page-header{padding:36px clamp(16px,4vw,48px) 0;max-width:960px;margin:0 auto;}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sky-bg);color:var(--sky);font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:30px;border:1px solid rgba(37,99,235,0.2);margin-bottom:12px;}
+.page-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);line-height:1.1;letter-spacing:-1px;margin-bottom:6px;}
+.page-title span{color:var(--sky);}
+.page-sub{color:var(--muted);font-size:0.92rem;margin-bottom:28px;}
+
+.main-wrap{max-width:960px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 60px;display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 2px 16px var(--sky-glow);margin-bottom:16px;}
+.card:last-child{margin-bottom:0;}
+.card-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title i{color:var(--sky);}
+
+/* ── TIMER CARD ── */
+.timer-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;box-shadow:0 2px 16px var(--sky-glow);text-align:center;position:relative;overflow:hidden;}
+.timer-card::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(37,99,235,0.06),transparent 70%);pointer-events:none;}
+
+/* Mode tabs */
+.mode-tabs{display:flex;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:24px;}
+.mode-btn{flex:1;padding:8px 4px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;color:var(--muted);cursor:pointer;border-radius:8px;transition:all 0.2s;text-align:center;}
+.mode-btn.active{background:var(--card);color:var(--sky);box-shadow:0 1px 6px rgba(37,99,235,0.15);}
+.mode-btn.break-active{background:var(--card);color:var(--green);box-shadow:0 1px 6px rgba(22,163,74,0.15);}
+
+/* SVG circle ring */
+.timer-ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.ring-svg{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--bg2);stroke-width:10;}
+.ring-progress{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke 0.5s;}
+.timer-inner{position:absolute;text-align:center;}
+.timer-display{font-family:'Fraunces',serif;font-size:3.2rem;font-weight:900;color:var(--ink);letter-spacing:-2px;line-height:1;}
+.timer-label{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px;}
+
+/* Session dots */
+.session-dots{display:flex;gap:7px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.s-dot{width:10px;height:10px;border-radius:50%;background:var(--bg2);border:2px solid var(--border);transition:all 0.3s;}
+.s-dot.done{background:var(--sky);border-color:var(--sky);}
+.s-dot.current{background:var(--orange);border-color:var(--orange);animation:pulse-dot 1s infinite;}
+@keyframes pulse-dot{0%,100%{transform:scale(1);}50%{transform:scale(1.3);}}
+
+/* Control buttons */
+.ctrl-row{display:flex;gap:10px;justify-content:center;margin-bottom:16px;}
+.ctrl-btn{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.2s;}
+.ctrl-btn.play{background:var(--sky);color:#fff;box-shadow:0 4px 16px rgba(37,99,235,0.4);width:64px;height:64px;font-size:1.3rem;}
+.ctrl-btn.play:hover{background:var(--sky2);transform:scale(1.05);}
+.ctrl-btn.play.running{background:var(--orange);}
+.ctrl-btn.reset{background:var(--bg2);color:var(--muted);border:1px solid var(--border);}
+.ctrl-btn.reset:hover{color:var(--red);border-color:var(--red);background:rgba(230,57,70,0.07);}
+.ctrl-btn.skip{background:var(--bg2);color:var(--muted);border:1px solid var(--border);}
+.ctrl-btn.skip:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+/* Quote */
+.quote-box{background:var(--sky-bg);border:1px solid rgba(37,99,235,0.15);border-radius:12px;padding:14px 16px;font-size:0.82rem;color:var(--ink2);font-style:italic;line-height:1.6;text-align:left;}
+.quote-author{font-style:normal;font-weight:700;color:var(--sky);font-size:0.75rem;margin-top:5px;}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px;}
+.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
+.stat-num{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;color:var(--sky);}
+.stat-lbl{font-size:0.65rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px;}
+
+/* Right col */
+/* Slider */
+.slider-group{margin-bottom:16px;}
+.slider-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.slider-label span{font-size:0.78rem;font-weight:600;color:var(--ink2);}
+.slider-val{font-family:'Fraunces',serif;font-size:0.9rem;font-weight:700;color:var(--sky);background:var(--sky-bg);padding:2px 9px;border-radius:20px;border:1px solid rgba(37,99,235,0.2);}
+input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:3px;background:var(--bg2);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--sky);border:2px solid #fff;box-shadow:0 1px 6px rgba(37,99,235,0.35);cursor:pointer;transition:transform 0.15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+
+/* Toggle */
+.toggle-row{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.toggle-item{display:flex;align-items:center;gap:9px;cursor:pointer;}
+.toggle-item input[type=checkbox]{width:34px;height:18px;-webkit-appearance:none;background:var(--bg2);border-radius:20px;border:1px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle-item input[type=checkbox]:checked{background:var(--sky);border-color:var(--sky);}
+.toggle-item input[type=checkbox]::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left 0.2s;}
+.toggle-item input[type=checkbox]:checked::after{left:18px;}
+.toggle-label{font-size:0.81rem;font-weight:500;color:var(--ink2);}
+
+/* Task list */
+.task-input-row{display:flex;gap:8px;margin-bottom:10px;}
+.task-input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:0.85rem;outline:none;transition:border-color 0.2s;}
+.task-input:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+.task-add-btn{padding:8px 14px;background:var(--sky);color:#fff;border:none;border-radius:10px;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.task-add-btn:hover{background:var(--sky2);}
+.task-list{display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;}
+.task-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;transition:all 0.2s;}
+.task-item.done{opacity:0.5;}
+.task-item.done .task-text{text-decoration:line-through;color:var(--muted);}
+.task-check{width:16px;height:16px;border-radius:4px;border:2px solid var(--border);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#fff;transition:all 0.2s;}
+.task-check.checked{background:var(--sky);border-color:var(--sky);}
+.task-text{font-size:0.82rem;flex:1;color:var(--ink2);}
+.task-del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.72rem;padding:2px 4px;transition:color 0.2s;}
+.task-del:hover{color:var(--red);}
+
+/* Log */
+.log-list{max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;}
+.log-item{font-size:0.75rem;color:var(--muted);padding:5px 8px;background:var(--bg);border-radius:6px;display:flex;align-items:center;gap:6px;}
+.log-item i{font-size:0.7rem;}
+
+/* Notification badge */
+#notif-banner{display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);background:var(--sky);color:#fff;padding:12px 24px;border-radius:12px;font-size:0.9rem;font-weight:600;box-shadow:0 4px 20px rgba(37,99,235,0.4);z-index:200;text-align:center;animation:slide-in 0.3s ease;}
+@keyframes slide-in{from{top:40px;opacity:0;}to{top:64px;opacity:1;}}
+
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:0.83rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{background:var(--green);}
+
+@media(max-width:780px){
+  .main-wrap{grid-template-columns:1fr;}
+  .timer-display{font-size:2.6rem;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="notif-banner"></div>
+
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <a class="back-btn" href="../index.html#tools">
+    <i class="fa-solid fa-arrow-left"></i> Back to Tools
+  </a>
+</nav>
+
+<div class="page-header">
+  <div class="tool-badge"><i class="fa-solid fa-clock"></i> Tool 10 of 12</div>
+  <h1 class="page-title">Quantum <span>Focus Timer</span></h1>
+  <p class="page-sub">Physics padhne ke liye Pomodoro timer. Focus sessions, breaks, tasks aur session history — sab ek jagah.</p>
+</div>
+
+<div class="main-wrap">
+  <!-- LEFT: Timer -->
+  <div>
+    <div class="timer-card">
+      <!-- Mode tabs -->
+      <div class="mode-tabs">
+        <button class="mode-btn active" id="mb-focus" onclick="setMode('focus')">Focus</button>
+        <button class="mode-btn" id="mb-short" onclick="setMode('short')">Short Break</button>
+        <button class="mode-btn" id="mb-long"  onclick="setMode('long')">Long Break</button>
+      </div>
+
+      <!-- Ring -->
+      <div class="timer-ring-wrap">
+        <svg class="ring-svg" width="220" height="220" viewBox="0 0 220 220">
+          <circle class="ring-bg" cx="110" cy="110" r="96"/>
+          <circle class="ring-progress" id="ring" cx="110" cy="110" r="96"
+            stroke="#2563eb"
+            stroke-dasharray="603.2"
+            stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-inner">
+          <div class="timer-display" id="timer-display">25:00</div>
+          <div class="timer-label" id="timer-mode-label">Focus Session</div>
+        </div>
+      </div>
+
+      <!-- Session dots -->
+      <div class="session-dots" id="session-dots"></div>
+
+      <!-- Controls -->
+      <div class="ctrl-row">
+        <button class="ctrl-btn reset" onclick="resetTimer()" title="Reset"><i class="fa-solid fa-rotate-left"></i></button>
+        <button class="ctrl-btn play" id="play-btn" onclick="toggleTimer()" title="Start/Pause">
+          <i class="fa-solid fa-play" id="play-icon"></i>
+        </button>
+        <button class="ctrl-btn skip" onclick="skipSession()" title="Skip"><i class="fa-solid fa-forward-step"></i></button>
+      </div>
+
+      <!-- Quote -->
+      <div class="quote-box" id="quote-box">
+        <span id="quote-text">Loading...</span>
+        <div class="quote-author" id="quote-author"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num" id="stat-sessions">0</div>
+          <div class="stat-lbl">Sessions Today</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-focus-time">0m</div>
+          <div class="stat-lbl">Focus Time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-streak">0</div>
+          <div class="stat-lbl">Streak 🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session Log -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-history"></i> Session Log</div>
+      <div class="log-list" id="log-list">
+        <div class="log-item" style="color:var(--muted);font-style:italic;">Abhi koi session nahi hua...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+    <!-- Settings -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-sliders"></i> Timer Settings</div>
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Focus Duration</span>
+          <span class="slider-val" id="focus-val">25 min</span>
+        </div>
+        <input type="range" id="focus-slider" min="5" max="60" value="25" step="5" oninput="onSettingChange()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Short Break</span>
+          <span class="slider-val" id="short-val">5 min</span>
+        </div>
+        <input type="range" id="short-slider" min="1" max="15" value="5" step="1" oninput="onSettingChange()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Long Break</span>
+          <span class="slider-val" id="long-val">15 min</span>
+        </div>
+        <input type="range" id="long-slider" min="5" max="30" value="15" step="5" oninput="onSettingChange()">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Sessions before Long Break</span>
+          <span class="slider-val" id="sessions-val">4</span>
+        </div>
+        <input type="range" id="sessions-slider" min="2" max="8" value="4" step="1" oninput="onSettingChange()">
+      </div>
+      <div class="toggle-row">
+        <label class="toggle-item">
+          <input type="checkbox" id="auto-start" checked>
+          <span class="toggle-label">Auto-start next session</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="sound-on" checked>
+          <span class="toggle-label">Sound alerts (beep)</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="notif-on" checked>
+          <span class="toggle-label">Browser notifications</span>
+        </label>
+        <label class="toggle-item">
+          <input type="checkbox" id="dark-timer" onchange="toggleDarkMode()">
+          <span class="toggle-label">Dark mode</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Task List -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-list-check"></i> Study Tasks</div>
+      <div class="task-input-row">
+        <input class="task-input" id="task-input" placeholder="e.g. Schrodinger eq chapter..." onkeydown="if(event.key==='Enter')addTask()">
+        <button class="task-add-btn" onclick="addTask()"><i class="fa-solid fa-plus"></i></button>
+      </div>
+      <div class="task-list" id="task-list">
+        <div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:8px;">Koi task nahi — add karo!</div>
+      </div>
+    </div>
+
+    <!-- Physics Fact -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-lightbulb"></i> Did You Know?</div>
+      <div id="fact-box" style="font-size:0.83rem;color:var(--ink2);line-height:1.7;"></div>
+      <button style="margin-top:10px;width:100%;padding:7px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;font-size:0.78rem;font-weight:600;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;" onclick="newFact()">
+        <i class="fa-solid fa-shuffle"></i> New Fact
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Quotes ──
+const QUOTES=[
+  {text:"If you can't explain it simply, you don't understand it well enough.",author:"— Albert Einstein"},
+  {text:"Physics is really nothing more than a search for ultimate simplicity.",author:"— Bill Bryson"},
+  {text:"The important thing is not to stop questioning. Curiosity has its own reason for existing.",author:"— Einstein"},
+  {text:"Not only is the universe stranger than we think, it is stranger than we can think.",author:"— Heisenberg"},
+  {text:"An expert is a man who has made all the mistakes which can be made, in a narrow field.",author:"— Niels Bohr"},
+  {text:"The day you stop learning is the day you start decaying.",author:"— Isaac Asimov"},
+  {text:"Study hard what interests you most in the most undisciplined, irreverent manner.",author:"— Feynman"},
+  {text:"Physics is like sex: sure, it may give some practical results, but that's not why we do it.",author:"— Feynman"},
+  {text:"In physics, you don't have to go around making trouble for yourself — nature does it for you.",author:"— Frank Wilczek"},
+  {text:"Equipped with his five senses, man explores the universe and calls the adventure science.",author:"— Edwin Hubble"},
+];
+
+const FACTS=[
+  "Ek electron itna chota hota hai ki agar 1 cm ki line mein electrons rakhein, toh ~10¹⁰ electrons fit honge.",
+  "Light ko Sun se Earth tak aane mein sirf 8 minutes 20 seconds lagte hain — 150 million km ki doori!",
+  "Quantum mechanics ke according, ek particle ek saath do jagah ho sakta hai — superposition principle.",
+  "Neutron star itna dense hota hai ki ek teaspoon ka mass ~10⁸ tonnes hota hai.",
+  "Heisenberg ka uncertainty principle kehta hai: Δx·Δp ≥ ℏ/2. Position aur momentum simultaneously exact nahi jaane ja sakte.",
+  "Schrodinger ka equation 1926 mein publish hua tha — quantum mechanics ka foundation!",
+  "Speed of light vacuum mein exactly 299,792,458 m/s hai — yeh SI system mein define ki gayi hai.",
+  "Pauli exclusion principle ke bina, saare electrons ek hi energy level mein hote — atoms exist na karte!",
+  "Planck constant h = 6.626×10⁻³⁴ J·s — quantum world aur classical world ke beech ki line.",
+  "Maxwell ke 4 equations poori electromagnetism describe karte hain — ek genius unification!",
+  "BEC (Bose-Einstein Condensate) mein particles ek single quantum state mein hote hain — -273.15°C ke karib.",
+  "Nuclear fusion mein, 4 hydrogen nuclei → 1 helium + energy (E=mc²). Yehi Sun ki energy hai!",
+];
+
+// ── State ──
+let mode='focus';
+let totalSeconds=25*60;
+let remaining=totalSeconds;
+let running=false;
+let interval=null;
+let completedSessions=0;
+let totalFocusMin=0;
+let streak=0;
+let tasks=[];
+let taskId=0;
+let log=[];
+const CIRCUMFERENCE=2*Math.PI*96; // 603.2
+
+// ── Mode ──
+function setMode(m){
+  if(running) return;
+  mode=m;
+  document.getElementById('mb-focus').className='mode-btn'+(m==='focus'?' active':'');
+  document.getElementById('mb-short').className='mode-btn'+(m==='short'?' break-active':'');
+  document.getElementById('mb-long').className ='mode-btn'+(m==='long'?' break-active':'');
+  const focusMin=parseInt(document.getElementById('focus-slider').value);
+  const shortMin=parseInt(document.getElementById('short-slider').value);
+  const longMin =parseInt(document.getElementById('long-slider').value);
+  totalSeconds=(m==='focus'?focusMin:m==='short'?shortMin:longMin)*60;
+  remaining=totalSeconds;
+  updateDisplay();
+  updateRing();
+  document.getElementById('timer-mode-label').textContent=m==='focus'?'Focus Session':m==='short'?'Short Break':'Long Break';
+  const ringEl=document.getElementById('ring');
+  ringEl.style.stroke=m==='focus'?'#2563eb':m==='short'?'#16a34a':'#8b5cf6';
+  newQuote();
+}
+
+function onSettingChange(){
+  document.getElementById('focus-val').textContent=document.getElementById('focus-slider').value+' min';
+  document.getElementById('short-val').textContent=document.getElementById('short-slider').value+' min';
+  document.getElementById('long-val').textContent =document.getElementById('long-slider').value+' min';
+  document.getElementById('sessions-val').textContent=document.getElementById('sessions-slider').value;
+  if(!running) setMode(mode);
+}
+
+// ── Timer ──
+function toggleTimer(){
+  if(running){ pauseTimer(); }
+  else { startTimer(); }
+}
+
+function startTimer(){
+  running=true;
+  document.getElementById('play-btn').classList.add('running');
+  document.getElementById('play-icon').className='fa-solid fa-pause';
+  interval=setInterval(tick,1000);
+}
+
+function pauseTimer(){
+  running=false;
+  document.getElementById('play-btn').classList.remove('running');
+  document.getElementById('play-icon').className='fa-solid fa-play';
+  clearInterval(interval);
+}
+
+function resetTimer(){
+  pauseTimer();
+  setMode(mode);
+}
+
+function skipSession(){
+  pauseTimer();
+  onSessionComplete(true);
+}
+
+function tick(){
+  remaining--;
+  if(remaining<=0){ remaining=0; onSessionComplete(false); return; }
+  updateDisplay();
+  updateRing();
+  if(remaining===60) showNotif('⏱️ 1 minute remaining!');
+}
+
+function updateDisplay(){
+  const m=Math.floor(remaining/60), s=remaining%60;
+  document.getElementById('timer-display').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.title=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} — Atri Focus Timer`;
+}
+
+function updateRing(){
+  const pct=remaining/totalSeconds;
+  const offset=CIRCUMFERENCE*(1-pct);
+  document.getElementById('ring').style.strokeDashoffset=offset;
+}
+
+function onSessionComplete(skipped){
+  pauseTimer();
+  if(mode==='focus'&&!skipped){
+    completedSessions++;
+    totalFocusMin+=parseInt(document.getElementById('focus-slider').value);
+    streak++;
+    addLog('✅ Focus session complete!','var(--green)');
+    playBeep('focus');
+    showNotif('🎉 Focus session done! Time for a break.');
+    updateStats();
+  } else if(mode!=='focus'&&!skipped){
+    addLog('☕ Break over — back to work!','var(--sky)');
+    playBeep('break');
+    showNotif('💪 Break over! Focus karo.');
+  }
+  updateDots();
+  // Auto next
+  if(document.getElementById('auto-start').checked&&!skipped){
+    const sessionsBeforeLong=parseInt(document.getElementById('sessions-slider').value);
+    const nextMode=mode==='focus'?(completedSessions%sessionsBeforeLong===0?'long':'short'):'focus';
+    setTimeout(()=>{ setMode(nextMode); startTimer(); },1500);
+  } else {
+    const sessionsBeforeLong=parseInt(document.getElementById('sessions-slider').value);
+    const nextMode=mode==='focus'?(completedSessions%sessionsBeforeLong===0?'long':'short'):'focus';
+    setMode(nextMode);
+  }
+  newQuote();
+}
+
+function updateDots(){
+  const sessionsBeforeLong=parseInt(document.getElementById('sessions-slider').value);
+  const dotsEl=document.getElementById('session-dots');
+  dotsEl.innerHTML=Array.from({length:sessionsBeforeLong},(_,i)=>{
+    let cls='s-dot';
+    if(i<completedSessions%sessionsBeforeLong) cls+=' done';
+    else if(i===completedSessions%sessionsBeforeLong&&mode==='focus') cls+=' current';
+    return`<div class="${cls}"></div>`;
+  }).join('');
+}
+
+function updateStats(){
+  document.getElementById('stat-sessions').textContent=completedSessions;
+  document.getElementById('stat-focus-time').textContent=totalFocusMin>59?Math.floor(totalFocusMin/60)+'h '+totalFocusMin%60+'m':totalFocusMin+'m';
+  document.getElementById('stat-streak').textContent=streak;
+}
+
+// ── Log ──
+function addLog(msg,col='var(--muted)'){
+  const now=new Date();
+  const time=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  log.unshift({msg,time,col});
+  renderLog();
+}
+
+function renderLog(){
+  const el=document.getElementById('log-list');
+  if(!log.length){el.innerHTML='<div class="log-item">Abhi koi session nahi hua...</div>';return;}
+  el.innerHTML=log.slice(0,12).map(l=>`<div class="log-item"><i class="fa-solid fa-circle" style="color:${l.col};font-size:0.5rem;"></i><span style="color:${l.col};">${l.msg}</span><span style="margin-left:auto;font-size:0.7rem;">${l.time}</span></div>`).join('');
+}
+
+// ── Tasks ──
+function addTask(){
+  const inp=document.getElementById('task-input');
+  const text=inp.value.trim();
+  if(!text) return;
+  taskId++;
+  tasks.push({id:taskId,text,done:false});
+  inp.value='';
+  renderTasks();
+}
+
+function toggleTask(id){
+  const t=tasks.find(t=>t.id===id);
+  if(t){ t.done=!t.done; if(t.done) addLog(`✔ Task done: "${t.text.slice(0,30)}"`, 'var(--green)'); }
+  renderTasks();
+}
+
+function deleteTask(id){ tasks=tasks.filter(t=>t.id!==id); renderTasks(); }
+
+function renderTasks(){
+  const el=document.getElementById('task-list');
+  if(!tasks.length){el.innerHTML='<div style="font-size:0.8rem;color:var(--muted);text-align:center;padding:8px;">Koi task nahi — add karo!</div>';return;}
+  el.innerHTML=tasks.map(t=>`
+    <div class="task-item${t.done?' done':''}">
+      <div class="task-check${t.done?' checked':''}" onclick="toggleTask(${t.id})">
+        ${t.done?'<i class="fa-solid fa-check" style="font-size:0.6rem;color:#fff;"></i>':''}
+      </div>
+      <span class="task-text">${t.text}</span>
+      <button class="task-del" onclick="deleteTask(${t.id})"><i class="fa-solid fa-xmark"></i></button>
+    </div>`).join('');
+}
+
+// ── Sound ──
+function playBeep(type){
+  if(!document.getElementById('sound-on').checked) return;
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const freqs=type==='focus'?[523,659,784]:[784,659,523];
+    freqs.forEach((f,i)=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.frequency.value=f;osc.type='sine';
+      gain.gain.setValueAtTime(0.3,ctx.currentTime+i*0.18);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.18+0.3);
+      osc.start(ctx.currentTime+i*0.18);
+      osc.stop(ctx.currentTime+i*0.18+0.35);
+    });
+  }catch(e){}
+}
+
+// ── Notifications ──
+function showNotif(msg){
+  const banner=document.getElementById('notif-banner');
+  banner.textContent=msg;banner.style.display='block';
+  clearTimeout(banner._t);banner._t=setTimeout(()=>banner.style.display='none',3500);
+  if(document.getElementById('notif-on').checked&&'Notification' in window){
+    if(Notification.permission==='granted') new Notification('Atri Focus Timer',{body:msg,icon:''});
+    else if(Notification.permission!=='denied') Notification.requestPermission();
+  }
+}
+
+// ── Quotes / Facts ──
+function newQuote(){
+  const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  document.getElementById('quote-text').textContent='"'+q.text+'"';
+  document.getElementById('quote-author').textContent=q.author;
+}
+
+function newFact(){
+  document.getElementById('fact-box').textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
+}
+
+// ── Dark mode ──
+function toggleDarkMode(){
+  const dark=document.getElementById('dark-timer').checked;
+  document.documentElement.style.setProperty('--bg',dark?'#0c1428':'#f0f6ff');
+  document.documentElement.style.setProperty('--bg2',dark?'#1e2d4a':'#e8f2ff');
+  document.documentElement.style.setProperty('--card',dark?'#162035':'#ffffff');
+  document.documentElement.style.setProperty('--ink',dark?'#e8f2ff':'#0c1428');
+  document.documentElement.style.setProperty('--ink2',dark?'#a0b4cc':'#1e2d4a');
+  document.documentElement.style.setProperty('--border',dark?'rgba(96,165,250,0.15)':'#dce8f5');
+  document.documentElement.style.setProperty('--muted',dark?'#6b8aad':'#5a6a85');
+}
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+(type||'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2500);
+}
+
+// ── Init ──
+window.addEventListener('load',()=>{
+  updateDots();
+  updateDisplay();
+  newQuote();
+  newFact();
+  // Request notification permission
+  if('Notification' in window && Notification.permission==='default'){
+    setTimeout(()=>Notification.requestPermission(),2000);
+  }
+  // Default tasks
+  ['Schrödinger equation derive karo','Numerical problems: Chapter 4','Lab report likhna hai'].forEach(t=>{
+    taskId++;tasks.push({id:taskId,text:t,done:false});
+  });
+  renderTasks();
+});
+</script>
+</body>
+</html>
