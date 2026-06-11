@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matrix & Vector Workspace — Atri Mishra | Atri's Physics Orbit</title>
+<meta name="description" content="Matrix multiplication, determinant, eigenvalues, eigenvectors and vector cross product workspace by Atri Mishra. Free MSc Physics tool for Delhi University students.">
+<meta name="author" content="Atri Mishra">
+<link rel="canonical" href="https://atrimishra.github.io/tools/matrix-workspace.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.0/math.min.js"></script>
+<style>
+:root{
+  --bg:#f0f6ff;--bg2:#e8f2ff;--ink:#0c1428;--ink2:#1e2d4a;--muted:#5a6a85;
+  --border:#dce8f5;--sky:#2563eb;--sky2:#3b82f6;--sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);--card:#ffffff;--radius:16px;
+  --green:#16a34a;--red:#e63946;--orange:#f4a261;--purple:#8b5cf6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--sky);border-radius:3px;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(240,246,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(16px,4vw,48px);height:56px;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-icon{width:30px;height:30px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;}
+.logo .dot{color:var(--sky);}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:0.83rem;font-weight:500;text-decoration:none;padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:var(--card);transition:all 0.2s;}
+.back-btn:hover{color:var(--sky);border-color:var(--sky);background:var(--sky-bg);}
+
+.page-header{padding:36px clamp(16px,4vw,48px) 0;max-width:1200px;margin:0 auto;}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sky-bg);color:var(--sky);font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:30px;border:1px solid rgba(37,99,235,0.2);margin-bottom:12px;}
+.page-title{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);line-height:1.1;letter-spacing:-1px;margin-bottom:6px;}
+.page-title span{color:var(--sky);}
+.page-sub{color:var(--muted);font-size:0.92rem;margin-bottom:28px;}
+
+.tool-wrapper{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,48px) 60px;}
+
+/* ── Operation Tabs ── */
+.op-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.op-btn{padding:9px 18px;border:1px solid var(--border);border-radius:10px;background:var(--card);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.op-btn:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-bg);}
+.op-btn.active{border-color:var(--sky);color:#fff;background:var(--sky);box-shadow:0 2px 10px rgba(37,99,235,0.3);}
+
+/* ── Panel ── */
+.panel{display:none;}
+.panel.active{display:grid;}
+
+/* ── Card ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 2px 16px var(--sky-glow);}
+.card-title{font-family:'Fraunces',serif;font-size:0.95rem;font-weight:700;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.card-title i{color:var(--sky);font-size:0.85rem;}
+
+/* ── Matrix Grid ── */
+.matrix-section{display:flex;flex-direction:column;gap:16px;}
+.matrix-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.matrix-block-title{font-size:0.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.matrix-grid{display:grid;gap:4px;}
+.m-cell{width:52px;height:36px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:0.88rem;text-align:center;outline:none;transition:border-color 0.2s;padding:0 4px;}
+.m-cell:focus{border-color:var(--sky);box-shadow:0 0 0 2px rgba(37,99,235,0.1);}
+
+/* Size selector */
+.size-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.size-label{font-size:0.75rem;font-weight:600;color:var(--muted);}
+.size-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--bg);font-size:0.75rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all 0.18s;display:flex;align-items:center;justify-content:center;}
+.size-btn:hover,.size-btn.active{background:var(--sky);color:#fff;border-color:var(--sky);}
+
+/* Result box */
+.result-area{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:0;}
+.result-title{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+.result-matrix{display:inline-grid;gap:4px;background:var(--sky-bg);border:1px solid rgba(37,99,235,0.15);border-radius:10px;padding:12px;}
+.r-cell{width:80px;height:34px;background:var(--card);border:1px solid var(--border);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:var(--sky);font-weight:600;display:flex;align-items:center;justify-content:center;padding:0 6px;word-break:break-all;}
+.scalar-result{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;color:var(--sky);padding:8px 0;}
+.eigen-list{display:flex;flex-direction:column;gap:8px;}
+.eigen-item{background:var(--sky-bg);border:1px solid rgba(37,99,235,0.15);border-radius:10px;padding:10px 14px;}
+.eigen-val{font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:var(--sky);font-weight:600;}
+.eigen-vec{font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--ink2);margin-top:3px;}
+
+/* Calc button */
+.calc-btn{width:100%;padding:11px;background:var(--sky);color:#fff;border:none;border-radius:12px;font-family:'Fraunces',serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(37,99,235,0.3);transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0;}
+.calc-btn:hover{background:var(--sky2);transform:translateY(-1px);}
+
+/* Preset */
+.preset-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.preset-chip{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--bg);font-size:0.72rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif;}
+.preset-chip:hover{border-color:var(--sky);color:var(--sky);background:var(--sky-bg);}
+
+/* Vector panel */
+.vector-section{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.vec-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.vec-title{font-size:0.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
+.vec-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+.vec-field label{display:block;font-size:0.7rem;font-weight:700;color:var(--muted);text-align:center;margin-bottom:3px;}
+.vec-field input{width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:0.9rem;font-weight:600;text-align:center;outline:none;transition:border-color 0.2s;}
+.vec-field input:focus{border-color:var(--sky);}
+
+/* Steps */
+.steps-box{background:var(--sky-bg);border:1px solid rgba(37,99,235,0.15);border-radius:10px;padding:14px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--ink2);line-height:1.9;white-space:pre-wrap;}
+
+/* Info chips row */
+.info-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px;}
+.info-chip{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
+.ic-num{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;word-break:break-all;}
+.ic-lbl{font-size:0.65rem;color:var(--muted);margin-top:2px;}
+
+/* Layout helpers */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start;}
+.gap-col{display:flex;flex-direction:column;gap:16px;}
+
+/* Error */
+.err-box{background:rgba(230,57,70,0.08);border:1px solid rgba(230,57,70,0.25);border-radius:10px;padding:10px 14px;color:var(--red);font-size:0.82rem;margin-top:8px;display:none;}
+
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-size:0.83rem;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.success{background:var(--green);}
+#toast.error{background:var(--red);}
+
+@media(max-width:700px){
+  .two-col,.three-col,.vector-section{grid-template-columns:1fr;}
+  .info-row{grid-template-columns:1fr 1fr;}
+  .m-cell{width:40px;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<nav>
+  <a class="logo" href="../index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+  <a class="back-btn" href="../index.html#tools">
+    <i class="fa-solid fa-arrow-left"></i> Back to Tools
+  </a>
+</nav>
+
+<div class="page-header">
+  <div class="tool-badge"><i class="fa-solid fa-table-cells"></i> Tool 11 of 12</div>
+  <h1 class="page-title">Matrix & <span>Vector</span> Workspace</h1>
+  <p class="page-sub">Matrix multiplication, determinant, inverse, eigenvalues, trace — aur vector dot/cross product. Quantum mechanics ke liye perfect.</p>
+</div>
+
+<div class="tool-wrapper">
+  <!-- Operation Tabs -->
+  <div class="op-tabs">
+    <button class="op-btn active" onclick="switchOp('multiply')"><i class="fa-solid fa-xmark"></i> A × B</button>
+    <button class="op-btn" onclick="switchOp('det')"><i class="fa-solid fa-calculator"></i> Determinant</button>
+    <button class="op-btn" onclick="switchOp('inverse')"><i class="fa-solid fa-rotate"></i> Inverse</button>
+    <button class="op-btn" onclick="switchOp('eigen')"><i class="fa-solid fa-arrows-to-dot"></i> Eigenvalues</button>
+    <button class="op-btn" onclick="switchOp('transpose')"><i class="fa-solid fa-shuffle"></i> Transpose</button>
+    <button class="op-btn" onclick="switchOp('vector')"><i class="fa-solid fa-arrow-right-arrow-left"></i> Vectors</button>
+    <button class="op-btn" onclick="switchOp('solve')"><i class="fa-solid fa-equals"></i> Solve Ax=b</button>
+  </div>
+
+  <!-- ── MULTIPLY PANEL ── -->
+  <div class="panel active" id="panel-multiply" style="grid-template-columns:1fr 1fr 1fr;gap:16px;">
+    <div class="gap-col">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-table-cells"></i> Matrix A</div>
+        <div class="size-row">
+          <span class="size-label">Size:</span>
+          <button class="size-btn active" id="ma-2" onclick="resizeMatrix('A',2)">2</button>
+          <button class="size-btn" id="ma-3" onclick="resizeMatrix('A',3)">3</button>
+          <button class="size-btn" id="ma-4" onclick="resizeMatrix('A',4)">4</button>
+        </div>
+        <div id="grid-A"></div>
+      </div>
+    </div>
+    <div class="gap-col">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-table-cells"></i> Matrix B</div>
+        <div class="size-row">
+          <span class="size-label">Size:</span>
+          <button class="size-btn active" id="mb-2" onclick="resizeMatrix('B',2)">2</button>
+          <button class="size-btn" id="mb-3" onclick="resizeMatrix('B',3)">3</button>
+          <button class="size-btn" id="mb-4" onclick="resizeMatrix('B',4)">4</button>
+        </div>
+        <div id="grid-B"></div>
+      </div>
+      <div class="card" style="padding:14px;">
+        <div class="preset-row">
+          <span class="preset-chip" onclick="loadPreset('pauli_x','A')">σ_x</span>
+          <span class="preset-chip" onclick="loadPreset('pauli_y','A')">σ_y</span>
+          <span class="preset-chip" onclick="loadPreset('pauli_z','A')">σ_z</span>
+          <span class="preset-chip" onclick="loadPreset('hadamard','A')">Hadamard</span>
+          <span class="preset-chip" onclick="loadPreset('identity3','A')">I₃</span>
+          <span class="preset-chip" onclick="loadPreset('rot90','A')">Rot 90°</span>
+        </div>
+        <button class="calc-btn" onclick="calcMultiply()"><i class="fa-solid fa-xmark"></i> Multiply A × B</button>
+        <div class="err-box" id="err-multiply"></div>
+      </div>
+    </div>
+    <div class="gap-col">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-equals"></i> Result A × B</div>
+        <div id="result-multiply"><div style="color:var(--muted);font-size:0.85rem;">Result yahan dikhega...</div></div>
+        <div id="info-multiply" class="info-row" style="display:none;"></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-list"></i> Step-by-step</div>
+        <div id="steps-multiply" style="color:var(--muted);font-size:0.82rem;">Calculate karo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DETERMINANT PANEL ── -->
+  <div class="panel" id="panel-det" style="grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-table-cells"></i> Matrix A</div>
+      <div class="size-row">
+        <span class="size-label">Size:</span>
+        <button class="size-btn active" id="md-2" onclick="resizeMatrixDet(2)">2</button>
+        <button class="size-btn" id="md-3" onclick="resizeMatrixDet(3)">3</button>
+        <button class="size-btn" id="md-4" onclick="resizeMatrixDet(4)">4</button>
+      </div>
+      <div id="grid-det"></div>
+      <button class="calc-btn" onclick="calcDet()"><i class="fa-solid fa-calculator"></i> Calculate det(A)</button>
+      <div class="err-box" id="err-det"></div>
+    </div>
+    <div class="gap-col">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-equals"></i> Results</div>
+        <div id="result-det"><div style="color:var(--muted);font-size:0.85rem;">Matrix enter karo.</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-lightbulb"></i> Steps</div>
+        <div id="steps-det" style="color:var(--muted);font-size:0.82rem;">Calculate karo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INVERSE PANEL ── -->
+  <div class="panel" id="panel-inverse" style="grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-table-cells"></i> Matrix A</div>
+      <div class="size-row">
+        <span class="size-label">Size:</span>
+        <button class="size-btn active" id="mi-2" onclick="resizeMatrixInv(2)">2</button>
+        <button class="size-btn" id="mi-3" onclick="resizeMatrixInv(3)">3</button>
+      </div>
+      <div id="grid-inv"></div>
+      <button class="calc-btn" onclick="calcInverse()"><i class="fa-solid fa-rotate"></i> Calculate A⁻¹</button>
+      <div class="err-box" id="err-inv"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-equals"></i> A⁻¹</div>
+      <div id="result-inv"><div style="color:var(--muted);font-size:0.85rem;">Matrix enter karo.</div></div>
+      <div id="verify-inv" style="margin-top:10px;font-size:0.8rem;color:var(--muted);"></div>
+    </div>
+  </div>
+
+  <!-- ── EIGEN PANEL ── -->
+  <div class="panel" id="panel-eigen" style="grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-arrows-to-dot"></i> Matrix A</div>
+      <div class="size-row">
+        <span class="size-label">Size:</span>
+        <button class="size-btn active" id="me-2" onclick="resizeMatrixEig(2)">2</button>
+        <button class="size-btn" id="me-3" onclick="resizeMatrixEig(3)">3</button>
+      </div>
+      <div id="grid-eig"></div>
+      <div class="preset-row" style="margin-top:10px;">
+        <span class="preset-chip" onclick="loadPresetEig('pauli_z')">σ_z</span>
+        <span class="preset-chip" onclick="loadPresetEig('pauli_x')">σ_x</span>
+        <span class="preset-chip" onclick="loadPresetEig('symm3')">Symmetric 3×3</span>
+        <span class="preset-chip" onclick="loadPresetEig('harm')">Harmonic Osc.</span>
+      </div>
+      <button class="calc-btn" onclick="calcEigen()"><i class="fa-solid fa-arrows-to-dot"></i> Find Eigenvalues</button>
+      <div class="err-box" id="err-eig"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-equals"></i> Eigenvalues & Eigenvectors</div>
+      <div id="result-eig"><div style="color:var(--muted);font-size:0.85rem;">Matrix enter karo.</div></div>
+    </div>
+  </div>
+
+  <!-- ── TRANSPOSE PANEL ── -->
+  <div class="panel" id="panel-transpose" style="grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-table-cells"></i> Matrix A</div>
+      <div class="size-row">
+        <span class="size-label">Size:</span>
+        <button class="size-btn active" id="mt-2" onclick="resizeMatrixTr(2,2)">2×2</button>
+        <button class="size-btn" id="mt-3" onclick="resizeMatrixTr(3,3)">3×3</button>
+        <button class="size-btn" id="mt-23" onclick="resizeMatrixTr(2,3)">2×3</button>
+        <button class="size-btn" id="mt-32" onclick="resizeMatrixTr(3,2)">3×2</button>
+      </div>
+      <div id="grid-tr"></div>
+      <button class="calc-btn" onclick="calcTranspose()"><i class="fa-solid fa-shuffle"></i> Transpose & Trace</button>
+    </div>
+    <div class="gap-col">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-equals"></i> Aᵀ (Transpose)</div>
+        <div id="result-tr"><div style="color:var(--muted);font-size:0.85rem;">Matrix enter karo.</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-info-circle"></i> Properties</div>
+        <div id="props-tr" style="color:var(--muted);font-size:0.85rem;">Calculate karo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VECTOR PANEL ── -->
+  <div class="panel" id="panel-vector" style="grid-template-columns:1fr;gap:16px;">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-arrow-right-arrow-left"></i> Vector Operations</div>
+      <div class="vector-section">
+        <div class="vec-block">
+          <div class="vec-title">Vector A</div>
+          <div class="vec-inputs">
+            <div class="vec-field"><label>Aₓ</label><input type="number" id="va-x" value="1" step="any"></div>
+            <div class="vec-field"><label>A_y</label><input type="number" id="va-y" value="2" step="any"></div>
+            <div class="vec-field"><label>A_z</label><input type="number" id="va-z" value="3" step="any"></div>
+          </div>
+        </div>
+        <div class="vec-block">
+          <div class="vec-title">Vector B</div>
+          <div class="vec-inputs">
+            <div class="vec-field"><label>Bₓ</label><input type="number" id="vb-x" value="4" step="any"></div>
+            <div class="vec-field"><label>B_y</label><input type="number" id="vb-y" value="5" step="any"></div>
+            <div class="vec-field"><label>B_z</label><input type="number" id="vb-z" value="6" step="any"></div>
+          </div>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calcVectors()"><i class="fa-solid fa-calculator"></i> Calculate All</button>
+      <div id="result-vec" style="display:none;">
+        <div class="info-row" id="vec-info-row"></div>
+        <div class="steps-box" id="vec-steps"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SOLVE Ax=b PANEL ── -->
+  <div class="panel" id="panel-solve" style="grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-equals"></i> System Ax = b</div>
+      <div class="size-row">
+        <span class="size-label">Size:</span>
+        <button class="size-btn active" id="ms-2" onclick="resizeMatrixSolve(2)">2×2</button>
+        <button class="size-btn" id="ms-3" onclick="resizeMatrixSolve(3)">3×3</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;">
+        <div>
+          <div style="font-size:0.72rem;font-weight:700;color:var(--muted);margin-bottom:6px;">Matrix A</div>
+          <div id="grid-solve"></div>
+        </div>
+        <div>
+          <div style="font-size:0.72rem;font-weight:700;color:var(--muted);margin-bottom:6px;">Vector b</div>
+          <div id="grid-b"></div>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calcSolve()"><i class="fa-solid fa-equals"></i> Solve Ax = b</button>
+      <div class="err-box" id="err-solve"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-x"></i> Solution x</div>
+      <div id="result-solve"><div style="color:var(--muted);font-size:0.85rem;">System enter karo.</div></div>
+      <div id="steps-solve" style="margin-top:10px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Matrix sizes ──
+let sizeA=2, sizeB=2, sizeDet=2, sizeInv=2, sizeEig=2, sizeTrR=2, sizeTrC=2, sizeSolve=2;
+
+// ── Render matrix grid ──
+function renderGrid(containerId, rows, cols, prefix, vals=null){
+  const g = document.getElementById(containerId);
+  g.innerHTML = '';
+  const div = document.createElement('div');
+  div.style.display = 'grid';
+  div.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+  div.style.gap = '4px';
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+    const inp = document.createElement('input');
+    inp.type = 'number'; inp.step = 'any';
+    inp.className = 'm-cell';
+    inp.id = `${prefix}_${r}_${c}`;
+    inp.value = vals ? (vals[r]?.[c] ?? 0) : (r===c ? 1 : 0);
+    div.appendChild(inp);
+  }
+  g.appendChild(div);
+}
+
+function getMatrix(prefix, rows, cols){
+  const M = [];
+  for(let r=0;r<rows;r++){
+    M.push([]);
+    for(let c=0;c<cols;c++){
+      M[r].push(parseFloat(document.getElementById(`${prefix}_${r}_${c}`)?.value)||0);
+    }
+  }
+  return M;
+}
+
+function showMatrix(M, containerId){
+  const rows=M.length, cols=M[0].length;
+  const div = document.createElement('div');
+  div.className = 'result-matrix';
+  div.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+  M.flat().forEach(v=>{
+    const cell = document.createElement('div');
+    cell.className = 'r-cell';
+    cell.textContent = formatNum(v);
+    div.appendChild(cell);
+  });
+  const c = document.getElementById(containerId);
+  c.innerHTML = ''; c.appendChild(div);
+}
+
+function formatNum(v){
+  if(typeof v === 'object' && v.re !== undefined){
+    const re = Math.round(v.re*1e6)/1e6, im = Math.round(v.im*1e6)/1e6;
+    if(Math.abs(im)<1e-9) return String(re);
+    return `${re}${im>=0?'+':''}${im}i`;
+  }
+  const r = Math.round(v*1e8)/1e8;
+  return String(r);
+}
+
+// ── Resize helpers ──
+function resizeMatrix(which, n){
+  if(which==='A'){
+    sizeA=n;
+    ['2','3','4'].forEach(s=>document.getElementById('ma-'+s)?.classList.toggle('active',s==n));
+    renderGrid('grid-A',n,n,'A');
+  } else {
+    sizeB=n;
+    ['2','3','4'].forEach(s=>document.getElementById('mb-'+s)?.classList.toggle('active',s==n));
+    renderGrid('grid-B',n,n,'B');
+  }
+}
+function resizeMatrixDet(n){
+  sizeDet=n;
+  ['2','3','4'].forEach(s=>document.getElementById('md-'+s)?.classList.toggle('active',s==n));
+  renderGrid('grid-det',n,n,'D');
+}
+function resizeMatrixInv(n){
+  sizeInv=n;
+  ['2','3'].forEach(s=>document.getElementById('mi-'+s)?.classList.toggle('active',s==n));
+  renderGrid('grid-inv',n,n,'I');
+}
+function resizeMatrixEig(n){
+  sizeEig=n;
+  ['2','3'].forEach(s=>document.getElementById('me-'+s)?.classList.toggle('active',s==n));
+  renderGrid('grid-eig',n,n,'E');
+}
+function resizeMatrixTr(r,c){
+  sizeTrR=r; sizeTrC=c;
+  ['mt-2','mt-3','mt-23','mt-32'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+  document.getElementById(r===2&&c===2?'mt-2':r===3&&c===3?'mt-3':r===2?'mt-23':'mt-32')?.classList.add('active');
+  renderGrid('grid-tr',r,c,'T');
+}
+function resizeMatrixSolve(n){
+  sizeSolve=n;
+  ['2','3'].forEach(s=>document.getElementById('ms-'+s)?.classList.toggle('active',s==n));
+  renderGrid('grid-solve',n,n,'S');
+  renderGrid('grid-b',n,1,'sb');
+}
+
+// ── Presets ──
+const PRESETS = {
+  pauli_x:   [[0,1],[1,0]],
+  pauli_y:   [[0,-1],[1,0]],   // simplified (no complex in input)
+  pauli_z:   [[1,0],[0,-1]],
+  hadamard:  [[0.7071,0.7071],[0.7071,-0.7071]],
+  identity3: [[1,0,0],[0,1,0],[0,0,1]],
+  rot90:     [[0,-1],[1,0]],
+};
+function loadPreset(key, which){
+  const vals = PRESETS[key];
+  if(!vals) return;
+  const n = vals.length;
+  if(which==='A'){ sizeA=n; resizeMatrix('A',n); }
+  else { sizeB=n; resizeMatrix('B',n); }
+  const prefix = which==='A'?'A':'B';
+  vals.forEach((row,r)=>row.forEach((v,c)=>{ const el=document.getElementById(`${prefix}_${r}_${c}`); if(el) el.value=v; }));
+}
+
+const PRESETS_EIG = {
+  pauli_z:  [[1,0],[0,-1]],
+  pauli_x:  [[0,1],[1,0]],
+  symm3:    [[4,1,2],[1,3,0],[2,0,2]],
+  harm:     [[0.5,0],[0,1.5]],
+};
+function loadPresetEig(key){
+  const vals=PRESETS_EIG[key]; if(!vals) return;
+  resizeMatrixEig(vals.length);
+  vals.forEach((row,r)=>row.forEach((v,c)=>{ const el=document.getElementById(`E_${r}_${c}`); if(el) el.value=v; }));
+}
+
+// ── Calculations ──
+function calcMultiply(){
+  try{
+    const A=math.matrix(getMatrix('A',sizeA,sizeA));
+    const B=math.matrix(getMatrix('B',sizeB,sizeB));
+    if(sizeA!==sizeB){ showErr('err-multiply','A aur B same size hone chahiye!'); return; }
+    hideErr('err-multiply');
+    const C=math.multiply(A,B);
+    const Carr=C.toArray();
+    showMatrix(Carr,'result-multiply');
+    // Info
+    const trC=math.trace(C), detC=math.det(C);
+    document.getElementById('info-multiply').style.display='grid';
+    document.getElementById('info-multiply').innerHTML=[
+      {n:formatNum(trC),l:'Trace(A×B)'},{n:formatNum(detC),l:'Det(A×B)'},
+      {n:sizeA,l:'Size'},{n:formatNum(math.det(math.matrix(getMatrix('A',sizeA,sizeA)))),l:'det(A)'}
+    ].map(x=>`<div class="info-chip"><div class="ic-num" style="color:var(--sky);">${x.n}</div><div class="ic-lbl">${x.l}</div></div>`).join('');
+    // Steps
+    const A2=getMatrix('A',sizeA,sizeA), B2=getMatrix('B',sizeB,sizeB);
+    let steps=`A × B = C\n\n`;
+    for(let r=0;r<sizeA;r++) for(let c=0;c<sizeB;c++){
+      let s=`C[${r+1}][${c+1}] = `;
+      const parts=A2[r].map((v,k)=>`${formatNum(v)}×${formatNum(B2[k][c])}`);
+      s+=parts.join(' + ')+` = ${formatNum(Carr[r][c])}`;
+      steps+=s+'\n';
+    }
+    document.getElementById('steps-multiply').innerHTML=`<div class="steps-box">${steps}</div>`;
+    showToast('Multiplication done!','success');
+  }catch(e){ showErr('err-multiply',e.message); }
+}
+
+function calcDet(){
+  try{
+    const A=getMatrix('D',sizeDet,sizeDet);
+    const d=math.det(math.matrix(A));
+    hideErr('err-det');
+    const tr=math.trace(math.matrix(A));
+    document.getElementById('result-det').innerHTML=`
+      <div class="info-row">
+        <div class="info-chip"><div class="ic-num" style="color:var(--sky);font-size:1.2rem;">${formatNum(d)}</div><div class="ic-lbl">det(A)</div></div>
+        <div class="info-chip"><div class="ic-num" style="color:var(--purple);">${formatNum(tr)}</div><div class="ic-lbl">Trace</div></div>
+        <div class="info-chip"><div class="ic-num" style="color:${Math.abs(d)>1e-10?'var(--green)':'var(--red)'};">${Math.abs(d)>1e-10?'Yes':'No'}</div><div class="ic-lbl">Invertible?</div></div>
+        <div class="info-chip"><div class="ic-num" style="color:var(--orange);">${sizeDet}</div><div class="ic-lbl">Rank (if nonzero)</div></div>
+      </div>`;
+    // Steps for 2x2
+    if(sizeDet===2){
+      document.getElementById('steps-det').innerHTML=`<div class="steps-box">2×2 det:\ndet = a·d − b·c\n    = ${A[0][0]}·${A[1][1]} − ${A[0][1]}·${A[1][0]}\n    = ${A[0][0]*A[1][1]} − ${A[0][1]*A[1][0]}\n    = ${formatNum(d)}</div>`;
+    } else {
+      document.getElementById('steps-det').innerHTML=`<div class="steps-box">det(A) = ${formatNum(d)}\n(Calculated using LU decomposition)</div>`;
+    }
+    showToast('Determinant: '+formatNum(d),'success');
+  }catch(e){ showErr('err-det',e.message); }
+}
+
+function calcInverse(){
+  try{
+    const A=math.matrix(getMatrix('I',sizeInv,sizeInv));
+    const d=math.det(A);
+    if(Math.abs(d)<1e-12){ showErr('err-inv','Matrix singular hai — inverse exist nahi karta! (det=0)'); return; }
+    hideErr('err-inv');
+    const Ainv=math.inv(A);
+    showMatrix(Ainv.toArray(),'result-inv');
+    // Verify A·A⁻¹ ≈ I
+    const check=math.multiply(A,Ainv);
+    const isI=check.toArray().every((r,ri)=>r.every((v,ci)=>Math.abs(v-(ri===ci?1:0))<1e-8));
+    document.getElementById('verify-inv').innerHTML=`<span style="color:${isI?'var(--green)':'var(--red)'};">${isI?'✅ Verified: A·A⁻¹ = I':'⚠️ Verification failed'}</span><br><span style="color:var(--muted);">det(A) = ${formatNum(d)}</span>`;
+    showToast('Inverse calculated!','success');
+  }catch(e){ showErr('err-inv',e.message); }
+}
+
+function calcEigen(){
+  try{
+    const A=math.matrix(getMatrix('E',sizeEig,sizeEig));
+    hideErr('err-eig');
+    const {values,vectors}=math.eigs(A);
+    const vArr=values.toArray(), vecArr=vectors.toArray();
+    // vArr has eigenvalues, vecArr columns are eigenvectors
+    let html='<div class="eigen-list">';
+    vArr.forEach((val,i)=>{
+      const evec=vecArr.map(row=>row[i]);
+      html+=`<div class="eigen-item">
+        <div class="eigen-val">λ${i+1} = ${formatNum(val)}</div>
+        <div class="eigen-vec">v${i+1} = [${evec.map(formatNum).join(', ')}]</div>
+      </div>`;
+    });
+    html+='</div>';
+    html+=`<div style="margin-top:10px;font-size:0.78rem;color:var(--muted);">Trace = ${formatNum(math.trace(A))} = Σλ = ${formatNum(vArr.reduce((s,v)=>s+v,0))}<br>det(A) = ${formatNum(math.det(A))} = Πλ ≈ ${formatNum(vArr.reduce((p,v)=>p*v,1))}</div>`;
+    document.getElementById('result-eig').innerHTML=html;
+    showToast('Eigenvalues found!','success');
+  }catch(e){ showErr('err-eig',e.message); }
+}
+
+function calcTranspose(){
+  const A=getMatrix('T',sizeTrR,sizeTrC);
+  const AT=math.transpose(math.matrix(A)).toArray();
+  showMatrix(AT,'result-tr');
+  let props=`<div style="font-size:0.82rem;color:var(--ink2);line-height:2;">`;
+  const isSquare=sizeTrR===sizeTrC;
+  props+=`<b>Size:</b> ${sizeTrR}×${sizeTrC} → Aᵀ is ${sizeTrC}×${sizeTrR}<br>`;
+  if(isSquare){
+    const tr=math.trace(math.matrix(A));
+    const d=math.det(math.matrix(A));
+    const isSymm=A.every((r,ri)=>r.every((v,ci)=>Math.abs(v-A[ci][ri])<1e-9));
+    props+=`<b>Trace(A):</b> ${formatNum(tr)}<br>`;
+    props+=`<b>det(A):</b> ${formatNum(d)}<br>`;
+    props+=`<b>Symmetric?</b> ${isSymm?'✅ Yes':'❌ No'}<br>`;
+    props+=`<b>det(Aᵀ) = det(A):</b> ${formatNum(d)}<br>`;
+  }
+  props+='</div>';
+  document.getElementById('props-tr').innerHTML=props;
+  showToast('Transpose done!','success');
+}
+
+function calcVectors(){
+  const A=[parseFloat(document.getElementById('va-x').value)||0,
+           parseFloat(document.getElementById('va-y').value)||0,
+           parseFloat(document.getElementById('va-z').value)||0];
+  const B=[parseFloat(document.getElementById('vb-x').value)||0,
+           parseFloat(document.getElementById('vb-y').value)||0,
+           parseFloat(document.getElementById('vb-z').value)||0];
+  const dot=A[0]*B[0]+A[1]*B[1]+A[2]*B[2];
+  const cross=[A[1]*B[2]-A[2]*B[1], A[2]*B[0]-A[0]*B[2], A[0]*B[1]-A[1]*B[0]];
+  const magA=Math.sqrt(A.reduce((s,v)=>s+v*v,0));
+  const magB=Math.sqrt(B.reduce((s,v)=>s+v*v,0));
+  const angle=magA>0&&magB>0?Math.acos(Math.max(-1,Math.min(1,dot/(magA*magB))))*180/Math.PI:0;
+  const magCross=Math.sqrt(cross.reduce((s,v)=>s+v*v,0));
+  const unitA=magA>0?A.map(v=>formatNum(v/magA)):['—','—','—'];
+  document.getElementById('result-vec').style.display='block';
+  document.getElementById('vec-info-row').innerHTML=[
+    {n:formatNum(dot),l:'A · B (Dot)',col:'var(--sky)'},
+    {n:`[${cross.map(formatNum).join(', ')}]`,l:'A × B (Cross)',col:'var(--purple)'},
+    {n:`${formatNum(angle)}°`,l:'Angle between',col:'var(--orange)'},
+    {n:formatNum(magCross),l:'|A × B|',col:'var(--green)'},
+  ].map(x=>`<div class="info-chip"><div class="ic-num" style="color:${x.col};font-size:0.88rem;">${x.n}</div><div class="ic-lbl">${x.l}</div></div>`).join('');
+  document.getElementById('vec-steps').textContent=
+`A = (${A.join(', ')})    |A| = ${formatNum(magA)}
+B = (${B.join(', ')})    |B| = ${formatNum(magB)}
+
+Dot Product:
+A·B = ${A[0]}×${B[0]} + ${A[1]}×${B[1]} + ${A[2]}×${B[2]} = ${formatNum(dot)}
+
+Cross Product A×B:
+i: ${A[1]}×${B[2]} − ${A[2]}×${B[1]} = ${formatNum(cross[0])}
+j: ${A[2]}×${B[0]} − ${A[0]}×${B[2]} = ${formatNum(cross[1])}
+k: ${A[0]}×${B[1]} − ${A[1]}×${B[0]} = ${formatNum(cross[2])}
+A×B = (${cross.map(formatNum).join(', ')})
+
+Angle: cos⁻¹(${formatNum(dot)}/(${formatNum(magA)}×${formatNum(magB)})) = ${formatNum(angle)}°
+
+Unit vector Â = (${unitA.join(', ')})`;
+  showToast('Vector ops done!','success');
+}
+
+function calcSolve(){
+  try{
+    const A=math.matrix(getMatrix('S',sizeSolve,sizeSolve));
+    const b=math.matrix(getMatrix('sb',sizeSolve,1).map(r=>r[0]));
+    hideErr('err-solve');
+    const d=math.det(A);
+    if(Math.abs(d)<1e-12){ showErr('err-solve','Singular matrix — unique solution nahi hai! (det=0)'); return; }
+    const x=math.lusolve(A,b);
+    const xArr=x.toArray().map(v=>Array.isArray(v)?v[0]:v);
+    document.getElementById('result-solve').innerHTML=`
+      <div class="eigen-list">${xArr.map((v,i)=>`<div class="eigen-item"><div class="eigen-val">x${i+1} = ${formatNum(v)}</div></div>`).join('')}</div>
+      <div style="margin-top:8px;font-size:0.75rem;color:var(--muted);">det(A) = ${formatNum(d)}</div>`;
+    // Verify
+    const Ax=math.multiply(A,math.matrix(xArr));
+    const bArr=getMatrix('sb',sizeSolve,1).map(r=>r[0]);
+    const ok=Ax.toArray().every((v,i)=>Math.abs(v-bArr[i])<1e-6);
+    document.getElementById('steps-solve').innerHTML=`<div style="font-size:0.78rem;color:${ok?'var(--green)':'var(--red)'};">${ok?'✅ Verified: Ax = b':'⚠️ Verification failed'}</div>`;
+    showToast('System solved!','success');
+  }catch(e){ showErr('err-solve',e.message); }
+}
+
+// ── Operation switch ──
+function switchOp(op){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.op-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+op).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── Error helpers ──
+function showErr(id,msg){ const el=document.getElementById(id); el.style.display='block'; el.textContent=msg; }
+function hideErr(id){ document.getElementById(id).style.display='none'; }
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+(type||'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2500);
+}
+
+// ── Init ──
+window.addEventListener('load',()=>{
+  renderGrid('grid-A',2,2,'A');
+  renderGrid('grid-B',2,2,'B');
+  renderGrid('grid-det',2,2,'D');
+  renderGrid('grid-inv',2,2,'I');
+  renderGrid('grid-eig',2,2,'E');
+  renderGrid('grid-tr',2,2,'T');
+  renderGrid('grid-solve',2,2,'S');
+  renderGrid('grid-b',2,1,'sb',[[1],[0]]);
+  // Load pauli preset as demo
+  loadPreset('pauli_z','A'); loadPreset('pauli_x','B');
+});
+</script>
+</body>
+</html>
