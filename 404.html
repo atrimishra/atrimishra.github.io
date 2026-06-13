@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Page Not Found | Atri's Physics Orbit</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --bg:#f0f6ff;--bg2:#e8f2ff;--ink:#0c1428;--ink2:#1e2d4a;--muted:#5a6a85;
+  --border:#dce8f5;--sky:#2563eb;--sky2:#3b82f6;--sky-bg:#eff6ff;
+  --sky-glow:rgba(37,99,235,0.12);--card:#ffffff;--radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.65;overflow:hidden;display:flex;flex-direction:column;}
+
+/* Canvas */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* NAV */
+nav{position:relative;z-index:10;background:rgba(240,246,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 clamp(16px,4vw,48px);height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.logo{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;}
+.logo-icon{width:30px;height:30px;background:var(--sky);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.78rem;}
+.logo .dot{color:var(--sky);}
+
+/* MAIN */
+main{flex:1;display:flex;align-items:center;justify-content:center;position:relative;z-index:5;padding:20px;}
+.center-box{text-align:center;max-width:560px;width:100%;}
+
+/* 404 big number */
+.big-404{font-family:'Fraunces',serif;font-size:clamp(6rem,18vw,10rem);font-weight:900;line-height:1;letter-spacing:-4px;background:linear-gradient(135deg,var(--sky),#60a5fa,var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0;position:relative;display:inline-block;}
+.big-404::after{content:'';position:absolute;bottom:-8px;left:10%;width:80%;height:3px;background:linear-gradient(90deg,transparent,var(--sky),transparent);border-radius:2px;}
+
+/* Equation badge */
+.eq-badge{display:inline-flex;align-items:center;gap:8px;background:var(--sky-bg);border:1px solid rgba(37,99,235,0.2);border-radius:30px;padding:6px 16px;font-size:0.8rem;font-weight:600;color:var(--sky);margin:16px 0 20px;font-family:'Georgia',serif;font-style:italic;}
+
+/* Heading */
+.heading{font-family:'Fraunces',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:700;color:var(--ink);margin-bottom:10px;letter-spacing:-0.5px;}
+.subtext{font-size:0.92rem;color:var(--muted);margin-bottom:28px;line-height:1.7;max-width:420px;margin-left:auto;margin-right:auto;}
+
+/* Quick links */
+.links-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.link-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;text-decoration:none;display:flex;align-items:center;gap:10px;transition:all 0.22s;box-shadow:0 2px 10px var(--sky-glow);}
+.link-card:hover{border-color:var(--sky);background:var(--sky-bg);transform:translateY(-2px);box-shadow:0 6px 20px var(--sky-glow);}
+.lc-icon{width:36px;height:36px;border-radius:10px;background:var(--sky-bg);border:1px solid rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--sky);flex-shrink:0;}
+.lc-text{text-align:left;}
+.lc-title{font-size:0.82rem;font-weight:700;color:var(--ink2);}
+.lc-sub{font-size:0.7rem;color:var(--muted);margin-top:1px;}
+
+/* Home btn */
+.home-btn{display:inline-flex;align-items:center;gap:8px;background:var(--sky);color:#fff;padding:12px 28px;border-radius:30px;font-size:0.9rem;font-weight:700;font-family:'Fraunces',serif;text-decoration:none;box-shadow:0 4px 18px rgba(37,99,235,0.35);transition:all 0.22s;letter-spacing:-0.3px;}
+.home-btn:hover{background:var(--sky2);transform:translateY(-2px);box-shadow:0 6px 24px rgba(37,99,235,0.45);}
+
+/* Countdown */
+.countdown{font-size:0.78rem;color:var(--muted);margin-top:14px;}
+.countdown span{color:var(--sky);font-weight:700;}
+
+/* Floating equations */
+.float-eq{position:fixed;font-family:'Georgia',serif;font-size:clamp(0.7rem,1.5vw,0.95rem);color:rgba(37,99,235,0.12);pointer-events:none;font-style:italic;animation:float-drift linear infinite;}
+@keyframes float-drift{0%{transform:translateY(100vh) rotate(0deg);opacity:0;}10%{opacity:1;}90%{opacity:0.5;}100%{transform:translateY(-120px) rotate(15deg);opacity:0;}}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <a class="logo" href="index.html">
+    <div class="logo-icon"><i class="fa-solid fa-atom"></i></div>
+    Atri<span class="dot">.</span>Physics
+  </a>
+</nav>
+
+<main>
+  <div class="center-box">
+
+    <div class="big-404">404</div>
+
+    <div class="eq-badge">
+      <i class="fa-solid fa-wave-square"></i>
+      ψ(x,t) → Page Not Found
+    </div>
+
+    <h1 class="heading">Yeh page quantum superposition mein hai 👻</h1>
+    <p class="subtext">
+      Jis page ko dhundh rahe ho woh ya toh exist nahi karta, ya delete ho gaya, ya phir Heisenberg Uncertainty Principle ki wajah se locate nahi ho raha.
+    </p>
+
+    <!-- Quick navigation -->
+    <div class="links-grid">
+      <a class="link-card" href="index.html">
+        <div class="lc-icon"><i class="fa-solid fa-house"></i></div>
+        <div class="lc-text">
+          <div class="lc-title">Home</div>
+          <div class="lc-sub">Main page par wapas jao</div>
+        </div>
+      </a>
+      <a class="link-card" href="index.html#toolkit">
+        <div class="lc-icon"><i class="fa-solid fa-wrench"></i></div>
+        <div class="lc-text">
+          <div class="lc-title">12 Tools</div>
+          <div class="lc-sub">Physics tools dekhо</div>
+        </div>
+      </a>
+      <a class="link-card" href="index.html#notes">
+        <div class="lc-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div class="lc-text">
+          <div class="lc-title">Notes</div>
+          <div class="lc-sub">DU Physics notes</div>
+        </div>
+      </a>
+      <a class="link-card" href="tools/graph-plotter.html">
+        <div class="lc-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="lc-text">
+          <div class="lc-title">Graph Plotter</div>
+          <div class="lc-sub">Functions plot karo</div>
+        </div>
+      </a>
+    </div>
+
+    <a class="home-btn" href="index.html">
+      <i class="fa-solid fa-atom"></i> Wapas Orbit Mein Jao
+    </a>
+
+    <div class="countdown">
+      <span id="count">10</span> seconds mein automatically home par redirect ho jaoge...
+    </div>
+
+  </div>
+</main>
+
+<script>
+// ── Floating physics equations ──
+const EQS = [
+  'E = mc²', 'F = ma', 'ΔxΔp ≥ ℏ/2', 'E = hν',
+  'PV = nRT', '∇·E = ρ/ε₀', 'F = qE + qv×B',
+  'λ = h/p', 'S = k ln Ω', 'ψ = Ae^(ikx)',
+  'E_n = -13.6/n² eV', '∇²ψ + k²ψ = 0',
+  'i ℏ ∂ψ/∂t = Ĥψ', 'N = N₀e^(−λt)',
+];
+
+function spawnEq(){
+  const div = document.createElement('div');
+  div.className = 'float-eq';
+  div.textContent = EQS[Math.floor(Math.random()*EQS.length)];
+  div.style.left = Math.random()*95+'vw';
+  div.style.animationDuration = (12+Math.random()*18)+'s';
+  div.style.animationDelay = '0s';
+  div.style.fontSize = (0.7+Math.random()*0.5)+'rem';
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(), 32000);
+}
+for(let i=0;i<8;i++) setTimeout(spawnEq, i*900);
+setInterval(spawnEq, 2200);
+
+// ── Particle canvas ──
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+for(let i=0;i<55;i++){
+  particles.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: Math.random()*2+0.5,
+    vx: (Math.random()-0.5)*0.4,
+    vy: (Math.random()-0.5)*0.4,
+    alpha: Math.random()*0.4+0.1,
+  });
+}
+
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(37,99,235,${p.alpha})`;
+    ctx.fill();
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0) p.x=canvas.width;
+    if(p.x>canvas.width) p.x=0;
+    if(p.y<0) p.y=canvas.height;
+    if(p.y>canvas.height) p.y=0;
+  });
+  // Connect nearby particles
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x;
+      const dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<100){
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(37,99,235,${0.08*(1-dist/100)})`;
+        ctx.lineWidth=0.8;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── Auto redirect countdown ──
+let count = 10;
+const countEl = document.getElementById('count');
+const timer = setInterval(()=>{
+  count--;
+  countEl.textContent = count;
+  if(count <= 0){
+    clearInterval(timer);
+    window.location.href = 'index.html';
+  }
+}, 1000);
+
+// Stop countdown if user interacts
+document.querySelectorAll('a').forEach(a=>{
+  a.addEventListener('click', ()=> clearInterval(timer));
+});
+</script>
+</body>
+</html>
