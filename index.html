@@ -1047,7 +1047,7 @@ function setChalisa(idx){cb.style.opacity=0;setTimeout(()=>{cb.innerHTML=chaupai
 setChalisa(0);setInterval(()=>{ci=(ci+1)%chaupais.length;setChalisa(ci);},4500);
 
 /* ── ASK ATRI CHAT LOGIC ── */
-const AA_WORKER_URL = "https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev"; // ⚠️ Step 3 mein yahan apna Cloudflare Worker URL daalna hai
+const AA_WORKER_URL = "https://atri-backend.rajtiwariatrt200504.workers.dev/"; // ⚠️ Step 3 mein yahan apna Cloudflare Worker URL daalna hai
 const AA_SYSTEM_PROMPT = "You are 'Ask Atri', a friendly physics tutor AI on Atri Mishra's website. Atri is an M.Sc. Physics student at Delhi University. Help BSc/MSc physics students (DU NEP syllabus) with concepts, derivations, numericals, and doubts. Keep answers clear, well-structured, and not too long (use simple notation like x^2, sqrt(x), or describe formulas in words when helpful). Be warm and encouraging, like a senior student helping a junior. If asked something totally unrelated to physics/math/science, gently redirect back to physics topics.";
 
 function aaCreateChat(messagesId,inputId,sendId){
